@@ -1,0 +1,266 @@
+@import '../../styles/variables.scss';
+
+.hero {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000000;
+  overflow: hidden;
+}
+
+// Starfield effect (CSS trick)
+.hero__stars {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  background: transparent;
+  box-shadow:
+    #{random(2000)}px #{random(2000)}px #FFF,
+    #{random(2000)}px #{random(2000)}px #FFF,
+    #{random(2000)}px #{random(2000)}px #FFF,
+    #{random(2000)}px #{random(2000)}px #FFF,
+    #{random(2000)}px #{random(2000)}px #FFF,
+    #{random(2000)}px #{random(2000)}px #FFF,
+    #{random(2000)}px #{random(2000)}px #FFF,
+    #{random(2000)}px #{random(2000)}px #FFF,
+    #{random(2000)}px #{random(2000)}px #FFF,
+    #{random(2000)}px #{random(2000)}px #FFF,
+    #{random(2000)}px #{random(2000)}px #FFF,
+    #{random(2000)}px #{random(2000)}px #FFF,
+    #{random(2000)}px #{random(2000)}px #FFF,
+    #{random(2000)}px #{random(2000)}px #FFF,
+    #{random(2000)}px #{random(2000)}px #FFF,
+    #{random(2000)}px #{random(2000)}px #FFF,
+    #{random(2000)}px #{random(2000)}px #FFF,
+    #{random(2000)}px #{random(2000)}px #FFF,
+    #{random(2000)}px #{random(2000)}px #FFF,
+    #{random(2000)}px #{random(2000)}px #FFF;
+  animation: animStar 100s linear infinite;
+
+  &::after {
+    content: ' ';
+    position: absolute;
+    top: 2000px;
+    width: 1px;
+    height: 1px;
+    background: transparent;
+    box-shadow:
+      #{random(2000)}px #{random(2000)}px #FFF,
+      #{random(2000)}px #{random(2000)}px #FFF,
+      #{random(2000)}px #{random(2000)}px #FFF,
+      #{random(2000)}px #{random(2000)}px #FFF,
+      #{random(2000)}px #{random(2000)}px #FFF,
+      #{random(2000)}px #{random(2000)}px #FFF,
+      #{random(2000)}px #{random(2000)}px #FFF,
+      #{random(2000)}px #{random(2000)}px #FFF,
+      #{random(2000)}px #{random(2000)}px #FFF,
+      #{random(2000)}px #{random(2000)}px #FFF,
+      #{random(2000)}px #{random(2000)}px #FFF,
+      #{random(2000)}px #{random(2000)}px #FFF,
+      #{random(2000)}px #{random(2000)}px #FFF,
+      #{random(2000)}px #{random(2000)}px #FFF,
+      #{random(2000)}px #{random(2000)}px #FFF,
+      #{random(2000)}px #{random(2000)}px #FFF,
+      #{random(2000)}px #{random(2000)}px #FFF,
+      #{random(2000)}px #{random(2000)}px #FFF,
+      #{random(2000)}px #{random(2000)}px #FFF,
+      #{random(2000)}px #{random(2000)}px #FFF;
+  }
+}
+
+.hero__stars--1 {
+  animation: animStarDown 100s linear infinite;
+}
+
+.hero__stars--2 {
+  animation: animStarDiagonal1 120s linear infinite;
+  animation-delay: -50s;
+}
+
+.hero__stars--3 {
+  animation: animStarDiagonal2 150s linear infinite;
+  animation-delay: -75s;
+}
+
+.hero__stars--4 {
+  animation: animStarRight 140s linear infinite;
+  animation-delay: -30s;
+}
+
+.hero__stars--5 {
+  animation: animStarLeft 130s linear infinite;
+  animation-delay: -60s;
+}
+
+@keyframes animStarDown {
+  from { transform: translateY(0px); }
+  to { transform: translateY(-2000px); }
+}
+
+@keyframes animStarDiagonal1 {
+  from { transform: translate(0px, 0px); }
+  to { transform: translate(-1000px, -2000px); }
+}
+
+@keyframes animStarDiagonal2 {
+  from { transform: translate(0px, 0px); }
+  to { transform: translate(1000px, -2000px); }
+}
+
+@keyframes animStarRight {
+  from { transform: translate(0px, 0px); }
+  to { transform: translate(2000px, -500px); }
+}
+
+@keyframes animStarLeft {
+  from { transform: translate(0px, 0px); }
+  to { transform: translate(-2000px, -500px); }
+}
+
+.hero__large-name {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) translateY(-180px);
+  font-family: $font-mono;
+  font-size: 280px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.85);
+  letter-spacing: 10px;
+  z-index: 1;
+  pointer-events: none;
+  line-height: 1;
+  white-space: nowrap;
+  text-shadow:
+    0 0 60px rgba(255, 255, 255, 0.3),
+    0 8px 16px rgba(0, 0, 0, 0.4);
+
+  :global(.char) {
+    display: inline-block;
+    transform-origin: center bottom;
+  }
+}
+
+.hero__planet {
+  position: absolute;
+  top: 53%;
+  left: 50%;
+  transform: translate(-50%, -50%) translateY(100px);
+  width: 700px;
+  height: 700px;
+  padding: 50px;
+  z-index: 2;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.hero__content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) translateY(280px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: #FFFFFF;
+  max-width: 800px;
+  z-index: 3;
+}
+
+.hero__tagline {
+  font-family: $font-mono;
+  font-size: 24px;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: $line-height-relaxed;
+  margin-bottom: $spacing-lg;
+  max-width: 700px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+
+  :global(.char) {
+    display: inline-block;
+  }
+}
+
+.hero__scroll-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-sm;
+  font-family: $font-body;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-top: $spacing-md;
+  animation: float 3s ease-in-out infinite;
+
+  .scroll-arrow {
+    width: 24px;
+    height: 24px;
+    color: rgba(255, 255, 255, 0.6);
+    animation: bounce 2s ease-in-out infinite;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(10px);
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .hero__large-name {
+    font-size: 100px;
+    letter-spacing: 5px;
+    transform: translate(-50%, -50%) translateY(-120px);
+  }
+
+  .hero__tagline {
+    font-size: 16px;
+  }
+
+  .hero__planet {
+    width: 400px;
+    height: 400px;
+    transform: translate(-50%, -50%) translateY(50px);
+    padding: 25px;
+  }
+
+  .hero__content {
+    max-width: 90%;
+    transform: translate(-50%, -50%) translateY(200px);
+  }
+
+  .hero__scroll-hint {
+    font-size: 12px;
+  }
+}
+
+// Accessibility - reduced motion
+@media (prefers-reduced-motion: reduce) {
+  .hero__stars,
+  .hero__scroll-hint,
+  .scroll-arrow {
+    animation: none;
+  }
+}
