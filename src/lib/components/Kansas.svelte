@@ -1,9 +1,8 @@
 <script>
-  import { onMount, onDestroy } from 'svelte';
+  import { onMount } from 'svelte';
   import { fade } from 'svelte/transition';
   import { gsap } from 'gsap';
   import { ScrollTrigger } from 'gsap/ScrollTrigger';
-  import { playWindSound, fadeInWind, fadeOutWind } from '$lib/utils/audio';
 
   gsap.registerPlugin(ScrollTrigger);
 
@@ -11,7 +10,6 @@
   let wheatBackground;
   let kansasTitle;
   let kansasText;
-  let audioInitialized = false;
   let showTimeline = false;
 
   function toggleTimeline() {
@@ -142,29 +140,6 @@
       repeat: -1
     });
 
-    // Audio on scroll
-    ScrollTrigger.create({
-      trigger: kansasSection,
-      start: 'top 80%',
-      end: 'bottom 20%',
-      onEnter: () => {
-        if (!audioInitialized) {
-          playWindSound();
-          fadeInWind(0.2, 2);
-          audioInitialized = true;
-        }
-      },
-      onLeave: () => {
-        fadeOutWind(2);
-      },
-      onEnterBack: () => {
-        fadeInWind(0.2, 2);
-      },
-      onLeaveBack: () => {
-        fadeOutWind(2);
-      }
-    });
-
     // Transition animation
     gsap.to('.kansas__transition', {
       opacity: 1,
@@ -190,11 +165,6 @@
     });
 
     // Milestone animations will be handled in reactive statement
-  });
-
-  onDestroy(() => {
-    // Clean up audio if needed
-    fadeOutWind(0.5);
   });
 </script>
 
@@ -610,8 +580,8 @@
     background: linear-gradient(
       to bottom,
       transparent 0%,
-      rgba($california-mist, 0.3) 50%,
-      rgba($california-mist, 0.7) 100%
+      rgba($california-sky, 0.3) 50%,
+      rgba($california-sand, 0.6) 100%
     );
     z-index: 5;
     pointer-events: none;
