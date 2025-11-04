@@ -1,6 +1,5 @@
 <script>
   import { onMount } from 'svelte';
-  import { fade } from 'svelte/transition';
   import { gsap } from 'gsap';
   import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -10,33 +9,6 @@
   let wheatBackground;
   let kansasTitle;
   let kansasText;
-  let showTimeline = false;
-
-  function toggleTimeline() {
-    showTimeline = !showTimeline;
-  }
-
-  function handleKeydown(event) {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      toggleTimeline();
-    }
-  }
-
-  // Reactive statement for milestone animations
-  $: if (showTimeline) {
-    setTimeout(() => {
-      gsap.utils.toArray('.kansas__milestone').forEach((milestone, i) => {
-        gsap.from(milestone, {
-          scale: 0,
-          opacity: 0,
-          duration: 0.5,
-          delay: i * 0.2,
-          ease: 'back.out(1.7)'
-        });
-      });
-    }, 100);
-  }
 
   onMount(() => {
     // Animate wheat stalks with GSAP
@@ -217,31 +189,10 @@
   <div class="kansas__content">
     <h1 class="kansas__title" bind:this={kansasTitle} style="transform: translateY(30px);">Kansas – Where I Found My Foundation</h1>
     <p class="kansas__text" bind:this={kansasText} style="transform: translateY(30px);">
-      In Kansas, I grew as a leader and a learner. School and college sparked my love for design—where I earned my <span class="kansas__highlight" on:click={toggleTimeline} on:keydown={handleKeydown} role="button" tabindex="0" aria-label="Click to view education milestones">art degree</span> and discovered how to weave concepts into experiences that speak.
+      In Kansas, I grew as a leader and a learner. School and college sparked my love for design—where I earned my art degree and discovered how to weave concepts into experiences that speak.
     </p>
   </div>
 
-  <!-- Simple timeline milestones (hidden by default) -->
-  {#if showTimeline}
-    <div class="kansas__timeline" transition:fade={{ duration: 500 }}>
-      <div class="timeline__header">
-        <h3>Education Milestones</h3>
-        <button class="timeline__close" on:click={toggleTimeline} aria-label="Close timeline">×</button>
-      </div>
-      <div class="kansas__milestone" style="left: 20%; top: 30%;">
-        <span class="milestone__dot"></span>
-        <span class="milestone__label">First Web Design Project</span>
-      </div>
-      <div class="kansas__milestone" style="left: 60%; top: 45%;">
-        <span class="milestone__dot"></span>
-        <span class="milestone__label">Art Degree Earned</span>
-      </div>
-      <div class="kansas__milestone" style="left: 40%; top: 65%;">
-        <span class="milestone__dot"></span>
-        <span class="milestone__label">Early Design Experiments</span>
-      </div>
-    </div>
-  {/if}
 
   <!-- Abstract wireframe shapes -->
   <div class="kansas__wireframes">
@@ -365,157 +316,6 @@
     }
   }
 
-  .kansas__highlight {
-    color: #8b6f47; // Darker, more readable color
-    font-weight: 600;
-    cursor: pointer;
-    text-decoration: underline;
-    text-decoration-style: dotted;
-    text-underline-offset: 4px;
-    transition: all 0.3s ease;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 2px 4px;
-    border-radius: 3px;
-
-    &:hover {
-      color: #6b5433;
-      background: rgba(255, 255, 255, 0.2);
-      text-shadow: 0 0 15px rgba(139, 111, 71, 0.3);
-    }
-
-    &:focus {
-      outline: 2px solid #8b6f47;
-      outline-offset: 2px;
-    }
-  }
-
-  .kansas__timeline {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 15;
-    pointer-events: none;
-    background: rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(2px);
-  }
-
-  .kansas__milestone {
-    position: absolute;
-    pointer-events: all;
-    animation: orbit 6s ease-in-out infinite;
-    cursor: pointer;
-
-    &:hover {
-      animation-play-state: paused;
-      
-      .milestone__label {
-        opacity: 1;
-        transform: translateY(-10px);
-      }
-      
-      .milestone__dot {
-        transform: scale(1.5);
-        box-shadow: 0 0 30px rgba(139, 111, 71, 0.8);
-      }
-    }
-  }
-
-  @keyframes orbit {
-    0%, 100% {
-      transform: translate(0, 0);
-    }
-    50% {
-      transform: translate(10px, -10px);
-    }
-  }
-
-  .milestone__dot {
-    display: block;
-    width: 16px;
-    height: 16px;
-    background: #8b6f47;
-    border-radius: 50%;
-    box-shadow: 0 0 20px rgba(139, 111, 71, 0.6);
-    animation: pulse 2s ease-in-out infinite;
-    border: 2px solid rgba(255, 255, 255, 0.8);
-  }
-
-  @keyframes pulse {
-    0%, 100% {
-      transform: scale(1);
-      opacity: 1;
-    }
-    50% {
-      transform: scale(1.3);
-      opacity: 0.7;
-    }
-  }
-
-  .milestone__label {
-    position: absolute;
-    top: 25px;
-    left: 50%;
-    transform: translateX(-50%);
-    white-space: nowrap;
-    font-family: $font-body;
-    font-size: 14px;
-    color: #2c2419;
-    background: rgba(255, 255, 255, 0.95);
-    padding: 8px 12px;
-    border-radius: 6px;
-    opacity: 0;
-    transition: all 0.3s ease;
-    pointer-events: none;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    border: 1px solid rgba(139, 111, 71, 0.2);
-    font-weight: 500;
-  }
-
-  .timeline__header {
-    position: absolute;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    background: rgba(255, 255, 255, 0.95);
-    padding: 12px 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    pointer-events: all;
-
-    h3 {
-      margin: 0;
-      font-family: $font-header;
-      font-size: 18px;
-      color: #2c2419;
-      font-weight: 600;
-    }
-  }
-
-  .timeline__close {
-    background: none;
-    border: none;
-    font-size: 24px;
-    color: #8b6f47;
-    cursor: pointer;
-    padding: 0;
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    transition: all 0.3s ease;
-
-    &:hover {
-      background: rgba(139, 111, 71, 0.1);
-      color: #6b5433;
-    }
-  }
 
   // Removed old milestone styles - replaced with 3D tube system
 

@@ -1,6 +1,5 @@
 <script>
   import { onMount } from 'svelte';
-  import { fade } from 'svelte/transition';
   import { gsap } from 'gsap';
   import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -9,35 +8,8 @@
   let californiaSection;
   let californiaTitle;
   let californiaText;
-  let showTimeline = false;
   let patternCount = 150;
   let gridCols = 15;
-
-  function toggleTimeline() {
-    showTimeline = !showTimeline;
-  }
-
-  function handleKeydown(event) {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      toggleTimeline();
-    }
-  }
-
-  // Reactive statement for milestone animations
-  $: if (showTimeline) {
-    setTimeout(() => {
-      gsap.utils.toArray('.california__milestone').forEach((milestone, i) => {
-        gsap.from(milestone, {
-          scale: 0,
-          opacity: 0,
-          duration: 0.5,
-          delay: i * 0.2,
-          ease: 'back.out(1.7)'
-        });
-      });
-    }, 100);
-  }
 
   onMount(() => {
     // Calculate pattern count based on viewport
@@ -129,31 +101,10 @@
   <div class="california__content">
     <h1 class="california__title" bind:this={californiaTitle} style="transform: translateY(30px);">California – Where I Found Creation</h1>
     <p class="california__text" bind:this={californiaText} style="transform: translateY(30px);">
-      In California, I discovered collaboration and innovation. The West Coast sparked my passion for building—where I honed my <span class="california__highlight" on:click={toggleTimeline} on:keydown={handleKeydown} role="button" tabindex="0" aria-label="Click to view technical skills">technical skills</span> and learned how to craft experiences that resonate.
+      In California, I discovered collaboration and innovation. The West Coast sparked my passion for building—where I honed my technical skills and learned how to craft experiences that resonate.
     </p>
   </div>
 
-  <!-- Simple timeline milestones (hidden by default) -->
-  {#if showTimeline}
-    <div class="california__timeline" transition:fade={{ duration: 500 }}>
-      <div class="timeline__header">
-        <h3>Technical Skills</h3>
-        <button class="timeline__close" on:click={toggleTimeline} aria-label="Close timeline">×</button>
-      </div>
-      <div class="california__milestone" style="left: 20%; top: 30%;">
-        <span class="milestone__dot"></span>
-        <span class="milestone__label">Frontend Development</span>
-      </div>
-      <div class="california__milestone" style="left: 60%; top: 45%;">
-        <span class="milestone__dot"></span>
-        <span class="milestone__label">Design Systems</span>
-      </div>
-      <div class="california__milestone" style="left: 40%; top: 65%;">
-        <span class="milestone__dot"></span>
-        <span class="milestone__label">Team Collaboration</span>
-      </div>
-    </div>
-  {/if}
 
   <!-- Surfboard and Palm Tree pattern background -->
   <div class="surfboard-pattern">
@@ -279,157 +230,6 @@
     }
   }
 
-  .california__highlight {
-    color: #FF8C69; // Coral accent
-    font-weight: 600;
-    cursor: pointer;
-    text-decoration: underline;
-    text-decoration-style: dotted;
-    text-underline-offset: 4px;
-    transition: all 0.3s ease;
-    background: rgba(255, 255, 255, 0.15);
-    padding: 2px 4px;
-    border-radius: 3px;
-
-    &:hover {
-      color: #FF6B47;
-      background: rgba(255, 255, 255, 0.25);
-      text-shadow: 0 0 15px rgba(255, 140, 105, 0.4);
-    }
-
-    &:focus {
-      outline: 2px solid #FF8C69;
-      outline-offset: 2px;
-    }
-  }
-
-  .california__timeline {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 15;
-    pointer-events: none;
-    background: rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(2px);
-  }
-
-  .california__milestone {
-    position: absolute;
-    pointer-events: all;
-    animation: orbit 6s ease-in-out infinite;
-    cursor: pointer;
-
-    &:hover {
-      animation-play-state: paused;
-      
-      .milestone__label {
-        opacity: 1;
-        transform: translateY(-10px);
-      }
-      
-      .milestone__dot {
-        transform: scale(1.5);
-        box-shadow: 0 0 30px rgba(139, 111, 71, 0.8);
-      }
-    }
-  }
-
-  @keyframes orbit {
-    0%, 100% {
-      transform: translate(0, 0);
-    }
-    50% {
-      transform: translate(10px, -10px);
-    }
-  }
-
-  .milestone__dot {
-    display: block;
-    width: 16px;
-    height: 16px;
-    background: #FF8C69;
-    border-radius: 50%;
-    box-shadow: 0 0 20px rgba(255, 140, 105, 0.6);
-    animation: pulse 2s ease-in-out infinite;
-    border: 2px solid rgba(255, 255, 255, 0.8);
-  }
-
-  @keyframes pulse {
-    0%, 100% {
-      transform: scale(1);
-      opacity: 1;
-    }
-    50% {
-      transform: scale(1.3);
-      opacity: 0.7;
-    }
-  }
-
-  .milestone__label {
-    position: absolute;
-    top: 25px;
-    left: 50%;
-    transform: translateX(-50%);
-    white-space: nowrap;
-    font-family: $font-body;
-    font-size: 14px;
-    color: #2C3E50;
-    background: rgba(255, 255, 255, 0.95);
-    padding: 8px 12px;
-    border-radius: 6px;
-    opacity: 0;
-    transition: all 0.3s ease;
-    pointer-events: none;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    border: 1px solid rgba(91, 154, 168, 0.25);
-    font-weight: 500;
-  }
-
-  .timeline__header {
-    position: absolute;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    background: rgba(255, 255, 255, 0.95);
-    padding: 12px 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    pointer-events: all;
-
-    h3 {
-      margin: 0;
-      font-family: $font-header;
-      font-size: 18px;
-      color: #2C3E50;
-      font-weight: 600;
-    }
-  }
-
-  .timeline__close {
-    background: none;
-    border: none;
-    font-size: 24px;
-    color: #5B9AA8;
-    cursor: pointer;
-    padding: 0;
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    transition: all 0.3s ease;
-
-    &:hover {
-      background: rgba(91, 154, 168, 0.1);
-      color: #2C3E50;
-    }
-  }
 
   // Removed old milestone styles - replaced with 3D tube system
 

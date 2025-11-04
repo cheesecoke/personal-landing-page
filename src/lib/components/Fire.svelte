@@ -1,6 +1,5 @@
 <script>
   import { onMount } from 'svelte';
-  import { fade } from 'svelte/transition';
   import { gsap } from 'gsap';
   import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -10,33 +9,6 @@
   let emberBackground;
   let fireTitle;
   let fireText;
-  let showTimeline = false;
-
-  function toggleTimeline() {
-    showTimeline = !showTimeline;
-  }
-
-  function handleKeydown(event) {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      toggleTimeline();
-    }
-  }
-
-  // Reactive statement for milestone animations
-  $: if (showTimeline) {
-    setTimeout(() => {
-      gsap.utils.toArray('.fire__milestone').forEach((milestone, i) => {
-        gsap.from(milestone, {
-          scale: 0,
-          opacity: 0,
-          duration: 0.5,
-          delay: i * 0.2,
-          ease: 'back.out(1.7)'
-        });
-      });
-    }, 100);
-  }
 
   onMount(() => {
     // Animate ember particles - upward drift with sway (behind fire)
@@ -166,31 +138,10 @@
   <div class="fire__content">
     <h1 class="fire__title" bind:this={fireTitle}>Fire – Where I Learned Humility and Strength</h1>
     <p class="fire__text" bind:this={fireText}>
-      In wildland firefighting, I discovered resilience and perspective. The mountains taught me humility—where I learned to respond to chaos with <span class="fire__highlight" on:click={toggleTimeline} on:keydown={handleKeydown} role="button" tabindex="0" aria-label="Click to view firefighting experiences">controlled strength</span> and understood the weight of forces larger than myself.
+      In wildland firefighting, I discovered resilience and perspective. The mountains taught me humility—where I learned to respond to chaos with controlled strength and understood the weight of forces larger than myself.
     </p>
   </div>
 
-  <!-- Simple timeline milestones (hidden by default) -->
-  {#if showTimeline}
-    <div class="fire__timeline" transition:fade={{ duration: 500 }}>
-      <div class="timeline__header">
-        <h3>Firefighting Experiences</h3>
-        <button class="timeline__close" on:click={toggleTimeline} aria-label="Close timeline">×</button>
-      </div>
-      <div class="fire__milestone" style="left: 20%; top: 30%;">
-        <span class="milestone__dot"></span>
-        <span class="milestone__label">First Season - Discovery</span>
-      </div>
-      <div class="fire__milestone" style="left: 60%; top: 45%;">
-        <span class="milestone__dot"></span>
-        <span class="milestone__label">Leadership Under Pressure</span>
-      </div>
-      <div class="fire__milestone" style="left: 40%; top: 65%;">
-        <span class="milestone__dot"></span>
-        <span class="milestone__label">Lessons in Humility</span>
-      </div>
-    </div>
-  {/if}
 
   <!-- Transition fade overlay -->
   <div class="fire__transition"></div>
@@ -323,182 +274,6 @@
     }
   }
 
-  .fire__highlight {
-    color: $fire-ember;
-    font-weight: 600;
-    cursor: pointer;
-    text-decoration: underline;
-    text-decoration-style: dotted;
-    text-underline-offset: 4px;
-    transition: all 0.3s ease;
-    background: rgba(217, 119, 87, 0.1);
-    padding: 2px 4px;
-    border-radius: 3px;
-    display: inline-block;
-    position: relative;
-
-    &:hover {
-      color: lighten($fire-ember, 10%);
-      background: rgba(217, 119, 87, 0.2);
-      text-shadow: 0 0 15px rgba(217, 119, 87, 0.5);
-      animation: humblingScale 1.2s ease-out;
-    }
-
-    &:focus {
-      outline: 2px solid $fire-ember;
-      outline-offset: 2px;
-    }
-  }
-
-  // Humbling scale animation - expand then contract
-  @keyframes humblingScale {
-    0% {
-      transform: scale(1);
-    }
-    20% {
-      transform: scale(1.25);
-    }
-    40% {
-      transform: scale(0.95);
-    }
-    60% {
-      transform: scale(1.08);
-    }
-    80% {
-      transform: scale(0.98);
-    }
-    100% {
-      transform: scale(1);
-    }
-  }
-
-  .fire__timeline {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 15;
-    pointer-events: none;
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(2px);
-  }
-
-  .fire__milestone {
-    position: absolute;
-    pointer-events: all;
-    animation: orbit 6s ease-in-out infinite;
-    cursor: pointer;
-
-    &:hover {
-      animation-play-state: paused;
-      
-      .milestone__label {
-        opacity: 1;
-        transform: translateY(-10px);
-      }
-      
-      .milestone__dot {
-        transform: scale(1.5);
-        box-shadow: 0 0 30px rgba(217, 119, 87, 0.8);
-      }
-    }
-  }
-
-  @keyframes orbit {
-    0%, 100% {
-      transform: translate(0, 0);
-    }
-    50% {
-      transform: translate(10px, -10px);
-    }
-  }
-
-  .milestone__dot {
-    display: block;
-    width: 16px;
-    height: 16px;
-    background: $fire-ember;
-    border-radius: 50%;
-    box-shadow: 0 0 20px rgba(217, 119, 87, 0.6);
-    animation: pulse 2s ease-in-out infinite;
-    border: 2px solid rgba(255, 255, 255, 0.8);
-  }
-
-  @keyframes pulse {
-    0%, 100% {
-      transform: scale(1);
-      opacity: 1;
-    }
-    50% {
-      transform: scale(1.3);
-      opacity: 0.7;
-    }
-  }
-
-  .milestone__label {
-    position: absolute;
-    top: 25px;
-    left: 50%;
-    transform: translateX(-50%);
-    white-space: nowrap;
-    font-family: $font-body;
-    font-size: 14px;
-    color: #FFFFFF;
-    background: rgba(58, 58, 58, 0.95);
-    padding: 8px 12px;
-    border-radius: 6px;
-    opacity: 0;
-    transition: all 0.3s ease;
-    pointer-events: none;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(217, 119, 87, 0.3);
-    font-weight: 500;
-  }
-
-  .timeline__header {
-    position: absolute;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    background: rgba(58, 58, 58, 0.95);
-    padding: 12px 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    pointer-events: all;
-
-    h3 {
-      margin: 0;
-      font-family: $font-header;
-      font-size: 18px;
-      color: #FFFFFF;
-      font-weight: 600;
-    }
-  }
-
-  .timeline__close {
-    background: none;
-    border: none;
-    font-size: 24px;
-    color: $fire-ember;
-    cursor: pointer;
-    padding: 0;
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    transition: all 0.3s ease;
-
-    &:hover {
-      background: rgba(217, 119, 87, 0.2);
-      color: lighten($fire-ember, 15%);
-    }
-  }
 
 
   @media (max-width: 768px) {
