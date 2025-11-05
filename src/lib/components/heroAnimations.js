@@ -4,7 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 export function setupHeroAnimations(largeNameElement, taglineElement) {
   gsap.registerPlugin(ScrollTrigger);
   const largeName = "CHASE";
-  const taglineText = "A front-end developer crafting experiences through code and design";
+  const taglineText = "Front-end developer with 6+ years of experience with a wildland fire background that built resilience and calm under pressure.";
 
   // Split large name into characters (no curve)
   largeNameElement.innerHTML = largeName

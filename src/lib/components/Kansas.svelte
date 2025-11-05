@@ -188,8 +188,8 @@
   <div class="kansas__content">
     <h1 class="kansas__title" bind:this={kansasTitle} style="transform: translateY(30px);">Kansas – Where I Found My Foundation</h1>
     <p class="kansas__text" bind:this={kansasText} style="transform: translateY(30px);">
-      In Kansas, I grew as a leader and a learner. School and college sparked my love for design—where I earned my art degree and discovered how to weave concepts into experiences that speak.
-    </p>
+      I'm originally from Kansas. During college, I earned my art degree and discovered my passion for design — not just the visuals, but the process of turning concepts into meaningful experiences.
+     </p>
   </div>
 
 

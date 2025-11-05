@@ -239,11 +239,8 @@
       bind:this={coloradoText} 
       style="opacity: 0; transform: scale(0.95);"
     >
-      In Colorado, I found renewal—where mountains meet monitors, where trails inspire 
-      algorithms. Here, nature and code aren't separate—they're intertwined. Each hike 
-      clarifies a complex problem. Each line of code mirrors the precision of a summit. 
-      This is where I build with purpose, blending outdoor wonder with technical craft.
-    </p>
+    I came to Colorado to turn the page and pursue work that matters — something with real impact, challenge, and purpose.
+  </p>
   </div>
 
   <!-- Transition fade overlay -->

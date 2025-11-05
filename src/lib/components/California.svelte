@@ -100,7 +100,7 @@
   <div class="california__content">
     <h1 class="california__title" bind:this={californiaTitle} style="transform: translateY(30px);">California – Where I Found Creation</h1>
     <p class="california__text" bind:this={californiaText} style="transform: translateY(30px);">
-      In California, I discovered collaboration and innovation. The West Coast sparked my passion for building—where I honed my technical skills and learned how to craft experiences that resonate.
+      Moving to California pushed me to grow as a builder and a teammate. It's where I leveled up my technical skills and learned how to bring ideas to life in a way that connects with people.
     </p>
   </div>
 
