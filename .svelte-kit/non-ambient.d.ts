@@ -36,6 +36,6 @@ declare module "$app/types" {
 		};
 		Pathname(): "/";
 		ResolvedPathname(): `${"" | `/${string}`}${ReturnType<AppTypes['Pathname']>}`;
-		Asset(): "/.gitkeep" | "/assets/California.svg" | "/assets/Invoice - October 2025.pdf" | "/assets/bear-silhouette.png" | "/assets/earth.png" | "/assets/palmtree.svg" | "/assets/surfboard.svg" | string & {};
+		Asset(): "/.gitkeep" | "/assets/California.svg" | "/assets/colorado.svg" | "/assets/fire.png" | "/assets/palmtree.svg" | "/assets/surfboard.svg" | string & {};
 	}
 }

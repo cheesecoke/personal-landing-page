@@ -769,6 +769,17 @@ function attributes(attrs, css_hash, classes, styles, flags = 0) {
   }
   return attr_str;
 }
+function stringify(value) {
+  return typeof value === "string" ? value : value == null ? "" : value + "";
+}
+function attr_class(value, hash, directives) {
+  var result = to_class(value, hash, directives);
+  return result ? ` class="${escape_html(result, true)}"` : "";
+}
+function attr_style(value, directives) {
+  var result = to_style(value, directives);
+  return result ? ` style="${escape_html(result, true)}"` : "";
+}
 function slot(renderer, $$props, name, slot_props, fallback_fn) {
   var slot_fn = $$props.$$slots?.[name];
   if (slot_fn === true) {
@@ -778,14 +789,23 @@ function slot(renderer, $$props, name, slot_props, fallback_fn) {
     slot_fn(renderer, slot_props);
   }
 }
+function ensure_array_like(array_like_or_iterator) {
+  if (array_like_or_iterator) {
+    return array_like_or_iterator.length !== void 0 ? array_like_or_iterator : Array.from(array_like_or_iterator);
+  }
+  return [];
+}
 export {
   ASYNC as A,
   BOUNDARY_EFFECT as B,
   COMMENT_NODE as C,
   DIRTY as D,
   ERROR_VALUE as E,
+  attr_style as F,
+  stringify as G,
   HYDRATION_ERROR as H,
   INERT as I,
+  head as J,
   LEGACY_PROPS as L,
   MAYBE_DIRTY as M,
   ROOT_EFFECT as R,
@@ -815,5 +835,7 @@ export {
   is_passive_event as u,
   render as v,
   slot as w,
-  head as x
+  ensure_array_like as x,
+  attr as y,
+  attr_class as z
 };

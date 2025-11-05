@@ -3,14 +3,13 @@
   import { gsap } from 'gsap';
   import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-  gsap.registerPlugin(ScrollTrigger);
-
   let fireSection;
   let emberBackground;
   let fireTitle;
   let fireText;
 
   onMount(() => {
+    gsap.registerPlugin(ScrollTrigger);
     // Animate ember particles - upward drift with sway (behind fire)
     gsap.to('.ember-particle', {
       y: (i) => -300 - Math.random() * 200, // Drift upward farther

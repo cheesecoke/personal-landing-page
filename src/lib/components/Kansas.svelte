@@ -3,14 +3,13 @@
   import { gsap } from 'gsap';
   import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-  gsap.registerPlugin(ScrollTrigger);
-
   let kansasSection;
   let wheatBackground;
   let kansasTitle;
   let kansasText;
 
   onMount(() => {
+    gsap.registerPlugin(ScrollTrigger);
     // Animate wheat stalks with GSAP
     gsap.to('.wheat-stalk', {
       x: (i) => Math.sin(i) * 5,

@@ -3,13 +3,12 @@
   import { gsap } from 'gsap';
   import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-  gsap.registerPlugin(ScrollTrigger);
-
   let snakePath;
   let startCircle;
   let epilogueText;
 
   onMount(() => {
+    gsap.registerPlugin(ScrollTrigger);
     if (!snakePath) return;
 
     const pathLength = snakePath.getTotalLength();

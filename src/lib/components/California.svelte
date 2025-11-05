@@ -3,8 +3,6 @@
   import { gsap } from 'gsap';
   import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-  gsap.registerPlugin(ScrollTrigger);
-
   let californiaSection;
   let californiaTitle;
   let californiaText;
@@ -12,6 +10,7 @@
   let gridCols = 15;
 
   onMount(() => {
+    gsap.registerPlugin(ScrollTrigger);
     // Calculate pattern count based on viewport
     const updatePatternCount = () => {
       const width = window.innerWidth;

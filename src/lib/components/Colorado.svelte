@@ -3,8 +3,6 @@
   import { gsap } from 'gsap';
   import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-  gsap.registerPlugin(ScrollTrigger);
-
   let coloradoSection;
   let coloradoTitle;
   let coloradoText;
@@ -61,6 +59,8 @@
   }
 
   onMount(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
     // Store original positions
     const artifacts = document.querySelectorAll('.code-artifact');
     artifacts.forEach((artifact) => {

@@ -1,9 +1,8 @@
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-gsap.registerPlugin(ScrollTrigger);
-
 export function setupHeroAnimations(largeNameElement, taglineElement) {
+  gsap.registerPlugin(ScrollTrigger);
   const largeName = "CHASE";
   const taglineText = "A front-end developer crafting experiences through code and design";
 
