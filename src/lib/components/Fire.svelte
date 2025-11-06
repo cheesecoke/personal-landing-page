@@ -137,7 +137,7 @@
   <div class="fire__content">
     <h1 class="fire__title" bind:this={fireTitle}>Fire – Where I Learned Humility and Strength</h1>
     <p class="fire__text" bind:this={fireText}>
-      Wildland firefighting shifted how I see things. Working in the mountains puts life in perspective — you face forces bigger than yourself, stay calm under pressure, and do the job in front of you.
+      Wildland firefighting shifted how I see things. Working in the mountains puts life in perspective, you face forces bigger than yourself, stay calm under pressure, and do the job in front of you.
     </p>
   </div>
 

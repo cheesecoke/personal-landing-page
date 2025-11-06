@@ -239,7 +239,7 @@
       bind:this={coloradoText} 
       style="opacity: 0; transform: scale(0.95);"
     >
-    I came to Colorado to turn the page and pursue work that matters — something with real impact, challenge, and purpose.
+    I came to Colorado to turn the page and pursue work that matters, something with real impact, challenge, and purpose, while playing in the woods.
   </p>
   </div>
 

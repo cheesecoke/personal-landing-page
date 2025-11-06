@@ -94,13 +94,13 @@
   
   <!-- SVG Background Container -->
   <div class="california__svg-container">
-    <img src="/assets/California.svg" alt="California coastline illustration" />
+    <img src="/assets/california.svg" alt="California coastline illustration" />
   </div>
 
   <div class="california__content">
-    <h1 class="california__title" bind:this={californiaTitle} style="transform: translateY(30px);">California – Where I Found Creation</h1>
+    <h1 class="california__title" bind:this={californiaTitle} style="transform: translateY(30px);">California – Where I Found Programming</h1>
     <p class="california__text" bind:this={californiaText} style="transform: translateY(30px);">
-      Moving to California pushed me to grow as a builder and a teammate. It's where I leveled up my technical skills and learned how to bring ideas to life in a way that connects with people.
+      Moving to California pushed me to grow as a developer and a teammate. My time at TrueCar and Tradesy leveled up my technical skills and taught me how to bring ideas to life in a way that connects with people.
     </p>
   </div>
 

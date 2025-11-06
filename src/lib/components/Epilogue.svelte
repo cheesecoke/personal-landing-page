@@ -82,7 +82,7 @@
     <div class="epilogue__ctas" bind:this={ctaButtons}>
       <!-- Primary CTA - Contact -->
       <a 
-        href="mailto:your.email@example.com" 
+        href="mailto:chasewcole@gmail.com" 
         class="epilogue__cta-button epilogue__cta-button--primary"
         aria-label="Contact me via email"
       >
@@ -103,7 +103,7 @@
 
     <!-- Narrative text -->
     <p class="epilogue__narrative" bind:this={narrativeText}>
-      This is just the beginning—<br />
+      This is just the beginning,<br />
       let's code the next chapter together.
     </p>
   </div>
