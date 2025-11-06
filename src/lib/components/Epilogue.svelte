@@ -104,7 +104,8 @@
     <!-- Narrative text -->
     <p class="epilogue__narrative" bind:this={narrativeText}>
       This is just the beginning,<br />
-      let's code the next chapter together.
+      let's code the next chapter together.<br />
+      <span class="epilogue__signature">— Chase Cole</span>
     </p>
   </div>
 </section>
@@ -330,6 +331,24 @@
 
     @media (max-width: 480px) {
       font-size: 13px;
+    }
+  }
+
+  .epilogue__signature {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 300;
+    color: rgba($white, 0.7);
+    letter-spacing: 1px;
+    font-style: italic;
+
+    @media (max-width: 768px) {
+      font-size: 13px;
+    }
+
+    @media (max-width: 480px) {
+      font-size: 12px;
     }
   }
 
