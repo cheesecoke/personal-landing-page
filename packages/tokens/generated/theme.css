@@ -34,7 +34,16 @@
   --color-status-private: var(--status-private);
   --color-fresh-ring: var(--fresh-ring);
   --color-fresh-track: var(--fresh-track);
+  --color-thread-line: var(--thread-line);
+  --color-thread-on: var(--thread-on);
+  --color-line-tick-major: var(--line-tick-major);
+  --color-line-outline: var(--line-outline);
+  --color-thread-next: var(--thread-next);
+  --color-thread-past: var(--thread-past);
+  --text-color-diagram: var(--text-diagram);
   --shadow-glow-signal: var(--glow-signal);
+  --shadow-glow-thread: var(--glow-thread);
+  --shadow-panel: var(--edge-panel);
   
   --font-sans: 'Mona Sans', 'Helvetica Neue', Arial, sans-serif;
   --font-readout: 'Tomorrow', 'Mona Sans', ui-monospace, monospace;
@@ -131,6 +140,46 @@
   color: var(--palette-smoke);
 }
 
+@utility type-button {
+  font-family: var(--font-sans);
+  font-size: var(--type-button-size);
+  font-weight: var(--type-button-weight);
+  line-height: var(--type-button-line-height);
+  letter-spacing: var(--type-button-tracking);
+  font-stretch: var(--type-button-stretch);
+  color: var(--palette-bone);
+}
+
+@utility type-nav {
+  font-family: var(--font-sans);
+  font-size: var(--type-nav-size);
+  font-weight: var(--type-nav-weight);
+  line-height: var(--type-nav-line-height);
+  letter-spacing: var(--type-nav-tracking);
+  font-stretch: var(--type-nav-stretch);
+  color: var(--palette-ash);
+}
+
+@utility type-link {
+  font-family: var(--font-sans);
+  font-size: var(--type-link-size);
+  font-weight: var(--type-link-weight);
+  line-height: var(--type-link-line-height);
+  letter-spacing: var(--type-link-tracking);
+  font-stretch: var(--type-link-stretch);
+  color: var(--palette-bone);
+}
+
+@utility type-handoff {
+  font-family: var(--font-sans);
+  font-size: var(--type-handoff-size);
+  font-weight: var(--type-handoff-weight);
+  line-height: var(--type-handoff-line-height);
+  letter-spacing: var(--type-handoff-tracking);
+  font-stretch: var(--type-handoff-stretch);
+  color: var(--palette-bone);
+}
+
 @utility type-readout-numeral {
   font-family: var(--font-readout);
   font-size: var(--type-readout-numeral-size);
@@ -175,6 +224,15 @@
 
 @utility animate-duration-hover {
   animation-duration: var(--duration-hover);
+}
+
+@utility duration-arrow {
+  --tw-duration: var(--duration-arrow);
+  transition-duration: var(--duration-arrow);
+}
+
+@utility animate-duration-arrow {
+  animation-duration: var(--duration-arrow);
 }
 
 @utility duration-rise {
@@ -238,6 +296,24 @@
 
 @utility animate-duration-thread-pulse {
   animation-duration: var(--duration-thread-pulse);
+}
+
+@utility duration-thread-node {
+  --tw-duration: var(--duration-thread-node);
+  transition-duration: var(--duration-thread-node);
+}
+
+@utility animate-duration-thread-node {
+  animation-duration: var(--duration-thread-node);
+}
+
+@utility duration-thread-fill {
+  --tw-duration: var(--duration-thread-fill);
+  transition-duration: var(--duration-thread-fill);
+}
+
+@utility animate-duration-thread-fill {
+  animation-duration: var(--duration-thread-fill);
 }
 
 @utility duration-canopy-intro {
