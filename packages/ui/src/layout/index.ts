@@ -16,6 +16,14 @@ export {
   type SiteFooterProps,
 } from './SiteFooter/SiteFooter';
 export {
+  NavTimeline,
+  SiteNav,
+  type NavTimelineProps,
+  type SiteNavItem,
+  type SiteNavProps,
+} from './SiteNav/SiteNav';
+export { timelineX, useNavTimeline, type NavTimelineState } from './SiteNav/useNavTimeline';
+export {
   SplitLayout,
   type SplitAlign,
   type SplitColumns,
