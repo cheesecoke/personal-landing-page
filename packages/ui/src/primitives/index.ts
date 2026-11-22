@@ -19,3 +19,16 @@ export {
   type TextLinkTone,
 } from './TextLink/TextLink';
 export { HandoffLink, type HandoffLinkProps, type HandoffVariant } from './HandoffLink/HandoffLink';
+
+export { StatusDot, type Status, type StatusDotProps } from './StatusDot/StatusDot';
+export { Hairline, type HairlineProps, type HairlineTone } from './Hairline/Hairline';
+export { LitEdge, type LitEdgeProps } from './LitEdge/LitEdge';
+export { TickScale, type TickScaleProps } from './TickScale/TickScale';
+export { Grain, type GrainProps } from './Grain/Grain';
+export {
+  RingArcs,
+  defaultRingArcs,
+  type RingArc,
+  type RingArcsProps,
+  type RingArcTone,
+} from './RingArcs/RingArcs';
