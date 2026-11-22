@@ -54,9 +54,9 @@ where it animates.
 | SplitLayout       |                                                                | story       |
 | Thread            | with ThreadScope, ThreadColumn, ThreadNode; follows the reader | story       |
 | ThreadSection     | a section with its node on the thread                          | story       |
-| PageHeader        |                                                                | not started |
-| HandoffFooter     |                                                                | not started |
-| GoDeeper          |                                                                | not started |
+| PageHeader        |                                                                | story       |
+| HandoffFooter     |                                                                | story       |
+| GoDeeper          |                                                                | story       |
 | FreshnessProvider | non-visual: holds "now", ranks, enforces the per-page cap      | not started |
 
 ## Tier 3. Feature sections (`packages/ui/src/sections`)
