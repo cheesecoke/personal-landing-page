@@ -41,3 +41,12 @@ export {
   type BuildWithStage,
   type BuildWithTool,
 } from './BuildWith/BuildWith';
+
+export {
+  ProjectIndex,
+  ProjectsMapSlot,
+  type ProjectIndexGroup,
+  type ProjectIndexProps,
+  type ProjectIndexRow,
+  type ProjectsMapSlotProps,
+} from './ProjectIndex/ProjectIndex';
