@@ -32,3 +32,6 @@ export {
   type RingArcsProps,
   type RingArcTone,
 } from './RingArcs/RingArcs';
+
+export { RingMark, type RingMarkDetail, type RingMarkProps } from './RingMark/RingMark';
+export { Favicon, faviconLinks, type FaviconProps, type FaviconSize } from './Favicon/Favicon';
