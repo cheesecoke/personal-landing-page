@@ -44,7 +44,7 @@ const sections: { title: string; height: number }[] = [
 function ProjectPage({ items = sections }: { items?: typeof sections }) {
   return (
     <ThreadScope hash={false}>
-      <Container as="main">
+      <Container as="main" width="project">
         <ThreadColumn placement="gutter">
           <div className="type-label flex min-h-touch items-center pt-5">Projects / Duo Decide</div>
           <div className="relative pt-6 pb-16">
@@ -245,7 +245,7 @@ function Growing({ children }: { children: ReactNode }) {
 export const Remeasures: Story = {
   render: () => (
     <ThreadScope hash={false}>
-      <Container as="main">
+      <Container as="main" width="project">
         <ThreadColumn placement="gutter">
           <div className="relative pt-6 pb-16">
             <Thread placement="gutter" top={40} bottom={56} />

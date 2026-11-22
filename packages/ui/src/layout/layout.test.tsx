@@ -17,8 +17,17 @@ describe('layout primitives', () => {
     );
     const el = screen.getByTestId('c');
     expect(el.tagName).toBe('HEADER');
-    expect(has(el, 'max-w-page', 'px-gutter')).toBe(true);
+    expect(has(el, 'max-w-[calc(var(--container-max)+2*var(--gutter))]', 'px-gutter')).toBe(true);
     expect(has(el, '@container')).toBe(false);
+  });
+
+  it('Container has a narrower project column', () => {
+    render(
+      <Container width="project" data-testid="c">
+        x
+      </Container>,
+    );
+    expect(has(screen.getByTestId('c'), 'max-w-page', 'px-gutter')).toBe(true);
   });
 
   it('Container can be a query container', () => {
