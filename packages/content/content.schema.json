@@ -1,0 +1,558 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Live content",
+  "description": "One definition per file in the live content folder. Validate each file against the definition x-files points it to.",
+  "x-schemaVersion": 1,
+  "x-files": {
+    "meta.json": "#/$defs/meta",
+    "projects/<slug>.json": "#/$defs/project",
+    "about.json": "#/$defs/about",
+    "titan-log.json": "#/$defs/titanLog"
+  },
+  "$defs": {
+    "meta": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": { "type": "number", "const": 1 },
+        "publishedAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+        },
+        "publishId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$"
+        }
+      },
+      "required": ["schemaVersion", "publishedAt", "publishId"],
+      "additionalProperties": false
+    },
+    "project": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "schemaVersion": { "type": "number", "const": 1 },
+            "slug": {
+              "type": "string",
+              "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40,
+              "pattern": "^\\S(?:.*\\S)?$"
+            },
+            "parent": {
+              "anyOf": [
+                { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+                { "type": "null" }
+              ]
+            },
+            "status": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "enum": [
+                    "in-build",
+                    "live",
+                    "daily-use",
+                    "first-version",
+                    "next-version",
+                    "being-expanded",
+                    "being-overhauled",
+                    "experiment",
+                    "running",
+                    "in-progress"
+                  ]
+                },
+                "label": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 32,
+                  "pattern": "^\\S(?:.*\\S)?$"
+                },
+                "since": {
+                  "anyOf": [
+                    { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+                    { "type": "string", "pattern": "^\\d{4}-(0[1-9]|1[0-2])$" }
+                  ]
+                }
+              },
+              "required": ["key", "label"],
+              "additionalProperties": false
+            },
+            "visibility": { "type": "string", "const": "public" },
+            "kind": { "type": "string", "enum": ["system", "product", "both"] },
+            "state": { "type": "string", "enum": ["growing", "live"] },
+            "whereItsAt": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 400
+            },
+            "log": {
+              "maxItems": 12,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+                  },
+                  "date": {
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  },
+                  "from": {
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  },
+                  "kind": { "type": "string", "enum": ["update", "release"] },
+                  "lines": {
+                    "minItems": 1,
+                    "maxItems": 4,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 140,
+                      "allOf": [
+                        { "pattern": "^\\S(?:.*\\S)?$" },
+                        {
+                          "pattern": "^(?!.*(?:[Hh][Tt][Tt][Pp][Ss]?:\\/\\/|[Ww][Ww][Ww]\\.)).*$"
+                        },
+                        { "pattern": "^(?!.*#\\d).*$" }
+                      ]
+                    }
+                  },
+                  "version": {
+                    "type": "string",
+                    "pattern": "^v\\d+\\.\\d+\\.\\d+$"
+                  }
+                },
+                "required": ["id", "date", "kind", "lines"],
+                "additionalProperties": false
+              }
+            },
+            "release": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "version": {
+                      "type": "string",
+                      "pattern": "^v\\d+\\.\\d+\\.\\d+$"
+                    },
+                    "date": {
+                      "type": "string",
+                      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                    },
+                    "channel": {
+                      "type": "string",
+                      "enum": ["app-store", "play-store", "testflight", "web"]
+                    },
+                    "notes": {
+                      "minItems": 1,
+                      "maxItems": 6,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 140,
+                        "allOf": [
+                          { "pattern": "^\\S(?:.*\\S)?$" },
+                          {
+                            "pattern": "^(?!.*(?:[Hh][Tt][Tt][Pp][Ss]?:\\/\\/|[Ww][Ww][Ww]\\.)).*$"
+                          },
+                          { "pattern": "^(?!.*#\\d).*$" }
+                        ]
+                      }
+                    },
+                    "usage": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "label": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 60,
+                            "pattern": "^\\S(?:.*\\S)?$"
+                          },
+                          "value": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 24,
+                            "pattern": "^\\S(?:.*\\S)?$"
+                          },
+                          "asOf": {
+                            "type": "string",
+                            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                          }
+                        },
+                        "required": ["label", "value", "asOf"],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": ["version", "date", "channel", "notes", "usage"],
+                  "additionalProperties": false
+                },
+                { "type": "null" }
+              ]
+            },
+            "shoots": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+                  },
+                  "label": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60,
+                    "pattern": "^\\S(?:.*\\S)?$"
+                  },
+                  "kind": {
+                    "type": "string",
+                    "enum": ["goal", "idea", "question"]
+                  },
+                  "state": {
+                    "type": "string",
+                    "enum": ["open", "grown", "answered", "dropped"]
+                  },
+                  "note": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 140,
+                    "allOf": [
+                      { "pattern": "^\\S(?:.*\\S)?$" },
+                      {
+                        "pattern": "^(?!.*(?:[Hh][Tt][Tt][Pp][Ss]?:\\/\\/|[Ww][Ww][Ww]\\.)).*$"
+                      },
+                      { "pattern": "^(?!.*#\\d).*$" }
+                    ]
+                  },
+                  "resolved": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "date": {
+                            "type": "string",
+                            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                          },
+                          "text": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 140,
+                            "allOf": [
+                              { "pattern": "^\\S(?:.*\\S)?$" },
+                              {
+                                "pattern": "^(?!.*(?:[Hh][Tt][Tt][Pp][Ss]?:\\/\\/|[Ww][Ww][Ww]\\.)).*$"
+                              },
+                              { "pattern": "^(?!.*#\\d).*$" }
+                            ]
+                          }
+                        },
+                        "required": ["date", "text"],
+                        "additionalProperties": false
+                      },
+                      { "type": "null" }
+                    ]
+                  }
+                },
+                "required": ["id", "label", "kind", "state", "resolved"],
+                "additionalProperties": false
+              }
+            },
+            "rings": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+                  },
+                  "label": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 24,
+                    "pattern": "^\\S(?:.*\\S)?$"
+                  },
+                  "weight": {
+                    "anyOf": [
+                      { "type": "number", "const": 1 },
+                      { "type": "number", "const": 2 },
+                      { "type": "number", "const": 3 },
+                      { "type": "number", "const": 4 }
+                    ]
+                  },
+                  "kind": { "type": "string", "enum": ["period", "release"] },
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 140,
+                    "allOf": [
+                      { "pattern": "^\\S(?:.*\\S)?$" },
+                      {
+                        "pattern": "^(?!.*(?:[Hh][Tt][Tt][Pp][Ss]?:\\/\\/|[Ww][Ww][Ww]\\.)).*$"
+                      },
+                      { "pattern": "^(?!.*#\\d).*$" }
+                    ]
+                  }
+                },
+                "required": ["id", "label", "weight", "kind", "text"],
+                "additionalProperties": false
+              }
+            },
+            "facts": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "key": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+                  },
+                  "value": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 24,
+                    "pattern": "^\\S(?:.*\\S)?$"
+                  },
+                  "label": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60,
+                    "pattern": "^\\S(?:.*\\S)?$"
+                  },
+                  "asOf": {
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  }
+                },
+                "required": ["key", "value", "label", "asOf"],
+                "additionalProperties": false
+              }
+            },
+            "fresh": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "changedAt": {
+                      "type": "string",
+                      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                    },
+                    "changeKind": {
+                      "type": "string",
+                      "enum": ["update", "release", "grown", "answered", "state"]
+                    }
+                  },
+                  "required": ["changedAt", "changeKind"],
+                  "additionalProperties": false
+                },
+                { "type": "null" }
+              ]
+            }
+          },
+          "required": [
+            "schemaVersion",
+            "slug",
+            "name",
+            "parent",
+            "status",
+            "visibility",
+            "kind",
+            "state",
+            "log",
+            "release",
+            "shoots",
+            "rings",
+            "facts",
+            "fresh"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "schemaVersion": { "type": "number", "const": 1 },
+            "slug": {
+              "type": "string",
+              "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40,
+              "pattern": "^\\S(?:.*\\S)?$"
+            },
+            "parent": {
+              "anyOf": [
+                { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+                { "type": "null" }
+              ]
+            },
+            "status": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "enum": [
+                    "in-build",
+                    "live",
+                    "daily-use",
+                    "first-version",
+                    "next-version",
+                    "being-expanded",
+                    "being-overhauled",
+                    "experiment",
+                    "running",
+                    "in-progress"
+                  ]
+                },
+                "label": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 32,
+                  "pattern": "^\\S(?:.*\\S)?$"
+                },
+                "since": {
+                  "anyOf": [
+                    { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+                    { "type": "string", "pattern": "^\\d{4}-(0[1-9]|1[0-2])$" }
+                  ]
+                }
+              },
+              "required": ["key", "label"],
+              "additionalProperties": false
+            },
+            "visibility": { "type": "string", "const": "name-only" }
+          },
+          "required": ["schemaVersion", "slug", "name", "parent", "status", "visibility"],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "about": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": { "type": "number", "const": 1 },
+        "now": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "month": {
+                  "type": "string",
+                  "pattern": "^\\d{4}-(0[1-9]|1[0-2])$"
+                },
+                "text": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 140,
+                  "allOf": [
+                    { "pattern": "^\\S(?:.*\\S)?$" },
+                    {
+                      "pattern": "^(?!.*(?:[Hh][Tt][Tt][Pp][Ss]?:\\/\\/|[Ww][Ww][Ww]\\.)).*$"
+                    },
+                    { "pattern": "^(?!.*#\\d).*$" }
+                  ]
+                }
+              },
+              "required": ["month", "text"],
+              "additionalProperties": false
+            },
+            { "type": "null" }
+          ]
+        },
+        "currentRole": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 60,
+                  "pattern": "^\\S(?:.*\\S)?$"
+                },
+                "org": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 60,
+                  "pattern": "^\\S(?:.*\\S)?$"
+                },
+                "since": {
+                  "type": "string",
+                  "pattern": "^\\d{4}-(0[1-9]|1[0-2])$"
+                }
+              },
+              "required": ["title", "org", "since"],
+              "additionalProperties": false
+            },
+            { "type": "null" }
+          ]
+        }
+      },
+      "required": ["schemaVersion", "now", "currentRole"],
+      "additionalProperties": false
+    },
+    "titanLog": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": { "type": "number", "const": 1 },
+        "enabled": { "default": false, "type": "boolean" },
+        "role": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60,
+          "pattern": "^\\S(?:.*\\S)?$"
+        },
+        "since": { "type": "string", "pattern": "^\\d{4}-(0[1-9]|1[0-2])$" },
+        "entries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "month": {
+                "type": "string",
+                "pattern": "^\\d{4}-(0[1-9]|1[0-2])$"
+              },
+              "lines": {
+                "minItems": 1,
+                "maxItems": 3,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 140,
+                  "allOf": [
+                    { "pattern": "^\\S(?:.*\\S)?$" },
+                    {
+                      "pattern": "^(?!.*(?:[Hh][Tt][Tt][Pp][Ss]?:\\/\\/|[Ww][Ww][Ww]\\.)).*$"
+                    },
+                    { "pattern": "^(?!.*#\\d).*$" },
+                    { "pattern": "^\\D*$" }
+                  ]
+                }
+              }
+            },
+            "required": ["month", "lines"],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": ["schemaVersion", "role", "since", "entries"],
+      "additionalProperties": false
+    }
+  }
+}

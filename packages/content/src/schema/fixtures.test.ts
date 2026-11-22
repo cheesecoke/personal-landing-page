@@ -4,12 +4,16 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import type { z } from 'zod';
 
+import { aboutSchema, metaSchema, titanLogSchema } from './about';
 import { issuePaths } from './issues';
 import { projectSchema } from './project';
 
 /** A fixture is named `<schema>.<case>.json`; the prefix picks the schema it is checked against. */
 const schemas: Record<string, z.ZodType> = {
   project: projectSchema,
+  about: aboutSchema,
+  'titan-log': titanLogSchema,
+  meta: metaSchema,
 };
 
 const fixturesDir = join(import.meta.dirname, '..', '..', 'fixtures');
@@ -43,7 +47,20 @@ describe('invalid fixtures', () => {
     for (const { file, schema, json } of read('invalid')) {
       const { expectPath, data } = json as { expectPath: string; data: unknown };
       const result = schema!.safeParse(data);
-      expect(result.success ? [] : issuePaths(result.error), file).toEqual([expectPath]);
+      const paths = result.success ? [] : [...new Set(issuePaths(result.error))];
+      expect(paths, file).toEqual([expectPath]);
     }
+  });
+});
+
+describe('the job log', () => {
+  it('is off unless the file says otherwise', () => {
+    const log = titanLogSchema.parse({
+      schemaVersion: 1,
+      role: 'Engineer',
+      since: '2026-01',
+      entries: [],
+    });
+    expect(log.enabled).toBe(false);
   });
 });

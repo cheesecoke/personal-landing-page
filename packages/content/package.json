@@ -7,9 +7,11 @@
     "**/*.css"
   ],
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./content.schema.json": "./content.schema.json"
   },
   "scripts": {
+    "generate": "tsx scripts/generate.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
