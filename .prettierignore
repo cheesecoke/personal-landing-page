@@ -10,3 +10,4 @@ coverage
 packages/tokens/generated
 apps/site/content/live
 LICENSE
+packages/tokens/fonts/*.txt

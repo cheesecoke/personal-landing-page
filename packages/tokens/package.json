@@ -10,7 +10,9 @@
     ".": "./src/index.ts",
     "./tokens.css": "./generated/tokens.css",
     "./theme.css": "./generated/theme.css",
-    "./tokens.json": "./generated/tokens.json"
+    "./tokens.json": "./generated/tokens.json",
+    "./fonts.css": "./fonts/fonts.css",
+    "./fonts/*": "./fonts/*"
   },
   "scripts": {
     "generate": "tsx scripts/generate.ts",
