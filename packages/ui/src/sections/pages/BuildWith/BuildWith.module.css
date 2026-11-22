@@ -1,0 +1,226 @@
+/*
+ * "What I build with": the agent tools on a rail, from tried to current. Ported from the About
+ * board. The board turns the rail on its side under a 640px viewport; here that is a container
+ * query on the section (640px less the page gutter and the thread indent).
+ */
+
+.root {
+  container-type: inline-size;
+  max-width: 680px;
+}
+
+.inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* The stage names above the rail, each over the tools in that stage. */
+.stages {
+  display: grid;
+  grid-template-columns: repeat(var(--tools), minmax(0, 1fr));
+  column-gap: 24px;
+  align-items: center;
+}
+
+.stage {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.stageRule {
+  flex: 1;
+  height: 1px;
+  margin-right: 12px;
+  background: var(--line-hairline);
+}
+
+.tools {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--tools), minmax(0, 1fr));
+  column-gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The rail runs from the first node's centre to the last one's, and turns Signal as it arrives. */
+.rail {
+  position: absolute;
+  top: 4px;
+  right: calc((100% - (var(--tools) - 1) * 24px) / var(--tools) - 4px);
+  left: 4px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    var(--line-tick) 0%,
+    var(--line-tick) var(--rail-from),
+    var(--thread-line) var(--rail-to),
+    var(--thread-line) 100%
+  );
+}
+
+.tool {
+  position: relative;
+  display: grid;
+  grid-template-rows: 9px auto auto;
+  align-content: start;
+  min-width: 0;
+}
+
+/* The piece of the rail below a tool when the list is vertical. */
+.seg {
+  position: absolute;
+  top: 15px;
+  bottom: -28px;
+  left: 4px;
+  display: none;
+  width: 1px;
+  background: var(--line-tick);
+}
+
+.segTurn {
+  background: linear-gradient(180deg, var(--line-tick), var(--thread-line));
+}
+
+.segCurrent {
+  background: var(--thread-line);
+}
+
+.node {
+  box-sizing: border-box;
+  grid-row: 1;
+  width: 9px;
+  height: 9px;
+  border: 1px solid var(--line-tick);
+  border-radius: 50%;
+  background: var(--bg-ground);
+}
+
+.nodeCurrent {
+  border-color: var(--thread-line);
+}
+
+/* The tool in use now: a lit dot. */
+.nodeNow {
+  border: 0;
+  background: var(--accent-signal);
+  box-shadow:
+    0 0 0 3px var(--bg-ground),
+    0 0 0 4px color-mix(in srgb, var(--accent-signal) 50%, transparent),
+    0 0 10px color-mix(in srgb, var(--accent-signal) 45%, transparent);
+}
+
+.name {
+  grid-row: 2;
+  margin-top: 16px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.35;
+}
+
+.nameCurrent {
+  color: var(--text-primary);
+}
+
+.nameNow {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/*
+ * Each tool's stage, after its name. Wide: read out but not shown (the names above the rail show
+ * it). Narrow: shown.
+ */
+.nameStage {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+  align-items: baseline;
+  margin: 6px 0 0;
+  padding: 14px 0 0;
+  border-top: 1px solid var(--line-hairline);
+}
+
+.fact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+  align-items: baseline;
+}
+
+.factValue {
+  margin: 0;
+  color: var(--text-primary);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.link {
+  align-self: flex-start;
+  margin-top: 6px;
+}
+
+@container (width < 560px) {
+  .stages,
+  .rail {
+    display: none;
+  }
+
+  .tools {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 22px;
+  }
+
+  .tool {
+    grid-template-rows: auto auto;
+    grid-template-columns: 9px minmax(0, 1fr);
+    column-gap: 16px;
+  }
+
+  .seg {
+    display: block;
+  }
+
+  .node {
+    grid-row: 1;
+    grid-column: 1;
+    margin-top: 6px;
+  }
+
+  .name {
+    grid-row: 1;
+    grid-column: 2;
+    margin-top: 0;
+  }
+
+  .nameStage {
+    position: static;
+    display: inline;
+    width: auto;
+    height: auto;
+    margin-left: 12px;
+    overflow: visible;
+    clip-path: none;
+  }
+}
