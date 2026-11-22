@@ -43,9 +43,9 @@ where it animates.
 
 | Component         | Notes                                                          | Status      |
 | ----------------- | -------------------------------------------------------------- | ----------- |
-| AppShell          | a placeholder lives in `apps/site/app/shell` until built       | not started |
-| SiteNav           | with NavTimeline and the release nav ring                      | story       |
-| SiteFooter        | with "Last update · date"                                      | story       |
+| AppShell          | lives in `apps/site/app/shell`: nav, `main`, footer, skip link | in site     |
+| SiteNav           | with NavTimeline and the release nav ring                      | in site     |
+| SiteFooter        | with "Last update · date"                                      | in site     |
 | Container         |                                                                | story       |
 | Section           |                                                                | story       |
 | Stack             |                                                                | story       |

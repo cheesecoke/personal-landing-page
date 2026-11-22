@@ -3,3 +3,32 @@
 
 /* Components live in the workspace packages; scan them for class names. */
 @source '../../../packages';
+
+/*
+ * Page transitions: a same-document View Transition that cross-fades `main` only. The root is not
+ * captured, so the nav and footer stay live underneath and the nav timeline keeps travelling.
+ * Reduced motion (the default): nothing is named, so the page simply swaps.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion='reduce']) {
+    view-transition-name: none;
+  }
+
+  :root:not([data-motion='reduce']) .app-main {
+    view-transition-name: main;
+  }
+
+  /* A plain cross-fade: no morphing between the old and new page heights. */
+  ::view-transition-group(main) {
+    animation: none;
+  }
+
+  ::view-transition-old(main),
+  ::view-transition-new(main) {
+    height: auto;
+    object-fit: none;
+    object-position: top;
+    animation-duration: var(--duration-hover);
+    animation-timing-function: var(--ease-standard);
+  }
+}
