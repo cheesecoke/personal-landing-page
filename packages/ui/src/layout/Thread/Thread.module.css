@@ -32,7 +32,7 @@
 .clearance {
   box-sizing: border-box;
   width: 100%;
-  max-width: var(--container-max);
+  max-width: calc(var(--container-max) + 2 * var(--gutter));
   margin-inline: auto;
   padding-inline: var(--gutter);
 }

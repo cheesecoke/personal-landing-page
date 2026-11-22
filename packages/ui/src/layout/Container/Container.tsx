@@ -2,13 +2,15 @@ import type { ElementType, HTMLAttributes, ReactNode } from 'react';
 
 import { cx } from '../internal/cx';
 
-export type ContainerWidth = 'page' | 'wide' | 'full';
+export type ContainerWidth = 'page' | 'project' | 'wide' | 'full';
 
 export interface ContainerProps extends HTMLAttributes<HTMLElement> {
   /** The element to render. Default `div`. */
   as?: ElementType;
   /**
-   * `page`: the 1200px page column with the gutter (every board's main column).
+   * `page`: the page column, 1200px of content plus the gutter each side (the nav, the footer,
+   * Home, Projects, About, Beyond, Contact).
+   * `project`: the narrower column of a project page, 1200px including the gutters.
    * `wide`: the 1440px full-bleed band, no gutter (the map, the Beyond scene).
    * `full`: no max width, no gutter.
    */
@@ -22,12 +24,13 @@ export interface ContainerProps extends HTMLAttributes<HTMLElement> {
 }
 
 const widthClass: Record<ContainerWidth, string> = {
-  page: 'mx-auto w-full max-w-page px-gutter',
+  page: 'mx-auto w-full max-w-[calc(var(--container-max)+2*var(--gutter))] px-gutter',
+  project: 'mx-auto w-full max-w-page px-gutter',
   wide: 'mx-auto w-full max-w-[1440px]',
   full: 'w-full',
 };
 
-/** The page column: centred, capped at the container token, padded by the fluid gutter. */
+/** The page column: centred, capped by the container token, padded by the fluid gutter. */
 export function Container({
   as: Tag = 'div',
   width = 'page',

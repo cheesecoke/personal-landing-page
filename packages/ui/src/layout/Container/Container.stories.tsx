@@ -13,8 +13,13 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** The 1200px page column with the fluid gutter. */
+/** 1200px of content with the fluid gutter each side. */
 export const Page: Story = {};
+
+/** A project page: 1200px including the gutters, so the content is narrower than the nav. */
+export const Project: Story = {
+  args: { width: 'project', children: <StoryBlock>Project column</StoryBlock> },
+};
 
 /** The 1440px band with no gutter: the map and the Beyond scene. */
 export const Wide: Story = {
