@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "slug": "atti",
+  "path": "/projects/pas/atti",
+  "title": "Atti",
+  "breadcrumb": {
+    "label": "Breadcrumb",
+    "items": [
+      { "label": "Projects", "href": "/projects" },
+      { "label": "PAS", "href": "/projects/pas" },
+      { "label": "Atti" }
+    ]
+  },
+  "hero": {
+    "status": "Daily use",
+    "title": "Atti",
+    "lead": "Claude is the model. Atti is everything around it: the harness, the memory, the persona and the channels.",
+    "figure": {
+      "type": "image",
+      "image": {
+        "src": "/media/projects/atti/atti-detail-pod.webp",
+        "width": 1200,
+        "height": 800,
+        "alt": "Concept drawing of the Atti pod: a small behind-the-ear unit, shown from several sides."
+      },
+      "caption": "Concept drawing: the Atti pod (hardware comes later)"
+    }
+  },
+  "sections": [
+    {
+      "type": "whereItsAt",
+      "id": "where-its-at",
+      "title": "Where it's at",
+      "paragraphs": [
+        "Live on Telegram since 28 October 2026 and in use every day. It captures reminders and to-dos, keeps my calendar, sends a morning brief and writes what it learns into my personal brain. Since 5 November I can also talk to it hands-free through an iPhone Shortcut."
+      ],
+      "facts": [
+        {
+          "value": "177",
+          "unit": "commits by Atti",
+          "caption": "Its own writes to my personal brain since October 28."
+        },
+        { "value": "1,478", "unit": "test cases", "caption": "Across Atti and its memory engine." },
+        {
+          "value": "145",
+          "unit": "phrasing cases",
+          "caption": "In the rules router that runs before the model."
+        }
+      ]
+    },
+    { "type": "log", "id": "log", "label": "Captain's log" },
+    {
+      "type": "figures",
+      "label": "Details",
+      "figures": [
+        {
+          "image": {
+            "src": "/media/projects/atti/atti-package-structure.webp",
+            "width": 1600,
+            "height": 800,
+            "alt": "Terminal card of Atti's repository: five packages with their source and test file counts, the modules inside Atti, and 157 commits on main."
+          },
+          "caption": "Real repo output · packages, modules and commits"
+        },
+        {
+          "image": {
+            "src": "/media/projects/atti/atti-detail-lifecycle.webp",
+            "width": 1200,
+            "height": 800,
+            "alt": "Atti's task lifecycle as a state diagram: how a job moves from queued to done, and what happens when it stalls or expires."
+          },
+          "caption": "How a job moves from queued to done, and what happens when it stalls"
+        }
+      ]
+    },
+    {
+      "type": "goDeeper",
+      "id": "go-deeper",
+      "title": "Go deeper",
+      "artifactsLabel": "Dated artifacts",
+      "artifacts": [
+        {
+          "stamp": "2026.314",
+          "date": "10 Nov 2026",
+          "title": "Harness, not gates",
+          "text": "Logs save at once with an Undo, no confirmation needed. A watchdog brings Atti back after downtime.",
+          "source": "Pull requests · companion-brain #63, #61"
+        },
+        {
+          "stamp": "2026.302",
+          "date": "29 Oct 2026",
+          "title": "Live replay evals",
+          "text": "Fixed cases rerun against the real model in a sandbox, plus flags for quiet failures.",
+          "source": "Pull requests · companion-brain #42, #38"
+        },
+        {
+          "stamp": "2026.301",
+          "date": "28 Oct 2026",
+          "title": "Atti goes live",
+          "text": "Live on Telegram, and in use every day since.",
+          "source": "Doc · Atti handoff, personal brain"
+        }
+      ],
+      "expanders": [
+        {
+          "title": "What I'm building",
+          "paragraphs": [
+            "An assistant that remembers, keeps my commitments and handles the routine work of my day. Rules run before the model: \"done\", \"snooze\" and \"add milk\" never need an LLM, and timing is set by code, not by the model. Tools are tiered by risk, so reads and simple logs just happen. Telegram came first, then voice. A console, the phone app and hardware come later."
+          ]
+        },
+        {
+          "title": "What I tried",
+          "paragraphs": [
+            "I borrowed Lifebox's on-device rules for reading dates and intents, so most messages never reach a model. A small, fast model handled the rest until full agent runs took over. Memory search started as a keyword ranker with a fixed test: the right memory came first 89% of the time, and that is the score an embedding model has to beat. Every reply where Atti apologised, failed or was corrected becomes a morning review item, and each fix becomes a regression case built from the real message. Live replays rerun those cases against the real model in a sandbox."
+          ]
+        },
+        {
+          "title": "What didn't work",
+          "paragraphs": [
+            "The outbox gave up after about seven minutes and silently lost nudges; it now retries until a deadline. Forwarded messages triggered actions; now they are saved as notes. My early failure flags only caught apologies, so confident but wrong replies slipped through; a new flag now catches claims with nothing behind them. After a restart, old sessions repeated stale \"I can't\" answers; restarts now open a fresh session. When the machine logged out, Atti stopped quietly; a watchdog now notices and sends a late brief."
+          ]
+        },
+        {
+          "title": "Open questions and next",
+          "paragraphs": [
+            "Can a small decision model route messages faster and cheaper than a general model, at similar accuracy? That experiment is written up and has no results yet. A context engine that hands each agent only the slice of memory it needs. A builder that turns a spec Atti writes into a draft pull request: it is built, and parked until the rest is steadier. Then a console for heavier planning, Lifebox as the phone app, and hardware."
+          ]
+        }
+      ]
+    }
+  ],
+  "next": {
+    "label": "Next",
+    "eyebrow": "Next in PAS",
+    "link": { "label": "Lifebox", "href": "/projects/pas/lifebox" },
+    "back": { "label": "Back to PAS", "href": "/projects/pas" }
+  }
+}
