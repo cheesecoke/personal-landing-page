@@ -30,6 +30,7 @@ const projectFiles = {
   lifebox: 'projects/lifebox.json',
   personalBrain: 'projects/personal-brain.json',
   aiSystem: 'projects/ai-system.json',
+  duoDecide: 'projects/duo-decide.json',
 } as const;
 
 export type ProjectKey = keyof typeof projectFiles;

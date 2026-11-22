@@ -1,0 +1,228 @@
+{
+  "schemaVersion": 1,
+  "slug": "duo-decide",
+  "path": "/projects/duo-decide",
+  "title": "Duo Decide",
+  "breadcrumb": {
+    "label": "Breadcrumb",
+    "items": [{ "label": "Projects", "href": "/projects" }, { "label": "Duo Decide" }]
+  },
+  "hero": {
+    "status": "In build",
+    "title": "Duo Decide",
+    "lead": "A decision app for couples. One shared place to ask a question, vote or poll, and see it decided.",
+    "figure": {
+      "type": "image",
+      "image": {
+        "src": "/media/projects/duo-decide/duo-decide-hero.webp",
+        "width": 1600,
+        "height": 1000,
+        "alt": "Three screens from the Duo Decide design mock: the decision queue, poll rounds 2 and 3, and the create-decision sheet."
+      },
+      "caption": "Design mock · three screens"
+    }
+  },
+  "sections": [
+    {
+      "type": "whereItsAt",
+      "id": "where-its-at",
+      "title": "Where it's at",
+      "paragraphs": [
+        "Voting, three-round polls, option lists, history and real-time sync work on iOS and the web. The redesign shipped in October. November went to App Store readiness: an iOS 26 build, over-the-air updates, archive and soft delete, and a native accessibility pass."
+      ],
+      "facts": [
+        {
+          "value": "1,167",
+          "unit": "test cases",
+          "caption": "Run in CI with lint, formatting and typecheck."
+        },
+        {
+          "value": "24",
+          "unit": "SQL migrations",
+          "caption": "Each applied and tested on PGlite in CI."
+        },
+        {
+          "value": "6",
+          "unit": "end-to-end flows",
+          "caption": "Auth, vote, poll, history, option lists, archive."
+        }
+      ]
+    },
+    { "type": "log", "id": "log", "label": "Captain's log" },
+    {
+      "type": "figures",
+      "label": "Details",
+      "figures": [
+        {
+          "image": {
+            "src": "/media/projects/duo-decide/duo-decide-detail-queue.webp",
+            "width": 1200,
+            "height": 800,
+            "alt": "Crop of the Duo Decide design mock: the queue header and a round-1 poll card showing who has voted."
+          },
+          "caption": "The queue · who has voted"
+        },
+        {
+          "image": {
+            "src": "/media/projects/duo-decide/duo-decide-detail-rounds.webp",
+            "width": 1200,
+            "height": 800,
+            "alt": "Crop of the poll rounds in the design mock: round 2 narrows to two options, and in round 3 the person who started it sits out."
+          },
+          "caption": "Poll rounds · narrowing to two"
+        }
+      ]
+    },
+    {
+      "type": "goDeeper",
+      "id": "go-deeper",
+      "title": "Go deeper",
+      "artifactsLabel": "Dated artifacts",
+      "expanders": [
+        {
+          "id": "building",
+          "title": "What I'm building",
+          "countLabel": "3 artifacts",
+          "paragraphs": [
+            "One shared queue of decisions for two people. Vote mode is quick: one of you proposes options and the other picks. Poll mode is for harder calls: you both vote privately, it narrows to the two options you picked, and if you still disagree the partner who didn't start it makes the final pick."
+          ],
+          "artifacts": [
+            {
+              "stamp": "2026.279",
+              "date": "6 Oct 2026",
+              "title": "Redesign v2",
+              "text": "A new design system with tested colour presets, and a Storybook library of every card state.",
+              "source": "Pull request · duo-decide #18",
+              "media": [
+                {
+                  "kind": "image",
+                  "image": {
+                    "src": "/media/projects/duo-decide/storybook-library.webp",
+                    "width": 1600,
+                    "height": 1000,
+                    "alt": "The Duo Decide Storybook: a tree of components and decision-card states beside a poll card, “Where are we eating Friday?”, in round 1. Fixture data."
+                  }
+                }
+              ]
+            },
+            {
+              "stamp": "2026.309",
+              "date": "5 Nov 2026",
+              "title": "Over-the-air updates",
+              "text": "Fixes reach both phones without waiting on a new store review.",
+              "source": "Pull request · duo-decide #40"
+            },
+            {
+              "stamp": "2026.308",
+              "date": "4 Nov 2026",
+              "title": "Built for the App Store",
+              "text": "An iOS build with the iOS 26 SDK, which the App Store now requires.",
+              "source": "Pull request · duo-decide #28"
+            }
+          ]
+        },
+        {
+          "id": "tried",
+          "title": "What I tried",
+          "countLabel": "3 artifacts",
+          "paragraphs": [
+            "I split thinking from building. Ideas and trade-offs live in one repo, specs and code in another, and an idea moves over only once it is a decision. Every database migration is applied and tested in CI. Duo was also the first outside repo my AI pipeline worked on, and it opened real pull requests here."
+          ],
+          "artifacts": [
+            {
+              "stamp": "2026.154",
+              "date": "3 Jun 2026",
+              "title": "The first pipeline run here",
+              "text": "The first pull request my AI pipeline opened outside its own repo: a small helper for vote counts.",
+              "source": "Pull request · duo-decide #7"
+            },
+            {
+              "stamp": "2026.114",
+              "date": "24 Apr 2026",
+              "title": "Two repos",
+              "text": "Ideas and trade-offs in one repo, specs and code in another. An idea moves over once it is a decision.",
+              "source": "Decision · duo-docs, speckit hybrid workflow"
+            },
+            {
+              "stamp": "2026.324",
+              "date": "20 Nov 2026",
+              "title": "Polls in round 1",
+              "text": "Both partners vote privately. Nobody sees a pick until both have voted.",
+              "source": "Capture · Storybook, fixture data",
+              "media": [
+                {
+                  "kind": "image",
+                  "image": {
+                    "src": "/media/projects/duo-decide/poll-round-1.webp",
+                    "width": 600,
+                    "height": 852,
+                    "alt": "A Duo Decide poll card in round 1: “Where are we eating Friday?”, both partners waiting, three options. Fixture data."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "didnt-work",
+          "title": "What didn't work",
+          "countLabel": "3 artifacts",
+          "paragraphs": [
+            [
+              "My pipeline followed the voting doc to the letter, and the doc was wrong. It changed vote mode to wait for both partners, but the person who starts a vote can't vote on it. From July to October every vote-mode decision sat one step from done. The fix was to correct the doc first, then the code, plus a repair script for decisions already stuck. The pipeline behind it is my ",
+              { "text": "AI system", "href": "/projects/ai-system#didnt-work" },
+              "."
+            ],
+            "Live testing found two more. A password-reset link signed people straight in instead of asking for a new password. And a deleted decision vanished from history for good, so deletes are now soft and decisions can be archived."
+          ],
+          "artifacts": [
+            {
+              "stamp": "2026.280",
+              "date": "7 Oct 2026",
+              "title": "One pick by the partner again",
+              "text": "The doc first, then the code, then a repair script for decisions already stuck. The tests that encoded the wrong rule now fail on the old code.",
+              "source": "Pull request · duo-decide #25"
+            },
+            {
+              "stamp": "2026.185",
+              "date": "4 Jul 2026",
+              "title": "Vote mode waits for both",
+              "text": "A pipeline run followed the voting doc. The person who starts a vote can't vote on it, so vote decisions stopped finishing.",
+              "source": "Pull request · duo-decide #10"
+            },
+            {
+              "stamp": "2026.309",
+              "date": "5 Nov 2026",
+              "title": "Soft delete",
+              "text": "A partner deleted a decision during live testing and it vanished from history. Migration 024 made deletes soft.",
+              "source": "Pull request · duo-decide #38"
+            }
+          ]
+        },
+        {
+          "id": "next",
+          "title": "Open questions and next",
+          "countLabel": "1 artifact",
+          "paragraphs": [
+            "Plan after deciding: once you pick a restaurant, add the time, place and notes, and keep it in history. Notifications for when your partner votes. Which tests and checks would let the pipeline merge a change without review. Then the App Store. One question is answered: who wins a split vote. In round 3 of a poll, the partner who didn't start it makes the final pick."
+          ],
+          "artifacts": [
+            {
+              "stamp": "2026.280",
+              "date": "7 Oct 2026",
+              "title": "Answered: who wins a split vote",
+              "text": "Round 3 of a poll is decided by the partner who didn't start it.",
+              "source": "Doc · ROUND_LOGIC.md, October 2026"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "next": {
+    "label": "Next",
+    "eyebrow": "Next project",
+    "link": { "label": "AI system", "href": "/projects/ai-system" },
+    "back": { "label": "Back to the map", "href": "/projects" }
+  }
+}
