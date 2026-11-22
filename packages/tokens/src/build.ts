@@ -2,12 +2,14 @@ import {
   breakpoint,
   duration,
   ease,
+  edge,
   font,
   glow,
   layout,
   palette,
   semantic,
   tokens,
+  tone,
   type,
   type PaletteName,
   type TypeRole,
@@ -44,9 +46,18 @@ export function toTokensCss(): string {
       lines.push(`--${group}-${role}: ${paletteVar(name)};`);
     }
   }
+  for (const [group, roles] of entries(tone)) {
+    for (const [role, hex] of entries(roles)) lines.push(`--${group}-${kebab(role)}: ${hex};`);
+  }
   for (const [name, value] of entries(glow)) {
     lines.push(
       `--glow-${name}: 0 0 ${value.blur} rgb(${hexToRgb(palette[value.color])} / ${value.alpha});`,
+    );
+  }
+
+  for (const [name, value] of entries(edge)) {
+    lines.push(
+      `--edge-${name}: inset 0 1px 0 rgb(${hexToRgb(palette[value.color])} / ${value.alpha});`,
     );
   }
 
@@ -112,12 +123,24 @@ export function toThemeCss(): string {
   for (const [role] of entries(semantic.text)) {
     theme.push(`--text-color-${role}: var(--text-${role});`);
   }
-  for (const group of ['accent', 'status', 'fresh'] as const) {
+  for (const group of ['accent', 'status', 'fresh', 'thread'] as const) {
     for (const [role] of entries(semantic[group])) {
       theme.push(`--color-${group}-${role}: var(--${group}-${role});`);
     }
   }
+  // Tones: `border-line-tick-major`, `border-thread-next`, `text-diagram`.
+  for (const [group, roles] of entries(tone)) {
+    for (const [role] of entries(roles)) {
+      const name = `${group}-${kebab(role)}`;
+      theme.push(
+        group === 'text'
+          ? `--text-color-${kebab(role)}: var(--${name});`
+          : `--color-${name}: var(--${name});`,
+      );
+    }
+  }
   for (const [name] of entries(glow)) theme.push(`--shadow-glow-${name}: var(--glow-${name});`);
+  for (const [name] of entries(edge)) theme.push(`--shadow-${name}: var(--edge-${name});`);
 
   theme.push('');
   // Same names as tokens.css, so these carry the value itself (a var() would point at itself).
