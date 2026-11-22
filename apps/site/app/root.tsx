@@ -8,9 +8,22 @@ import {
   ScrollRestoration,
 } from 'react-router';
 
+import monaSans from '@cwc/tokens/fonts/mona-sans-latin-wdth-normal.woff2?url';
+import tomorrow500 from '@cwc/tokens/fonts/tomorrow-latin-500-normal.woff2?url';
+
 import type { Route } from './+types/root';
+import stylesheet from './app.css?url';
 import { AppShell } from './shell/AppShell';
 import { pageTitle, PlaceholderPage } from './shell/PlaceholderPage';
+
+const preloadFont = (href: string) =>
+  ({ rel: 'preload', href, as: 'font', type: 'font/woff2', crossOrigin: 'anonymous' }) as const;
+
+export const links: Route.LinksFunction = () => [
+  preloadFont(monaSans),
+  preloadFont(tomorrow500),
+  { rel: 'stylesheet', href: stylesheet },
+];
 
 export function Layout({ children }: { children: ReactNode }) {
   return (

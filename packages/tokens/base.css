@@ -1,0 +1,53 @@
+/*
+ * Base styles every surface shares (the site and Storybook). Load after tokens.css.
+ * Dark on purpose: the page is Ground, text is Bone, the focus ring is Signal.
+ */
+
+@layer base {
+  html {
+    background-color: var(--bg-ground);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-synthesis: none;
+    text-rendering: optimizelegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-size-adjust: 100%;
+    color-scheme: dark;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--bg-ground);
+  }
+
+  a {
+    color: var(--text-primary);
+  }
+
+  a:hover {
+    color: var(--accent-signal);
+  }
+
+  :focus-visible {
+    outline: 1px solid var(--accent-signal);
+    outline-offset: 4px;
+  }
+}
+
+/*
+ * Reduced motion is the default: components add motion inside
+ * `@media (prefers-reduced-motion: no-preference)` (Tailwind: `motion-ok:`).
+ * `[data-motion='reduce']` on the root mirrors the OS setting for tests and the Storybook
+ * toolbar, and switches off whatever is left.
+ */
+[data-motion='reduce'] *,
+[data-motion='reduce'] *::before,
+[data-motion='reduce'] *::after {
+  transition-duration: 0s !important;
+  transition-delay: 0s !important;
+  animation-duration: 0s !important;
+  animation-delay: 0s !important;
+  animation-iteration-count: 1 !important;
+  scroll-behavior: auto !important;
+}

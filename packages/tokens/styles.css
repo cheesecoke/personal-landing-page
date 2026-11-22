@@ -1,0 +1,11 @@
+/*
+ * Everything a surface needs after `@import 'tailwindcss'`:
+ *
+ *   @import 'tailwindcss';
+ *   @import '@cwc/tokens/styles.css';
+ *   @source '<path to packages>';
+ */
+@import './fonts/fonts.css';
+@import './generated/tokens.css';
+@import './generated/theme.css';
+@import './base.css';
