@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "title": "Projects",
+  "header": {
+    "title": "Projects",
+    "lead": "What I build on my own time, and how: what I tried, what broke, what's next."
+  },
+  "mapLabel": "Map of the projects",
+  "index": {
+    "title": "Index",
+    "groups": [
+      {
+        "title": "PAS · the assistant system",
+        "rows": [
+          {
+            "id": "pas",
+            "name": "PAS",
+            "status": "Daily use",
+            "line": "My personal assistant system: Atti and the projects that run under it.",
+            "href": "/projects/pas",
+            "depth": 0
+          },
+          {
+            "id": "atti",
+            "name": "Atti",
+            "status": "Daily use",
+            "line": "A personal assistant built around one person, running on Telegram.",
+            "href": "/projects/pas/atti",
+            "depth": 1
+          },
+          {
+            "id": "lifebox",
+            "name": "Lifebox",
+            "status": "Experiment",
+            "line": "One interface per person. Planned as Atti's phone app.",
+            "href": "/projects/pas/lifebox",
+            "depth": 2
+          }
+        ]
+      },
+      {
+        "title": "Brains and pipelines",
+        "rows": [
+          {
+            "id": "ai-system",
+            "name": "AI system",
+            "status": "First version",
+            "line": "My first agent pipeline: plan, code, pull request.",
+            "href": "/projects/ai-system",
+            "depth": 0
+          },
+          {
+            "id": "distill",
+            "name": "Distill",
+            "status": "Next version",
+            "line": "The next version of the pipeline, being built now.",
+            "href": "/projects/ai-system#distill",
+            "depth": 1
+          },
+          {
+            "id": "personal-brain",
+            "name": "Personal brain",
+            "status": "Daily use",
+            "line": "Markdown in git that my assistant and agents read and write.",
+            "href": "/projects/personal-brain",
+            "depth": 0
+          },
+          {
+            "id": "business-brain",
+            "name": "Business brain",
+            "status": "Running",
+            "line": "A research pipeline that scores ideas with cited evidence.",
+            "href": "/projects/personal-brain#business-brain",
+            "depth": 1
+          },
+          {
+            "id": "finance-brain",
+            "name": "Finance brain",
+            "status": "In progress",
+            "line": "The first brain with a vault. Trying a new way in.",
+            "href": "/projects/personal-brain#finance-brain",
+            "depth": 1
+          }
+        ]
+      },
+      {
+        "title": "Products",
+        "rows": [
+          {
+            "id": "duo-decide",
+            "name": "Duo Decide",
+            "status": "In build",
+            "line": "A decision app for couples. Vote or poll, together.",
+            "href": "/projects/duo-decide",
+            "depth": 0
+          },
+          {
+            "id": "thread-quest",
+            "name": "Thread Quest",
+            "status": "Being expanded",
+            "line": "A closet and style tool: save the clothes you like and build outfits from them.",
+            "href": "/projects/thread-quest",
+            "depth": 0
+          },
+          {
+            "id": "one-rep",
+            "name": "One Rep",
+            "status": "Being overhauled",
+            "line": "Ten reps between work sessions, and a simple way to log them.",
+            "href": "/beyond#one-rep",
+            "depth": 0
+          },
+          {
+            "id": "this-site",
+            "name": "This site",
+            "status": "In build",
+            "line": "chasewcole.com, being rebuilt as a living record of my work. You are on it.",
+            "href": "/",
+            "depth": 0
+          }
+        ]
+      }
+    ]
+  },
+  "next": { "label": "Next", "link": { "label": "About", "href": "/about" } }
+}

@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { cssDuration, generatedFiles, toThemeCss, toTokensCss } from './build';
-import { breakpoint, duration, fresh, palette, semantic, type } from './tokens';
+import { breakpoint, duration, fresh, palette, semantic, tone, type } from './tokens';
 
 const generated = (file: string) =>
   readFileSync(join(import.meta.dirname, '..', 'generated', file), 'utf8');
@@ -27,6 +27,14 @@ describe('tokens', () => {
   it('points every semantic colour at a palette colour', () => {
     for (const roles of Object.values(semantic)) {
       for (const name of Object.values(roles)) expect(palette).toHaveProperty(name);
+    }
+  });
+
+  it('keeps the tones as 6-digit hex, outside the palette', () => {
+    const hexes = Object.values(tone).flatMap((roles) => Object.values(roles));
+    for (const hex of hexes) {
+      expect(hex).toMatch(/^#[0-9A-F]{6}$/);
+      expect(Object.values(palette)).not.toContain(hex);
     }
   });
 
@@ -56,10 +64,23 @@ describe('css output', () => {
     expect(css).toContain('--text-label: var(--palette-smoke);');
     expect(css).toContain('--glow-signal: 0 0 12px rgb(111 227 210 / 0.6);');
     expect(css).toContain('--duration-thread-pulse: 11s;');
+    expect(css).toContain('--line-tick-major: #4A463D;');
+    expect(css).toContain('--thread-next: #2C6A62;');
+    expect(css).toContain('--thread-past: #4FB3A6;');
+    expect(css).toContain('--edge-panel: inset 0 1px 0 rgb(221 191 148 / 0.08);');
   });
 
   it('gives every type role a utility', () => {
     const css = toThemeCss();
     for (const role of Object.keys(type)) expect(css).toContain(`@utility type-${role} {`);
+  });
+
+  it('exposes the tones, the thread colours and the panel edge as utilities', () => {
+    const css = toThemeCss();
+    expect(css).toContain('--color-line-tick-major: var(--line-tick-major);');
+    expect(css).toContain('--color-thread-next: var(--thread-next);');
+    expect(css).toContain('--color-thread-on: var(--thread-on);');
+    expect(css).toContain('--text-color-diagram: var(--text-diagram);');
+    expect(css).toContain('--shadow-panel: var(--edge-panel);');
   });
 });

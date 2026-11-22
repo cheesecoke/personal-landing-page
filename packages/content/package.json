@@ -10,6 +10,8 @@
     ".": "./src/index.ts",
     "./node": "./src/node/index.ts",
     "./react": "./src/react/index.ts",
+    "./hand": "./src/hand/index.ts",
+    "./hand/load": "./src/hand/load.ts",
     "./fixtures": "./src/fixtures.ts",
     "./content.schema.json": "./content.schema.json"
   },

@@ -31,7 +31,16 @@
   --status-private: var(--palette-ash);
   --fresh-ring: var(--palette-hinoki);
   --fresh-track: var(--palette-tick);
+  --thread-line: var(--palette-signal-dim);
+  --thread-on: var(--palette-signal);
+  --line-tick-major: #4A463D;
+  --line-outline: #5A564D;
+  --thread-next: #2C6A62;
+  --thread-past: #4FB3A6;
+  --text-diagram: #D9D3C8;
   --glow-signal: 0 0 12px rgb(111 227 210 / 0.6);
+  --glow-thread: 0 0 8px rgb(111 227 210 / 0.5);
+  --edge-panel: inset 0 1px 0 rgb(221 191 148 / 0.08);
   
   /* Type */
   --font-sans: 'Mona Sans', 'Helvetica Neue', Arial, sans-serif;
@@ -71,6 +80,26 @@
   --type-label-line-height: 1.4;
   --type-label-tracking: 0.12em;
   --type-label-stretch: 100%;
+  --type-button-size: 14px;
+  --type-button-weight: 600;
+  --type-button-line-height: 1;
+  --type-button-tracking: 0;
+  --type-button-stretch: 100%;
+  --type-nav-size: 14px;
+  --type-nav-weight: 500;
+  --type-nav-line-height: 1.4;
+  --type-nav-tracking: 0.005em;
+  --type-nav-stretch: 100%;
+  --type-link-size: 14px;
+  --type-link-weight: 500;
+  --type-link-line-height: 1.4;
+  --type-link-tracking: 0;
+  --type-link-stretch: 100%;
+  --type-handoff-size: clamp(30px, 3.6vw, 50px);
+  --type-handoff-weight: 500;
+  --type-handoff-line-height: 1.05;
+  --type-handoff-tracking: -0.03em;
+  --type-handoff-stretch: 125%;
   --type-readout-numeral-size: clamp(36px, 4vw, 60px);
   --type-readout-numeral-weight: 300;
   --type-readout-numeral-line-height: 0.95;
@@ -98,6 +127,7 @@
   --ease-standard: cubic-bezier(.4,0,.2,1);
   --duration-nav: 0.6s;
   --duration-hover: 0.4s;
+  --duration-arrow: 0.5s;
   --duration-rise: 0.7s;
   --duration-mark-arc: 0.8s;
   --duration-fresh-in: 0.6s;
@@ -105,6 +135,8 @@
   --duration-ar-draw: 1.4s;
   --duration-breathe: 9s;
   --duration-thread-pulse: 11s;
+  --duration-thread-node: 0.45s;
+  --duration-thread-fill: 0.14s;
   --duration-canopy-intro: 5.2s;
   --duration-canopy-grow: 2.6s;
   --duration-canopy-shrink: 1s;
