@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "title": "Contact",
+  "header": {
+    "title": "The door is open.",
+    "lead": "Building with agents, or want to compare notes? Write to me."
+  },
+  "channels": [
+    {
+      "name": "Email",
+      "label": "chasewcole@gmail.com",
+      "href": "mailto:chasewcole@gmail.com",
+      "primary": true
+    },
+    {
+      "name": "LinkedIn",
+      "label": "linkedin.com/in/chasewcole",
+      "href": "https://www.linkedin.com/in/chasewcole",
+      "primary": false
+    },
+    {
+      "name": "GitHub",
+      "label": "github.com/cheesecoke",
+      "href": "https://github.com/cheesecoke",
+      "primary": false
+    }
+  ]
+}
