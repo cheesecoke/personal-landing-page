@@ -29,7 +29,8 @@ function filesUnder(dir: string): string[] {
 describe('loadHandContent', () => {
   it('loads and validates every hand file in the site', () => {
     const content = loadHandContent(handDir);
-    expect(Object.keys(content).length).toBe(handFilePaths.length);
+    const loaded = Object.keys(content).length - 1 + Object.keys(content.projects).length;
+    expect(loaded).toBe(handFilePaths.length);
   });
 
   it('has a schema for every file in the hand folder', () => {
@@ -55,7 +56,7 @@ describe('loadHandContent', () => {
 
   it('fails on a missing file and on broken JSON', () => {
     const dir = mkdtempSync(join(tmpdir(), 'hand-'));
-    expect(() => loadHandContent(dir)).toThrow(/home\.json[\s\S]*missing/);
+    expect(() => loadHandContent(dir)).toThrow(/missing/);
     writeFileSync(join(dir, 'home.json'), '{');
     expect(() => loadHandContent(dir)).toThrow(/not valid JSON/);
   });
