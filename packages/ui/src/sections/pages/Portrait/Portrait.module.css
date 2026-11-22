@@ -1,0 +1,162 @@
+/* The portrait with its Cyberware switch. Ported from the Portrait board. */
+
+.figure {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 400px;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.frame {
+  position: relative;
+  box-sizing: border-box;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border: 1px solid var(--line-hairline);
+  border-radius: var(--radius-panel);
+  background-color: var(--bg-ground);
+}
+
+/* Signal dim at 44% on Ground: the board's frame colour while the cyberware is on. */
+.frame[data-cyber='on'] {
+  border-color: color-mix(in srgb, var(--thread-line) 44%, var(--bg-ground));
+}
+
+.stage {
+  position: absolute;
+  inset: 0;
+  isolation: isolate;
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+}
+
+.cyber {
+  visibility: hidden;
+}
+
+.frame[data-cyber='on'] .cyber {
+  visibility: visible;
+}
+
+.frame[data-cyber='on'] .hero {
+  visibility: hidden;
+}
+
+/* A clip is invisible until the controller reveals it on a decoded frame. */
+.video {
+  opacity: 0;
+}
+
+.shade {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 24%;
+  background-image: linear-gradient(
+    180deg,
+    transparent,
+    color-mix(in srgb, var(--bg-ground) 82%, transparent)
+  );
+  pointer-events: none;
+}
+
+.toggle {
+  position: absolute;
+  bottom: 2px;
+  left: 4px;
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  min-height: var(--touch-target);
+  margin: 0;
+  padding: 0 14px;
+  border: 0;
+  background: transparent;
+  color: var(--text-secondary);
+  font-weight: var(--type-readout-status-weight);
+  font-size: var(--type-readout-status-size);
+  font-family: var(--font-readout);
+  line-height: var(--type-readout-status-line-height);
+  letter-spacing: var(--type-readout-status-tracking);
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.toggle:hover {
+  color: var(--text-primary);
+}
+
+.toggle[aria-pressed='true'],
+.toggle[aria-pressed='true']:hover {
+  color: var(--accent-signal);
+}
+
+.toggle:focus-visible {
+  outline: 1px solid var(--accent-signal);
+  outline-offset: -6px;
+}
+
+.node {
+  box-sizing: border-box;
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border: 1px solid var(--text-label);
+  border-radius: 50%;
+  background-color: transparent;
+}
+
+.toggle[aria-pressed='true'] .node {
+  border-color: var(--accent-signal);
+  background-color: var(--accent-signal);
+  box-shadow:
+    0 0 0 3px var(--bg-ground),
+    0 0 0 4px color-mix(in srgb, var(--accent-signal) 50%, transparent);
+}
+
+.state {
+  min-width: 3ch;
+  opacity: 0.7;
+  text-align: left;
+}
+
+.caption {
+  max-width: 56ch;
+  line-height: 1.6;
+}
+
+/* Motion is opt-in. With reduced motion there is no video at all, only the stills. */
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion='reduce']) .frame {
+    transition: border-color var(--duration-rise) ease;
+  }
+
+  :root:not([data-motion='reduce']) .video {
+    transition: opacity 0.18s linear; /* token-lint-ignore: the board's cross-fade, no token */
+  }
+
+  :root:not([data-motion='reduce']) .toggle {
+    transition: color var(--duration-hover);
+  }
+
+  :root:not([data-motion='reduce']) .node {
+    transition:
+      background-color var(--duration-hover),
+      border-color var(--duration-hover),
+      box-shadow var(--duration-hover);
+  }
+}

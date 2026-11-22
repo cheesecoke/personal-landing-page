@@ -14,3 +14,12 @@ export {
   type RingsTimelineProps,
 } from './RingsTimeline/RingsTimeline';
 export { stumpRings } from './RingsTimeline/stumpRings';
+
+export {
+  Portrait,
+  type PortraitClips,
+  type PortraitLook,
+  type PortraitProps,
+  type PortraitStill,
+} from './Portrait/Portrait';
+export type { PortraitGlanceTiming } from './Portrait/portraitController';
