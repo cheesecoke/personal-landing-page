@@ -41,3 +41,7 @@ export { Caption, type CaptionProps } from './Caption/Caption';
 export { Figure, type FigureProps } from './Figure/Figure';
 export { Breadcrumb, type BreadcrumbItem, type BreadcrumbProps } from './Breadcrumb/Breadcrumb';
 export { Expander, ExpanderGroup, type ExpanderProps } from './Expander/Expander';
+
+export { VisuallyHidden, type VisuallyHiddenProps } from './VisuallyHidden/VisuallyHidden';
+export { SkipLink, type SkipLinkProps } from './SkipLink/SkipLink';
+export { FocusRing, focusRing, focusRingInset, type FocusRingProps } from './FocusRing/FocusRing';
