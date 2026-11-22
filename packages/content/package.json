@@ -17,6 +17,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@cwc/tokens": "workspace:*",
     "zod": "^4.6.7"
   }
 }

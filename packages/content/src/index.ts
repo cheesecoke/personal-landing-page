@@ -7,3 +7,4 @@ export * from './schema/about';
 export * from './schema/issues';
 export * from './json-schema';
 export * from './live';
+export * from './freshness';
