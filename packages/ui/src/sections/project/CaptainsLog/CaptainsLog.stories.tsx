@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 
 import type { LogEntryData } from '../LogEntry/LogEntry';
+import { ShootList } from '../ShootList/ShootList';
 import { CaptainsLog } from './CaptainsLog';
 
 // Copy from the Captain's log board.
@@ -135,6 +136,43 @@ export const Growing: Story = {
     await expect(glowing(canvasElement)[0]).toBe(nodes(canvasElement)[0]);
     // The mark ran out (17 of 14 days): nothing is drawn.
     await expect(canvasElement.querySelector('[data-new-label]')).toBeNull();
+  },
+};
+
+/** As on the project pages: the not-yet-grown list closes the panel. */
+export const WithShoots: Story = {
+  args: {
+    children: (
+      <ShootList
+        title="Not yet grown"
+        labels={{
+          kind: { goal: 'Goal', idea: 'Idea', question: 'Question' },
+          state: { open: 'Not yet grown', grown: 'Grown', answered: 'Answered' },
+        }}
+        shoots={[
+          {
+            id: 'app-store',
+            label: 'App Store release',
+            kind: 'goal',
+            state: 'open',
+            resolved: null,
+          },
+          {
+            id: 'notifications',
+            label: 'Notifications',
+            kind: 'idea',
+            state: 'open',
+            resolved: null,
+          },
+          { id: 'plan', label: 'Plan after deciding', kind: 'idea', state: 'open', resolved: null },
+        ]}
+      />
+    ),
+  },
+  play: async ({ canvasElement }) => {
+    await expect(
+      within(canvasElement).getByRole('list', { name: 'Not yet grown' }),
+    ).toBeInTheDocument();
   },
 };
 
