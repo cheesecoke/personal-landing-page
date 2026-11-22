@@ -1,4 +1,11 @@
 // Project and job page sections. One folder per component, story beside it.
+export { BranchRings, type BranchRingsProps, type RingData } from './BranchRings/BranchRings';
+export {
+  RING_THICKNESS,
+  ringGeometry,
+  type RingGeometry,
+  type RingWeight,
+} from './BranchRings/ringGeometry';
 export { CaptainsLog, type CaptainsLogProps } from './CaptainsLog/CaptainsLog';
 export {
   LogEntry,
