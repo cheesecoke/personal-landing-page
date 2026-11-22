@@ -65,6 +65,11 @@ pnpm dev          pnpm storybook            pnpm build-storybook
 - A new component: `packages/ui/src/<tier>/<Name>/<Name>.tsx`, with `<Name>.stories.tsx` (and
   `<Name>.module.css` if needed) beside it, exported from that tier's `index.ts`. Update its row in
   `docs/components.md`.
+- Stories are picked up from `packages/*/src/**/*.stories.tsx` and
+  `apps/site/app/templates/**/*.stories.tsx`. Storybook has toolbars for reduced motion and the site
+  date, and viewports at 390, 768 and 1440.
+- Tailwind only emits classes written as whole strings. Never build a class name from parts
+  (`type-${role}`); use a lookup of full names.
 - A page template: `apps/site/app/templates/<Name>Template.tsx` with its story beside it.
 - A route: `apps/site/app/routes/`, registered in `apps/site/app/routes.ts`.
 - A big decision: a short ADR in `docs/decisions/`.

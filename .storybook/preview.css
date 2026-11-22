@@ -1,0 +1,7 @@
+@import 'tailwindcss';
+@import '@cwc/tokens/styles.css';
+
+/* Scan everything that has stories for class names. */
+@source '../packages';
+@source '../apps/site/app';
+@source './';
