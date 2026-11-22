@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "slug": "personal-brain",
+  "path": "/projects/personal-brain",
+  "title": "Personal brain",
+  "breadcrumb": {
+    "label": "Breadcrumb",
+    "items": [{ "label": "Projects", "href": "/projects" }, { "label": "Personal brain" }]
+  },
+  "hero": {
+    "status": "Daily use",
+    "title": "Personal brain",
+    "lead": "The umbrella for my brains: markdown in git that my assistant and agents read and write.",
+    "figure": {
+      "type": "zones",
+      "label": "How the personal brain is organised: Atti, skills and pipelines write into an open zone of markdown (study notes, ideas, plans, Atti's records). A sealed vault sits beside it, out of reach of the tools. Only a publish gate puts anything into the public folder.",
+      "writes": { "title": "Writes", "items": ["Atti", "Skills", "Pipelines"] },
+      "open": {
+        "title": "Open zone",
+        "note": "Markdown in git",
+        "items": ["Study notes", "Ideas", "Plans", "Atti's records"]
+      },
+      "sealed": { "title": "Sealed vault", "note": "Out of reach of the tools" },
+      "gate": "Publish gate",
+      "destination": "Public folder",
+      "caption": "How the brain is organised. No private contents shown."
+    }
+  },
+  "sections": [
+    {
+      "type": "whereItsAt",
+      "id": "where-its-at",
+      "title": "Where it's at",
+      "paragraphs": [
+        [
+          "In daily use since August 2026. Atti, my assistant, writes here most days; see ",
+          { "text": "PAS", "href": "/projects/pas" },
+          ". Two brains feed it, each built separately and tied together here."
+        ]
+      ],
+      "facts": [
+        {
+          "value": "889",
+          "unit": "commits since August 2026",
+          "caption": "From me, my skills and my assistant."
+        },
+        {
+          "value": "No message text in git",
+          "caption": "Atti's commits name what changed, never what I said."
+        },
+        {
+          "value": "κ 0.41 → 0.91",
+          "unit": "Sample: 20 items",
+          "caption": "The business brain's scoring rule, before and after a rewrite."
+        }
+      ]
+    },
+    { "type": "log", "id": "log", "label": "Captain's log" },
+    {
+      "type": "feeds",
+      "id": "feeds",
+      "title": "Brains that feed it",
+      "items": [
+        {
+          "id": "business-brain",
+          "name": "Business brain",
+          "line": "A research pipeline that scores ideas with cited evidence."
+        },
+        {
+          "id": "finance-brain",
+          "name": "Finance brain",
+          "line": "The first brain with a vault. Connecting to Plaid turned out to be too much, so a different approach is in progress."
+        }
+      ],
+      "diagram": {
+        "label": "The business brain and the finance brain both feed into the personal brain.",
+        "center": "Personal brain"
+      }
+    },
+    {
+      "type": "goDeeper",
+      "id": "go-deeper",
+      "title": "Go deeper",
+      "expanders": [
+        {
+          "title": "What I'm building",
+          "paragraphs": [
+            "One place my life and projects run on, readable by a person and by agents. Markdown in git is the source of truth; any index can be rebuilt from it. Nothing leaves except through a public folder, and only a publish gate puts anything there."
+          ]
+        },
+        {
+          "title": "What I tried",
+          "paragraphs": [
+            "A separate brain per domain, each with its own root, so a tool that reads one cannot wander into another. A sealed vault the learning tools are barred from by their path rules. In the business brain, two blind scoring passes checked the rubric before I trusted it."
+          ]
+        },
+        {
+          "title": "What didn't work",
+          "paragraphs": [
+            "The learning map reads one root, and that root is a sibling brain, so notes written here don't show up on it yet. The first business-brain rubric failed its agreement test on three criteria; rewritten as decision rules, all passed. Plaid was too much for the finance brain."
+          ]
+        },
+        {
+          "title": "Open questions and next",
+          "paragraphs": [
+            "Whether the brains merge or stay separate is not decided. The finance brain is trying a different way to bring data in."
+          ],
+          "confirm": ["[CONFIRM: next step for the business brain]"]
+        }
+      ]
+    }
+  ],
+  "next": {
+    "label": "Next",
+    "eyebrow": "Next project",
+    "link": { "label": "Thread Quest", "href": "/projects/thread-quest" },
+    "back": { "label": "Back to the map", "href": "/projects" }
+  }
+}
