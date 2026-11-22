@@ -1,6 +1,6 @@
 import { useRef, type HTMLAttributes } from 'react';
 
-import { RingMark } from '../../primitives';
+import { RingMark, VisuallyHidden } from '../../primitives';
 import { Container } from '../Container/Container';
 import { cx } from '../internal/cx';
 import type { LinkComponent, SiteLink } from '../internal/link';
@@ -143,7 +143,7 @@ export function SiteNav({
                       data-nav-ring=""
                       className="box-border size-[9px] flex-none rounded-full border border-fresh-ring"
                     />
-                    <span className="sr-only">{item.ring.label}</span>
+                    <VisuallyHidden>{item.ring.label}</VisuallyHidden>
                   </>
                 ) : null}
               </Link>

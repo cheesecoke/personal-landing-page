@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { useLocation } from 'react-router';
 
-import { Grain, SiteFooter, SiteNav } from '@cwc/ui';
+import { Grain, SiteFooter, SiteNav, SkipLink } from '@cwc/ui';
 
 import { RouterLink } from './RouterLink';
 import { currentNavHref, formatLastUpdate, shellLinks, site } from './site';
@@ -20,13 +20,7 @@ export function AppShell({ lastUpdate, children }: AppShellProps) {
   const { pathname } = useLocation();
   return (
     <div className="relative flex min-h-dvh flex-col overflow-x-clip bg-ground text-primary">
-      {/* TODO(primitives): swap to <SkipLink> */}
-      <a
-        href="#main"
-        className="sr-only type-link focus-visible:not-sr-only focus-visible:absolute focus-visible:top-2 focus-visible:left-2 focus-visible:z-10 focus-visible:flex focus-visible:min-h-touch focus-visible:items-center focus-visible:rounded-button focus-visible:bg-raised focus-visible:px-4"
-      >
-        {site.skipLabel}
-      </a>
+      <SkipLink>{site.skipLabel}</SkipLink>
       <Grain />
       <header className="relative">
         <SiteNav
