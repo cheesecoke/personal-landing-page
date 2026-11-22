@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "visibility": "name-only",
+  "slug": "one-rep",
+  "name": "One Rep",
+  "parent": null,
+  "status": {
+    "key": "being-overhauled",
+    "label": "Being overhauled"
+  }
+}

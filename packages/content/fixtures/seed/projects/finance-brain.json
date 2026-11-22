@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "visibility": "name-only",
+  "slug": "finance-brain",
+  "name": "Finance brain",
+  "parent": "personal-brain",
+  "status": {
+    "key": "in-progress",
+    "label": "In progress"
+  }
+}

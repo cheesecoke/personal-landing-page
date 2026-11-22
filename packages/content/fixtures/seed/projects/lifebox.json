@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "visibility": "public",
+  "slug": "lifebox",
+  "name": "Lifebox",
+  "parent": "atti",
+  "kind": "both",
+  "state": "growing",
+  "status": {
+    "key": "experiment",
+    "label": "Experiment"
+  },
+  "whereItsAt": "An Expo and React Native app. You drop in short notes, and it turns them into structured memories and events, looks for patterns, and brings back what matters in a feed called Now. It is not released, and the hardest problem, shipping a different build to each person, is still open.",
+  "log": [
+    {
+      "id": "2026-11-14",
+      "date": "2026-11-14",
+      "kind": "update",
+      "lines": ["Studied how AI-run website testing compares with an app built for one person."]
+    },
+    {
+      "id": "2026-10-19",
+      "date": "2026-10-19",
+      "kind": "update",
+      "lines": ["Planned as Atti's phone app."]
+    },
+    {
+      "id": "2026-10-16",
+      "date": "2026-10-16",
+      "kind": "update",
+      "lines": [
+        "The app notices what you log on your phone and offers a matching extra in For you.",
+        "Weekly summaries of themes, never notes, are sent only if you opt in."
+      ]
+    },
+    {
+      "id": "2026-10-07",
+      "date": "2026-10-07",
+      "kind": "update",
+      "lines": ["Design paper, draft 2: \"Stable Frame, Adaptive Content\"."]
+    }
+  ],
+  "release": null,
+  "shoots": [
+    {
+      "id": "a-release-per-user",
+      "label": "A release per user",
+      "kind": "question",
+      "state": "open",
+      "note": "Open problem: an iOS build takes 30 to 60 minutes, and here every user gets their own.",
+      "resolved": null
+    },
+    {
+      "id": "atti-proposes-changes",
+      "label": "Atti proposes changes",
+      "kind": "idea",
+      "state": "open",
+      "resolved": null
+    },
+    {
+      "id": "personal-to-core-defaults",
+      "label": "Personal to core defaults",
+      "kind": "idea",
+      "state": "open",
+      "note": "How a change made for one person graduates: Personal, then Popular, Community, Core.",
+      "resolved": null
+    }
+  ],
+  "rings": [],
+  "facts": [],
+  "fresh": {
+    "changedAt": "2026-11-14",
+    "changeKind": "update"
+  }
+}

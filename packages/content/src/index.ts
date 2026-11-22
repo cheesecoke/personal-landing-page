@@ -6,3 +6,4 @@ export * from './schema/project';
 export * from './schema/about';
 export * from './schema/issues';
 export * from './json-schema';
+export * from './live';
