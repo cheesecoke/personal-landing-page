@@ -5,6 +5,7 @@ import type { z } from 'zod';
 
 import { HomeContent } from './home';
 import { MapContent } from './map';
+import { ProjectPageContent } from './project-page';
 import { ProjectsIndexContent } from './projects-index';
 
 /**
@@ -19,9 +20,21 @@ const handFiles = {
   map: { file: 'map.json', schema: MapContent },
 } as const;
 
+/**
+ * Project pages: the key each loads under and its path inside the hand folder. The key is the
+ * camel-cased slug, and the file's `slug` must match it.
+ */
+const projectFiles = {
+  pas: 'projects/pas.json',
+} as const;
+
+export type ProjectKey = keyof typeof projectFiles;
+
 export type HandContent = {
   [Key in keyof typeof handFiles]: z.infer<(typeof handFiles)[Key]['schema']>;
-};
+} & { projects: Record<ProjectKey, ProjectPageContent> };
+
+const kebab = (key: string) => key.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
 
 /** A hand file that is missing, is not JSON, or does not match its schema. */
 export class HandContentError extends Error {
@@ -66,11 +79,21 @@ export function loadHandContent(dir: string): HandContent {
     key,
     loadFile(dir, file, schema),
   ]);
-  return Object.fromEntries(entries) as HandContent;
+  const projects = Object.entries(projectFiles).map(([key, file]) => {
+    const page = loadFile(dir, file, ProjectPageContent);
+    if (page.slug !== kebab(key)) {
+      throw new HandContentError(file, [`slug: expected "${kebab(key)}", found "${page.slug}"`]);
+    }
+    return [key, page];
+  });
+  return { ...Object.fromEntries(entries), projects: Object.fromEntries(projects) } as HandContent;
 }
 
 /** The path of every hand file, relative to the hand folder. */
-export const handFilePaths: readonly string[] = Object.values(handFiles).map(({ file }) => file);
+export const handFilePaths: readonly string[] = [
+  ...Object.values(handFiles).map(({ file }) => file),
+  ...Object.values(projectFiles),
+];
 
 function walk(value: unknown, path: string, visit: (text: string, path: string) => void): void {
   if (typeof value === 'string') visit(value, path);
