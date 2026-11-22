@@ -1,0 +1,61 @@
+/*
+ * The opening of a project page: the title block beside the hero. Ported from the project boards
+ * (`pp-open`, `pp-hero`, `pp-cap`, `pp-heroN`). The section is a query container: the hero moves
+ * beside the title when the section is 864px wide (a 960px page).
+ */
+
+.root {
+  container-type: inline-size;
+}
+
+.open {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 32px;
+  align-items: center;
+}
+
+/* The hero bleeds to the page edges; on a phone that includes the step the thread adds. */
+.hero {
+  position: relative;
+  min-width: 0;
+  margin: 0 calc(-1 * var(--gutter)) 0 calc(-1 * var(--gutter) - var(--thread-shift, 0px));
+}
+
+.cap {
+  padding-inline: calc(var(--gutter) + var(--thread-shift, 0px)) var(--gutter);
+  text-align: left;
+}
+
+.pad {
+  padding: 40px var(--gutter) 8px calc(var(--gutter) + var(--thread-shift, 0px));
+}
+
+.plain {
+  min-width: 0;
+}
+
+@container (width >= 864px) {
+  .open {
+    grid-template-columns: minmax(0, 420px) minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .hero {
+    margin-right: calc(-1 * var(--gutter));
+    margin-left: -80px;
+  }
+
+  .cap {
+    text-align: right;
+  }
+
+  /* A drawn hero keeps clear of the title instead of sliding under it. */
+  .drawn {
+    margin-left: 32px;
+  }
+
+  .drawn .pad {
+    padding-inline: 0;
+  }
+}
