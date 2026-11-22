@@ -22,6 +22,8 @@ mode) built from a component library that lives in Storybook. pnpm workspace + T
 pnpm install
 pnpm typecheck    pnpm lint    pnpm test    pnpm build
 pnpm dev          pnpm storybook            pnpm build-storybook
+pnpm test:stories # every story in headless Chromium: renders, play functions, axe as error
+                  # (once: pnpm exec playwright install chromium)
 ```
 
 ## Hard rules

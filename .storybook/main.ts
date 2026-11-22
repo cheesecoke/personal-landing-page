@@ -10,7 +10,7 @@ const config: StorybookConfig = {
     '../packages/*/src/**/*.stories.tsx',
     '../apps/site/app/templates/**/*.stories.tsx',
   ],
-  addons: ['@storybook/addon-docs', '@storybook/addon-a11y'],
+  addons: ['@storybook/addon-docs', '@storybook/addon-a11y', '@storybook/addon-vitest'],
   core: { disableTelemetry: true },
   viteFinal: (viteConfig) => ({
     ...viteConfig,

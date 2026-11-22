@@ -62,6 +62,8 @@ const preview: Preview = {
         },
       },
     },
+    // Accessibility violations fail the story test.
+    a11y: { test: 'error' },
     controls: { matchers: { date: /Date$/i } },
     options: {
       storySort: { order: ['Foundations', 'Primitives', 'Layout', 'Sections', 'Templates'] },
