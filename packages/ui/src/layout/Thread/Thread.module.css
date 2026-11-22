@@ -1,0 +1,225 @@
+/*
+ * The thread: the vertical line down the left of a page, with a node at each section.
+ * Ported from the boards (RailSync, the project pages, Projects/About/Beyond/Contact, Home).
+ *
+ * Placements
+ *   gutter  project pages: in the page gutter, 32px left of the content.
+ *   column  Projects, About, Beyond, Contact: at the left of a column that is indented 44px.
+ *   edge    Home: 36px left of the page column, on a full-width wrapper.
+ *
+ * Under 700px every placement puts the line 10px from the content's old left edge and the content
+ * starts at least 24px clear of it (the active node scales up, so 10px was too tight).
+ */
+
+.column {
+  position: relative;
+}
+
+/* gutter: the thread hangs in the gutter; on a phone the content steps right to clear it. */
+.columnGutter {
+  --thread-shift: 0px;
+}
+
+/* column: the content is indented and the thread sits at the column's left edge. */
+.columnColumn {
+  --thread-indent: 44px;
+  --thread-rail-left: 0px;
+
+  padding-left: var(--thread-indent);
+}
+
+/* The page column inside an edge section: steps right on a phone to clear the thread. */
+.clearance {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: calc(var(--container-max) + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+@media (width < 700px) {
+  .columnGutter {
+    --thread-shift: 14px;
+
+    padding-left: var(--thread-shift);
+  }
+
+  .columnColumn {
+    --thread-indent: 20px;
+    --thread-rail-left: -10px;
+  }
+
+  .clearance {
+    padding-left: calc(var(--gutter) + 14px);
+  }
+}
+
+/* The rail. Visible overflow so the fill's glow and the scaled node are not cut off. */
+.rail {
+  --thread-x: 0px;
+
+  position: absolute;
+  top: var(--thread-top, 0);
+  bottom: var(--thread-bottom, 0);
+  width: 1px;
+  pointer-events: none;
+  clip-path: inset(-14px -20px);
+}
+
+.railGutter {
+  left: max(-32px, calc(10px - var(--gutter) - var(--thread-shift, 0px)));
+}
+
+.railEdge {
+  left: max(10px, calc(50% - var(--container-max) / 2 - 36px));
+}
+
+.railColumn {
+  --thread-x: 4px;
+
+  left: var(--thread-rail-left, 0);
+  width: 9px;
+}
+
+.line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--thread-x);
+  width: 1px;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    var(--thread-line) var(--thread-fade, 8%),
+    var(--thread-line) var(--thread-fade-end, 100%),
+    var(--thread-line-foot, var(--thread-line))
+  );
+  opacity: 0.55;
+}
+
+.lineFadeEnd {
+  --thread-fade-end: 92%;
+  --thread-line-foot: transparent;
+}
+
+/* The lit part: one element, scaled from the top. The hook sets the transform. */
+.fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--thread-x);
+  width: 1px;
+  background: var(--thread-on);
+  box-shadow: var(--glow-thread);
+  transform: scaleY(0);
+  transform-origin: 50% 0;
+  will-change: transform;
+}
+
+/* One 120px light travelling down the line. Clipped to the rail. */
+.pulseClip {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--thread-x);
+  width: 1px;
+  overflow: hidden;
+}
+
+.pulse {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+  width: 1px;
+  height: 120px;
+  background: linear-gradient(180deg, transparent, var(--thread-on), transparent);
+}
+
+/* A node: 9px ring on the line. */
+.node {
+  position: absolute;
+  box-sizing: border-box;
+  width: 9px;
+  height: 9px;
+  border: 1px solid var(--thread-on);
+  border-radius: 50%;
+  background: var(--bg-ground);
+  pointer-events: none;
+}
+
+/* Inside a column rail: at the rail's left edge; top or bottom from the props. */
+.nodeRail {
+  top: var(--thread-node-top, auto);
+  bottom: var(--thread-node-bottom, auto);
+  left: 0;
+}
+
+/* On a section, by placement. */
+.nodeGutter {
+  top: var(--thread-node-top, 3px);
+  left: max(-32px, calc(10px - var(--gutter) - var(--thread-shift, 0px)));
+  margin-left: -4px;
+}
+
+.nodeColumn {
+  top: var(--thread-node-top, 3px);
+  left: calc(var(--thread-rail-left, 0px) - var(--thread-indent, 44px));
+}
+
+.nodeEdge {
+  top: var(--thread-node-top, 3px);
+  left: calc(max(10px, 50% - var(--container-max) / 2 - 36px) - 4px);
+}
+
+.node[data-thread-state='next'] {
+  border-color: var(--thread-next);
+  box-shadow: none;
+}
+
+.node[data-thread-state='past'] {
+  border-color: var(--thread-past);
+  box-shadow: none;
+}
+
+/* The node the reader is on: the same lit circle as the nav. */
+.node[data-thread-state='on'] {
+  border-color: var(--thread-on);
+  box-shadow:
+    var(--glow-signal),
+    0 0 3px color-mix(in srgb, var(--thread-on) 70%, transparent);
+  transform: scale(1.3);
+}
+
+.section {
+  position: relative;
+}
+
+@keyframes thread-pulse {
+  from {
+    transform: translateY(-120px);
+  }
+
+  to {
+    transform: translateY(2400px);
+  }
+}
+
+/* Motion is opt-in: with reduced motion the fill steps, node states switch, and no pulse runs. */
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion='reduce']) .fill {
+    transition: transform var(--duration-thread-fill) linear;
+  }
+
+  :root:not([data-motion='reduce']) .node {
+    transition:
+      border-color var(--duration-thread-node) ease,
+      box-shadow var(--duration-thread-node) ease,
+      transform var(--duration-thread-node) var(--ease-out);
+  }
+
+  :root:not([data-motion='reduce']) .pulse {
+    display: block;
+    animation: thread-pulse var(--duration-thread-pulse) var(--ease-standard) infinite;
+  }
+}
