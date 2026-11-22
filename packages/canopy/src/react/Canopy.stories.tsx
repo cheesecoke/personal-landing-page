@@ -43,6 +43,8 @@ const meta = {
     intro: 'never',
     onStage: (handle) => {
       stage = handle;
+      // The perf script (`pnpm --filter @cwc/canopy perf`) reads the stage from here.
+      (window as { __canopy?: CanopyHandle | null }).__canopy = handle;
     },
   },
 } satisfies Meta<typeof Canopy>;
