@@ -23,3 +23,11 @@ export {
   type PortraitStill,
 } from './Portrait/Portrait';
 export type { PortraitGlanceTiming } from './Portrait/portraitController';
+
+export {
+  CurrentRoleBlock,
+  type CurrentRole,
+  type CurrentRoleBlockProps,
+} from './CurrentRoleBlock/CurrentRoleBlock';
+export { NowBlock, type NowBlockProps, type NowEntry } from './NowBlock/NowBlock';
+export { formatMonth, tenureMonths, type Month } from './internal/month';
