@@ -416,8 +416,14 @@ export function Canopy({
                 <li key={shoot.id}>
                   <button
                     type="button"
-                    className={cx(s.shoot, cur && cur.id === n.id && cur.i === i && s.hov)}
+                    className={cx(
+                      s.shoot,
+                      shoot.state === 'grown' && s.grown,
+                      shoot.state === 'answered' && s.answered,
+                      cur && cur.id === n.id && cur.i === i && s.hov,
+                    )}
                     data-shoot={i}
+                    data-shoot-state={shoot.state}
                     aria-pressed={selection.pinShoot?.id === n.id && selection.pinShoot.i === i}
                     onClick={() => pinShoot(i)}
                     onMouseEnter={() => hoverShoot(i)}
@@ -425,7 +431,15 @@ export function Canopy({
                     onFocus={() => hoverShoot(i)}
                     onBlur={() => hoverShoot(null)}
                   >
-                    <b>{shoot.label}</b>
+                    <b>
+                      {shoot.label}
+                      {shoot.state === 'grown' && (
+                        <span className={s.state}>{copy.shootStates.grown}</span>
+                      )}
+                      {shoot.state === 'answered' && (
+                        <span className={s.state}>{copy.shootStates.answered}</span>
+                      )}
+                    </b>
                     {shoot.note && <span className={s.text}>{shoot.note}</span>}
                   </button>
                 </li>
