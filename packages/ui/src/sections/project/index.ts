@@ -3,7 +3,7 @@ export { BranchRings, type BranchRingsProps, type RingData } from './BranchRings
 export {
   RING_THICKNESS,
   ringGeometry,
-  type RingGeometry,
+  type BranchRingGeometry,
   type RingWeight,
 } from './BranchRings/ringGeometry';
 export { CaptainsLog, type CaptainsLogProps } from './CaptainsLog/CaptainsLog';

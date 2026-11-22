@@ -3,7 +3,7 @@ export type RingWeight = 1 | 2 | 3 | 4;
 /** Ring thickness in board units, by weight. Four steps, never a raw count. */
 export const RING_THICKNESS: Record<RingWeight, number> = { 1: 2, 2: 4, 3: 7, 4: 10 };
 
-export interface RingGeometry {
+export interface BranchRingGeometry {
   /** Radius of the solid core. */
   core: number;
   /** Radius of the outline, where the growing arc is drawn. */
@@ -19,7 +19,7 @@ const round = (value: number) => Math.round(value * 10) / 10;
  * outward from a 16-unit centre, 6 apart, each as thick as its weight, then the whole section is
  * scaled so its outline sits at radius 118.
  */
-export function ringGeometry(weights: readonly RingWeight[]): RingGeometry {
+export function ringGeometry(weights: readonly RingWeight[]): BranchRingGeometry {
   let r = 16;
   const raw = weights.map((weight) => {
     const t = RING_THICKNESS[weight];
