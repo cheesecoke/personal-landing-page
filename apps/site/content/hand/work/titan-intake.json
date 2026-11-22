@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "slug": "titan-intake",
+  "path": "/work/titan-intake",
+  "title": "Titan Intake",
+  "breadcrumb": {
+    "label": "Breadcrumb",
+    "items": [{ "label": "About", "href": "/about" }, { "label": "Titan Intake" }]
+  },
+  "hero": {
+    "status": "Current · since January 2026",
+    "title": "Titan Intake",
+    "subtitle": "Senior Software Engineer, AI",
+    "lead": "I build the company's AI orchestrator: agents turn a product spec into tested code, and a harness measures every stage.",
+    "figure": {
+      "type": "flow",
+      "label": "Flow: product spec, tickets, agents build, agents test, engineer review. A harness measures each stage; a memory layer feeds lessons back into the build step.",
+      "steps": ["Product spec", "Tickets", "Agents build", "Agents test", "Engineer review"],
+      "notes": ["Memory feeds lessons back", "Harness measures each stage"],
+      "caption": "What the system does. No work imagery by design."
+    }
+  },
+  "sections": [
+    {
+      "type": "whereItsAt",
+      "id": "what-it-is",
+      "title": "What it is",
+      "paragraphs": [
+        "The orchestrator breaks a product spec into tickets. Coding agents build and test each one. A harness measures every stage, and a memory layer feeds lessons from past runs back in."
+      ],
+      "facts": [
+        {
+          "value": "Spec to tested code",
+          "caption": "Starts at the product spec, one step before tickets."
+        },
+        {
+          "value": "Company AI Academy",
+          "caption": "Live agent demos for people outside engineering."
+        }
+      ]
+    },
+    { "type": "log", "id": "log", "label": "Captain's log" },
+    {
+      "type": "goDeeper",
+      "id": "go-deeper",
+      "title": "Go deeper",
+      "expanders": [
+        {
+          "title": "How it works",
+          "paragraphs": [
+            "A product spec goes in. The orchestrator writes the tickets, and coding agents build and test each one. A test harness scores every stage, so when something goes wrong I can see where, and fix it."
+          ]
+        },
+        {
+          "title": "What I tried",
+          "paragraphs": [
+            "Starting the pipeline at the product spec instead of at tickets, so the agents see the intent and not just the task. A harness that scores every stage, so a failure points to where it happened."
+          ]
+        },
+        {
+          "title": "What didn't work",
+          "paragraphs": [
+            "Early on, the pipeline kept repeating the same mistakes. Measuring each stage showed where, and a memory layer that learns from past runs brought those failures down."
+          ],
+          "confirm": ["[CONFIRM: a second, non-specific lesson from the Titan assessment]"]
+        },
+        {
+          "title": "Teaching it",
+          "paragraphs": [
+            "I run the company AI Academy: sessions with live demonstrations of agent workflows, so people outside engineering can use AI in their own work."
+          ]
+        }
+      ]
+    }
+  ],
+  "next": {
+    "label": "Next",
+    "eyebrow": "Next",
+    "link": { "label": "Contact", "href": "/contact" },
+    "back": { "label": "Back to About", "href": "/about" }
+  }
+}
