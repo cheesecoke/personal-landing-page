@@ -23,3 +23,9 @@ export {
   type ShootState,
 } from './ShootList/ShootItem';
 export { ShootList, type ShootListProps } from './ShootList/ShootList';
+export {
+  ReleasePanel,
+  type ReleaseChannel,
+  type ReleaseData,
+  type ReleasePanelProps,
+} from './ReleasePanel/ReleasePanel';
