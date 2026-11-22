@@ -1,0 +1,16 @@
+{
+  "expectPath": "facts.0.asOf",
+  "data": {
+    "schemaVersion": 1,
+    "visibility": "public",
+    "slug": "duo-decide",
+    "name": "Duo Decide",
+    "parent": null,
+    "kind": "product",
+    "state": "growing",
+    "status": { "key": "in-build", "label": "In build" },
+    "facts": [
+      { "key": "test-cases", "value": "1,167", "label": "test cases", "asOf": "2026-02-30" }
+    ]
+  }
+}

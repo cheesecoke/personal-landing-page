@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "visibility": "public",
+  "slug": "duo-decide",
+  "name": "Duo Decide",
+  "parent": null,
+  "kind": "product",
+  "state": "growing",
+  "status": { "key": "in-build", "label": "In build", "since": "2025-08" },
+  "whereItsAt": "Voting, three-round polls, option lists, history and real-time sync work on iOS and the web. The redesign shipped in October. November went to App Store readiness: an iOS 26 build, over-the-air updates, archive and soft delete, and a native accessibility pass.",
+  "facts": [
+    { "key": "test-cases", "value": "1,167", "label": "test cases", "asOf": "2026-11-20" },
+    { "key": "sql-migrations", "value": "24", "label": "SQL migrations", "asOf": "2026-11-20" },
+    { "key": "end-to-end-flows", "value": "6", "label": "end-to-end flows", "asOf": "2026-11-20" }
+  ]
+}

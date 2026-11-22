@@ -1,0 +1,14 @@
+{
+  "expectPath": "status.key",
+  "data": {
+    "schemaVersion": 1,
+    "visibility": "public",
+    "slug": "duo-decide",
+    "name": "Duo Decide",
+    "parent": null,
+    "kind": "product",
+    "state": "growing",
+    "status": { "key": "shipping-soon", "label": "Shipping soon" },
+    "facts": []
+  }
+}
