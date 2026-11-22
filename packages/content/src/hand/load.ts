@@ -28,6 +28,7 @@ const projectFiles = {
   pas: 'projects/pas.json',
   atti: 'projects/atti.json',
   lifebox: 'projects/lifebox.json',
+  personalBrain: 'projects/personal-brain.json',
 } as const;
 
 export type ProjectKey = keyof typeof projectFiles;
