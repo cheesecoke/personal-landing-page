@@ -41,23 +41,23 @@ where it animates.
 
 ## Tier 2. Layout and structure (`packages/ui/src/layout`)
 
-| Component         | Notes                                                     | Status      |
-| ----------------- | --------------------------------------------------------- | ----------- |
-| AppShell          | a placeholder lives in `apps/site/app/shell` until built  | not started |
-| SiteNav           | with NavTimeline and the release nav ring                 | not started |
-| SiteFooter        | with "Last update · date"                                 | not started |
-| Container         |                                                           | story       |
-| Section           |                                                           | story       |
-| Stack             |                                                           | story       |
-| Cluster           |                                                           | story       |
-| Grid              |                                                           | story       |
-| SplitLayout       |                                                           | story       |
-| Thread            |                                                           | not started |
-| ThreadSection     |                                                           | not started |
-| PageHeader        |                                                           | not started |
-| HandoffFooter     |                                                           | not started |
-| GoDeeper          |                                                           | not started |
-| FreshnessProvider | non-visual: holds "now", ranks, enforces the per-page cap | not started |
+| Component         | Notes                                                          | Status      |
+| ----------------- | -------------------------------------------------------------- | ----------- |
+| AppShell          | a placeholder lives in `apps/site/app/shell` until built       | not started |
+| SiteNav           | with NavTimeline and the release nav ring                      | not started |
+| SiteFooter        | with "Last update · date"                                      | not started |
+| Container         |                                                                | story       |
+| Section           |                                                                | story       |
+| Stack             |                                                                | story       |
+| Cluster           |                                                                | story       |
+| Grid              |                                                                | story       |
+| SplitLayout       |                                                                | story       |
+| Thread            | with ThreadScope, ThreadColumn, ThreadNode; follows the reader | story       |
+| ThreadSection     | a section with its node on the thread                          | story       |
+| PageHeader        |                                                                | not started |
+| HandoffFooter     |                                                                | not started |
+| GoDeeper          |                                                                | not started |
+| FreshnessProvider | non-visual: holds "now", ranks, enforces the per-page cap      | not started |
 
 ## Tier 3. Feature sections (`packages/ui/src/sections`)
 

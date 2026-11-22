@@ -18,3 +18,29 @@ export {
   type SplitStackGap,
 } from './SplitLayout/SplitLayout';
 export { Stack, type StackProps } from './Stack/Stack';
+export {
+  ACTIVATION_LINE,
+  activeNode,
+  fillScale,
+  fillTarget,
+  isAtEnd,
+  nodeState,
+  readerPosition,
+  type ThreadNodeState,
+  type ThreadRail,
+  type ThreadView,
+} from './Thread/readerPosition';
+export {
+  Thread,
+  ThreadColumn,
+  ThreadNode,
+  ThreadScope,
+  ThreadSection,
+  type ThreadColumnProps,
+  type ThreadNodeProps,
+  type ThreadPlacement,
+  type ThreadProps,
+  type ThreadScopeProps,
+  type ThreadSectionProps,
+} from './Thread/Thread';
+export { useThreadProgress, type ThreadProgressOptions } from './Thread/useThreadProgress';
