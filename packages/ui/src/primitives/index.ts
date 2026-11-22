@@ -45,3 +45,20 @@ export { Expander, ExpanderGroup, type ExpanderProps } from './Expander/Expander
 export { VisuallyHidden, type VisuallyHiddenProps } from './VisuallyHidden/VisuallyHidden';
 export { SkipLink, type SkipLinkProps } from './SkipLink/SkipLink';
 export { FocusRing, focusRing, focusRingInset, type FocusRingProps } from './FocusRing/FocusRing';
+
+export {
+  NewMarker,
+  NewMarkerLabel,
+  NewMarkerRing,
+  useHydrated,
+  type NewMarkerLabelProps,
+  type NewMarkerProps,
+  type NewMarkerRingProps,
+} from './NewMarker/NewMarker';
+export { newMark, type NewMark, type NewMarkInput } from './NewMarker/newMark';
+export {
+  ProjectStateBadge,
+  type ProjectStateBadgeProps,
+  type ProjectStateFresh,
+  type ProjectStateTone,
+} from './ProjectStateBadge/ProjectStateBadge';
