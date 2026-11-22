@@ -33,6 +33,7 @@
     "*.{json,md,yml,yaml}": "prettier --write"
   },
   "devDependencies": {
+    "@cwc/content": "workspace:*",
     "@cwc/tokens": "workspace:*",
     "@eslint/js": "^10.0.1",
     "@storybook/addon-a11y": "^10.6.8",

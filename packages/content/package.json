@@ -9,6 +9,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./node": "./src/node/index.ts",
+    "./react": "./src/react/index.ts",
     "./fixtures": "./src/fixtures.ts",
     "./content.schema.json": "./content.schema.json"
   },
@@ -19,5 +20,19 @@
   "dependencies": {
     "@cwc/tokens": "workspace:*",
     "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
   }
 }
