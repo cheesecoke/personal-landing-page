@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "title": "Home",
+  "hero": {
+    "eyebrow": "Chase Cole · Senior Software Engineer, AI · Titan Intake",
+    "headline": ["What I’ve built,", "and what’s", "still growing."],
+    "underlined": "growing.",
+    "lead": "I’m a software engineer: I build apps people use, the tools engineers build with, and AI systems. Whatever brought you here, the work is below.",
+    "actions": [
+      { "label": "See the projects", "href": "/projects", "variant": "primary" },
+      { "label": "Get in touch", "href": "/contact", "variant": "quiet" }
+    ],
+    "stump": {
+      "wide": {
+        "src": "/media/stump/stump-hero.webp",
+        "width": 2400,
+        "height": 1500,
+        "alt": "",
+        "sources": [{ "src": "/media/stump/stump-hero.avif", "type": "image/avif" }]
+      },
+      "wideLit": {
+        "src": "/media/stump/stump-hero-lit.webp",
+        "width": 2400,
+        "height": 1500,
+        "alt": "",
+        "sources": [{ "src": "/media/stump/stump-hero-lit.avif", "type": "image/avif" }]
+      },
+      "phone": {
+        "src": "/media/stump/stump-phone.webp",
+        "width": 1170,
+        "height": 1400,
+        "alt": "A stylised tree stump in a dark studio, its growth rings drawn in light: teal rings, one orange ring.",
+        "sources": [{ "src": "/media/stump/stump-phone.avif", "type": "image/avif" }]
+      },
+      "projects": [
+        { "name": "PAS · Atti", "status": "Daily use", "href": "/projects/pas" },
+        { "name": "Personal brain", "status": "Daily use", "href": "/projects/personal-brain" },
+        { "name": "AI system", "status": "First version", "href": "/projects/ai-system" },
+        { "name": "Duo Decide", "status": "In build", "href": "/projects/duo-decide" }
+      ],
+      "rings": [
+        { "label": "Titan Intake", "when": "Now", "tone": "signal" },
+        { "label": "Wildland fire", "when": "2022–24", "tone": "ember" }
+      ],
+      "listLabel": "Projects on the stump"
+    }
+  },
+  "proof": {
+    "label": "Proof",
+    "items": [
+      {
+        "value": "Spec to tested code",
+        "caption": "At work: agents build, engineers review.",
+        "href": "/work/titan-intake"
+      },
+      {
+        "value": "177",
+        "unit": "commits by Atti",
+        "caption": "My assistant's own writes to my brain.",
+        "href": "/projects/pas/atti"
+      },
+      {
+        "value": "1,167",
+        "unit": "test cases",
+        "caption": "Duo Decide, run in CI.",
+        "href": "/projects/duo-decide"
+      }
+    ]
+  },
+  "atWork": {
+    "eyebrow": "At work",
+    "title": "The AI orchestrator I built",
+    "text": "It turns a product spec into tickets that agents build and test, with a harness measuring every stage.",
+    "link": { "label": "The work at Titan Intake", "href": "/work/titan-intake" },
+    "flow": {
+      "label": "Flow: product spec, tickets, agents build, agents test, engineer review.",
+      "steps": ["Product spec", "Tickets", "Agents build", "Agents test", "Engineer review"]
+    }
+  },
+  "ownTime": {
+    "title": "On my own time",
+    "lead": "Think, write, build, test.",
+    "link": { "label": "All projects", "href": "/projects" },
+    "plates": [
+      {
+        "name": "PAS",
+        "line": "My personal assistant system.",
+        "status": "Daily use",
+        "href": "/projects/pas",
+        "image": {
+          "src": "/media/projects/atti/atti-tile.webp",
+          "width": 1200,
+          "height": 900,
+          "alt": "Concept drawing A-02: the Atti pod's exploded stack, from shell to skin pad."
+        },
+        "imageKind": "Concept drawing"
+      },
+      {
+        "name": "Duo Decide",
+        "line": "A decision app for couples.",
+        "status": "In build",
+        "href": "/projects/duo-decide",
+        "image": {
+          "src": "/media/projects/duo-decide/duo-decide-tile.webp",
+          "width": 1200,
+          "height": 900,
+          "alt": "The Duo Decide decision queue in the design mock: \"What are we deciding today?\""
+        },
+        "imageKind": "Design mock"
+      },
+      {
+        "name": "AI system",
+        "line": "First pipeline, being replaced by Distill.",
+        "status": "First version",
+        "href": "/projects/ai-system",
+        "image": {
+          "src": "/media/projects/ai-system/ai-system-tile.webp",
+          "width": 1200,
+          "height": 900,
+          "alt": "Diagram of my plan-to-pull-request pipeline: intake, evidence, plan, code and PR, with a brain that feeds lessons back into planning."
+        },
+        "imageKind": "Pipeline diagram"
+      }
+    ]
+  },
+  "map": {
+    "title": "How my projects connect.",
+    "link": { "label": "Open the map", "href": "/projects" },
+    "mapLinkLabel": "Open the project map"
+  },
+  "next": {
+    "label": "Next",
+    "link": { "label": "Projects", "href": "/projects" },
+    "aside": { "label": "Building with agents too? Write to me.", "href": "/contact" }
+  }
+}
