@@ -9,14 +9,16 @@
   },
   "scripts": {
     "typecheck": "turbo run typecheck && tsc -p tsconfig.json --noEmit",
-    "lint": "eslint . && stylelint \"**/*.css\" --allow-empty-input && prettier --check .",
+    "lint": "eslint . && stylelint \"**/*.css\" --allow-empty-input && pnpm token-lint && prettier --check .",
     "format": "prettier --write .",
     "test": "vitest run",
     "build": "turbo run build",
     "dev": "turbo run dev --filter=site",
-    "prepare": "husky"
+    "prepare": "husky",
+    "token-lint": "tsx tools/token-lint/cli.ts"
   },
   "lint-staged": {
+    "packages/ui/src/**/*.{ts,tsx,css}": "tsx tools/token-lint/cli.ts",
     "*.{ts,tsx,js,mjs,cjs}": [
       "eslint --fix",
       "prettier --write"
