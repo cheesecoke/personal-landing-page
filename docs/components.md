@@ -46,12 +46,12 @@ where it animates.
 | AppShell          | a placeholder lives in `apps/site/app/shell` until built  | not started |
 | SiteNav           | with NavTimeline and the release nav ring                 | not started |
 | SiteFooter        | with "Last update · date"                                 | not started |
-| Container         |                                                           | not started |
-| Section           |                                                           | not started |
-| Stack             |                                                           | not started |
-| Cluster           |                                                           | not started |
-| Grid              |                                                           | not started |
-| SplitLayout       |                                                           | not started |
+| Container         |                                                           | story       |
+| Section           |                                                           | story       |
+| Stack             |                                                           | story       |
+| Cluster           |                                                           | story       |
+| Grid              |                                                           | story       |
+| SplitLayout       |                                                           | story       |
 | Thread            |                                                           | not started |
 | ThreadSection     |                                                           | not started |
 | PageHeader        |                                                           | not started |
