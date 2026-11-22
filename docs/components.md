@@ -1,0 +1,108 @@
+# Component inventory
+
+Status: `not started` → `story` (built, with stories) → `in site` (used by a route).
+Update a component's row in the PR that changes its status.
+
+Each component with live data has stories for every state it can be in (`Growing`, `Live`,
+`NoUpdate`, `Empty`, plus extras), each checked at 390, 768 and 1440 wide, and a `Reduced` story
+where it animates.
+
+## Tier 1. Primitives (`packages/ui/src/primitives`)
+
+| Component         | Notes                                                         | Status      |
+| ----------------- | ------------------------------------------------------------- | ----------- |
+| Text              | `role` prop: the type roles                                   | not started |
+| Heading           |                                                               | not started |
+| Label             |                                                               | not started |
+| Readout           | numeral, status, date, stardate                               | not started |
+| ConfirmMarker     |                                                               | not started |
+| Button            | primary, quiet                                                | not started |
+| ArrowIcon         |                                                               | not started |
+| TextLink          |                                                               | not started |
+| HandoffLink       |                                                               | not started |
+| StatusDot         | dot only                                                      | not started |
+| RingMark          | logo; optional `arc` prop                                     | not started |
+| Favicon           |                                                               | not started |
+| Hairline          |                                                               | not started |
+| LitEdge           |                                                               | not started |
+| TickScale         |                                                               | not started |
+| Grain             | the one film-grain texture                                    | not started |
+| RingArcs          |                                                               | not started |
+| Panel             |                                                               | not started |
+| Expander          |                                                               | not started |
+| Breadcrumb        |                                                               | not started |
+| Caption           |                                                               | not started |
+| Figure            |                                                               | not started |
+| VisuallyHidden    |                                                               | not started |
+| SkipLink          |                                                               | not started |
+| FocusRing         |                                                               | not started |
+| ProjectStateBadge | StatusDot + status word + optional NewMarker slot             | not started |
+| NewMarker         | ring around the status dot that drains with age, plus a label | not started |
+
+## Tier 2. Layout and structure (`packages/ui/src/layout`)
+
+| Component         | Notes                                                     | Status      |
+| ----------------- | --------------------------------------------------------- | ----------- |
+| AppShell          | a placeholder lives in `apps/site/app/shell` until built  | not started |
+| SiteNav           | with NavTimeline and the release nav ring                 | not started |
+| SiteFooter        | with "Last update · date"                                 | not started |
+| Container         |                                                           | not started |
+| Section           |                                                           | not started |
+| Stack             |                                                           | not started |
+| Cluster           |                                                           | not started |
+| Grid              |                                                           | not started |
+| SplitLayout       |                                                           | not started |
+| Thread            |                                                           | not started |
+| ThreadSection     |                                                           | not started |
+| PageHeader        |                                                           | not started |
+| HandoffFooter     |                                                           | not started |
+| GoDeeper          |                                                           | not started |
+| FreshnessProvider | non-visual: holds "now", ranks, enforces the per-page cap | not started |
+
+## Tier 3. Feature sections (`packages/ui/src/sections`)
+
+| Component         | Notes                                               | Status      |
+| ----------------- | --------------------------------------------------- | ----------- |
+| StumpHero         | with ArCallout                                      | not started |
+| ProofRow          | counted facts with an "as of" date                  | not started |
+| AtWorkPipeline    |                                                     | not started |
+| ProjectPlates     |                                                     | not started |
+| ProjectTile       | with ProjectStateBadge                              | not started |
+| CanopyMap         | `teaser`, `full`; wraps `packages/canopy`           | not started |
+| ProjectIndex      | rows with ProjectStateBadge + NewMarker             | not started |
+| WhereItsAt        |                                                     | not started |
+| CaptainsLog       | log entries on the thread, newest first             | not started |
+| LogEntry          | kind `update` or `release`                          | not started |
+| ReleasePanel      | live projects only                                  | not started |
+| ShootItem         | `open`, `grown`, `answered`; plus ShootList         | not started |
+| BranchRings       | one ring per stretch of work or per release         | not started |
+| TitanLog          | CaptainsLog variant; renders nothing while disabled | not started |
+| CurrentRoleBlock  | tenure computed from a date                         | not started |
+| NowBlock          |                                                     | not started |
+| LatestLine        |                                                     | not started |
+| DetailsStrip      |                                                     | not started |
+| PasFamily         |                                                     | not started |
+| AiSystemEvolution |                                                     | not started |
+| BrainsThatFeedIt  |                                                     | not started |
+| RingsTimeline     |                                                     | not started |
+| Portrait          |                                                     | not started |
+| BuildWith         |                                                     | not started |
+| FieldNotes        |                                                     | not started |
+| TitanFlow         |                                                     | not started |
+| BeyondSlots       |                                                     | not started |
+| ContactDoor       |                                                     | not started |
+
+## Tier 4. Page templates (`apps/site/app/templates`)
+
+Each takes fixture data in Storybook and has a `NoLiveData` story.
+
+| Template         | Status      |
+| ---------------- | ----------- |
+| HomeTemplate     | not started |
+| ProjectsTemplate | not started |
+| ProjectTemplate  | not started |
+| JobTemplate      | not started |
+| AboutTemplate    | not started |
+| BeyondTemplate   | not started |
+| ContactTemplate  | not started |
+| NotFound         | not started |
