@@ -1,0 +1,5 @@
+@import 'tailwindcss';
+@import '@cwc/tokens/styles.css';
+
+/* Components live in the workspace packages; scan them for class names. */
+@source '../../../packages';

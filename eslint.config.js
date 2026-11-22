@@ -44,6 +44,9 @@ export default tseslint.config(
         'error',
         {
           groups: ['builtin', 'external', 'internal', ['parent', 'sibling', 'index']],
+          // Workspace packages sort as their own group, after third-party imports.
+          pathGroups: [{ pattern: '@cwc/**', group: 'internal' }],
+          pathGroupsExcludedImportTypes: ['builtin'],
           'newlines-between': 'always',
           alphabetize: { order: 'asc', caseInsensitive: true },
         },

@@ -10,19 +10,31 @@ import { navItems } from '../paths';
 export function AppShell({ children }: { children: ReactNode }) {
   return (
     <>
-      <header>
-        <nav aria-label="Site">
-          <Link to="/">Chase Cole</Link>
-          <ul>
+      <header className="mx-auto max-w-page px-gutter">
+        <nav
+          aria-label="Site"
+          className="flex min-h-touch flex-wrap items-center justify-between gap-x-8 border-b border-hairline"
+        >
+          <Link to="/" className="type-h3 no-underline">
+            Chase Cole
+          </Link>
+          <ul className="m-0 flex list-none gap-2 p-0">
             {navItems.map((item) => (
               <li key={item.to}>
-                <NavLink to={item.to}>{item.label}</NavLink>
+                <NavLink
+                  to={item.to}
+                  className="flex min-h-touch items-center px-3 type-body no-underline"
+                >
+                  {item.label}
+                </NavLink>
               </li>
             ))}
           </ul>
         </nav>
       </header>
-      <main id="main">{children}</main>
+      <main id="main" className="mx-auto max-w-page px-gutter py-16">
+        {children}
+      </main>
     </>
   );
 }
