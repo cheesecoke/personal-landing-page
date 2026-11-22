@@ -52,3 +52,12 @@ export const proofFacts: ProofFact[] = [
     href: '/projects/duo-decide',
   },
 ];
+
+export const atWorkCopy = {
+  label: 'At work',
+  title: 'The AI orchestrator I built',
+  body: 'It turns a product spec into tickets that agents build and test, with a harness measuring every stage.',
+  link: { label: 'The work at Titan Intake', href: '/work/titan-intake' },
+  steps: ['Product spec', 'Tickets', 'Agents build', 'Agents test', 'Engineer review'],
+  flowLabel: 'Flow: product spec, tickets, agents build, agents test, engineer review.',
+};
