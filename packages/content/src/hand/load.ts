@@ -27,6 +27,7 @@ const handFiles = {
 const projectFiles = {
   pas: 'projects/pas.json',
   atti: 'projects/atti.json',
+  lifebox: 'projects/lifebox.json',
 } as const;
 
 export type ProjectKey = keyof typeof projectFiles;
