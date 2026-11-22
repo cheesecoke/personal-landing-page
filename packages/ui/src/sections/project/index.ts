@@ -1,5 +1,10 @@
 // Project and job page sections. One folder per component, story beside it.
 export {
+  AiSystemEvolution,
+  type AiSystemEvolutionProps,
+  type EvolutionStop,
+} from './AiSystemEvolution/AiSystemEvolution';
+export {
   ArtifactCard,
   ArtifactList,
   ProjectVideo,
