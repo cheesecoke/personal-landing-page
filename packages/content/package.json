@@ -7,7 +7,9 @@
     "**/*.css"
   ],
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./hand": "./src/hand/index.ts",
+    "./hand/load": "./src/hand/load.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit"
