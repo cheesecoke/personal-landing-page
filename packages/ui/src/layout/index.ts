@@ -1,9 +1,27 @@
 // Tier 2: layout and structure (AppShell, SiteNav, Thread, ...). One folder per component, story beside it.
 export { Cluster, type ClusterProps } from './Cluster/Cluster';
 export { Container, type ContainerProps, type ContainerWidth } from './Container/Container';
+export {
+  GoDeeper,
+  type GoDeeperArtifact,
+  type GoDeeperItem,
+  type GoDeeperProps,
+} from './GoDeeper/GoDeeper';
 export { Grid, type GridMin, type GridProps } from './Grid/Grid';
+export {
+  HandoffFooter,
+  type HandoffFooterProps,
+  type HandoffFooterSpace,
+  type HandoffFooterVariant,
+} from './HandoffFooter/HandoffFooter';
 export type { Align, Gap, Justify } from './internal/gap';
 export type { LinkComponent, SiteLink } from './internal/link';
+export {
+  PageHeader,
+  type PageHeaderLayout,
+  type PageHeaderMeasure,
+  type PageHeaderProps,
+} from './PageHeader/PageHeader';
 export {
   Section,
   type SectionMeasure,
