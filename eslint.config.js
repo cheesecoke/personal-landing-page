@@ -3,6 +3,7 @@ import prettier from 'eslint-config-prettier';
 import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript';
 import importX from 'eslint-plugin-import-x';
 import reactHooks from 'eslint-plugin-react-hooks';
+import storybook from 'eslint-plugin-storybook';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
@@ -17,6 +18,7 @@ export default tseslint.config(
       '**/storybook-static/**',
       '**/coverage/**',
       '**/.vercel/**',
+      '!.storybook',
       'packages/tokens/generated/**',
     ],
   },
@@ -88,5 +90,6 @@ export default tseslint.config(
       ],
     },
   },
+  ...storybook.configs['flat/recommended'],
   prettier,
 );
