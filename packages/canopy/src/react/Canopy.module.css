@@ -1,6 +1,10 @@
 /*
  * The canopy shell. Dark only, on purpose: the tree is light on black.
- * List | stage, with the open project's card floating over the stage's right edge.
+ * Desktop: list | stage, with the open project's card floating over the stage's right edge.
+ * Phone: stage, chip strip, bottom sheet.
+ *
+ * The phone layout switches on the viewport, not a container: the sheet is `position: fixed`, and
+ * a query container would become its containing block.
  */
 .root {
   --canopy-gutter-l: max(16px, env(safe-area-inset-left, 0px));
@@ -634,4 +638,169 @@
 .teaser .stage::after,
 .teaser .stage::before {
   display: none;
+}
+
+/* ---------- phone: stage, chip strip, bottom sheet ---------- */
+@media (width <= 760px) {
+  .root.full {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    min-height: 0;
+  }
+
+  .full .stage {
+    flex: none;
+    order: 1;
+    height: 70svh;
+    min-height: 380px;
+  }
+
+  .flat.wide {
+    display: none;
+  }
+
+  .flat.narrow {
+    display: block;
+  }
+
+  .head {
+    top: 16px;
+    right: var(--canopy-gutter-r);
+    left: var(--canopy-gutter-l);
+  }
+
+  .head h2 {
+    font-size: 17px;
+  }
+
+  .head p {
+    display: none;
+  }
+
+  .key {
+    bottom: 12px;
+    left: var(--canopy-gutter-l);
+    gap: 14px;
+    font-size: 12px;
+  }
+
+  .nogl {
+    left: var(--canopy-gutter-l);
+  }
+
+  .rail {
+    order: 2;
+    width: 100%;
+    min-width: 0;
+    padding: 14px 0 28px;
+    overflow: hidden;
+    border-top: 1px solid var(--line-hairline);
+    border-right: 0;
+  }
+
+  .lede {
+    margin: 0;
+    padding-right: var(--canopy-gutter-r);
+    padding-bottom: 12px;
+    padding-left: var(--canopy-gutter-l);
+    font-size: 14px;
+  }
+
+  .lede b {
+    display: inline;
+    margin: 0;
+    font-size: 14px;
+    font-stretch: 112%;
+  }
+
+  .sec,
+  .keys {
+    display: none;
+  }
+
+  .list {
+    flex-direction: row;
+    gap: 8px;
+    min-width: 0;
+    padding-right: var(--canopy-gutter-r);
+    padding-bottom: 4px;
+    padding-left: var(--canopy-gutter-l);
+    overflow-x: auto;
+    scroll-padding-inline: var(--canopy-gutter-l) var(--canopy-gutter-r);
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+  }
+
+  .list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .row,
+  .row.d1,
+  .row.d2,
+  .row.start {
+    flex: none;
+    order: 1;
+    column-gap: 8px;
+    width: auto;
+    min-height: 44px;
+    margin: 0;
+    padding: 0 12px;
+    border: 1px solid var(--line-hairline);
+    border-radius: 22px;
+    font-size: 14px;
+    scroll-snap-align: start;
+  }
+
+  .row.d1 .nm::before,
+  .row.d2 .nm::before {
+    display: none;
+  }
+
+  .row.start {
+    order: 0;
+    border-color: var(--line-tick);
+  }
+
+  .row.start .nm {
+    font-size: 15px;
+  }
+
+  .row .st {
+    display: none;
+  }
+
+  .row .ug {
+    grid-row: 1;
+  }
+
+  .card {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 20;
+    width: auto;
+    max-height: min(46vh, 440px);
+    padding: 16px var(--canopy-gutter-r) calc(16px + env(safe-area-inset-bottom, 0px))
+      var(--canopy-gutter-l);
+    border-width: 1px 0 0;
+    border-radius: 14px 14px 0 0;
+    box-shadow: 0 -18px 40px color-mix(in srgb, black 55%, transparent);
+  }
+
+  .card h3 {
+    margin: 4px 0 6px;
+    font-size: 23px;
+  }
+
+  .card .one {
+    margin-top: 8px;
+    font-size: 14.5px;
+  }
+
+  .card .open {
+    margin-top: 12px;
+  }
 }

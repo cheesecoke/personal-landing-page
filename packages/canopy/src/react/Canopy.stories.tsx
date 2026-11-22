@@ -34,6 +34,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const desktop = { viewport: { value: 'desktop', isRotated: false } };
+const phone = { viewport: { value: 'phone', isRotated: false } };
 
 /** Projects: the list, the stage and (once a project is picked) its card. */
 export const Full: Story = { globals: desktop };
@@ -71,8 +72,23 @@ export const ProjectOpen: Story = {
   },
 };
 
+/** Phone: the stage, a chip strip, and the card as a bottom sheet. */
+export const Phone: Story = { globals: phone };
+
+export const PhoneProjectOpen: Story = {
+  globals: phone,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole('button', { name: /^PAS/ }));
+    await canvas.findByRole('complementary', { name: 'Selected project' });
+  },
+};
+
+export const PhoneTeaser: Story = { args: { variant: 'teaser', height: 360 }, globals: phone };
+
 /** What pre-rendered HTML shows without JavaScript, and what is shown if the 3D chunk cannot load. */
 export const FlatFallback: Story = { args: { flat: true }, globals: desktop };
+export const FlatFallbackPhone: Story = { args: { flat: true }, globals: phone };
 export const FlatFallbackTeaser: Story = {
   args: { flat: true, variant: 'teaser' },
   globals: desktop,
