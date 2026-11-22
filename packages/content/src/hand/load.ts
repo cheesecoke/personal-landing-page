@@ -18,6 +18,8 @@ const handFiles = {
   home: { file: 'home.json', schema: HomeContent },
   projectsIndex: { file: 'projects-index.json', schema: ProjectsIndexContent },
   map: { file: 'map.json', schema: MapContent },
+  /** The job page. It has the shape of a project page but is not a project. */
+  titanIntake: { file: 'work/titan-intake.json', schema: ProjectPageContent },
 } as const;
 
 /**
