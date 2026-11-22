@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "footer": {
+    "name": "Chase Cole",
+    "role": "Senior Software Engineer, AI · Titan Intake",
+    "copyright": "© 2026 Chase Cole",
+    "navLabel": "Footer",
+    "email": { "label": "chasewcole@gmail.com", "href": "mailto:chasewcole@gmail.com" }
+  }
+}

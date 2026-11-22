@@ -7,3 +7,5 @@ export * from './home';
 export * from './projects-index';
 export * from './map';
 export * from './project-page';
+export * from './about';
+export * from './pages';
