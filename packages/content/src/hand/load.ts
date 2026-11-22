@@ -3,6 +3,7 @@ import { join } from 'node:path';
 
 import type { z } from 'zod';
 
+import { AboutContent } from './about';
 import { HomeContent } from './home';
 import { MapContent } from './map';
 import { ProjectPageContent } from './project-page';
@@ -18,6 +19,7 @@ const handFiles = {
   home: { file: 'home.json', schema: HomeContent },
   projectsIndex: { file: 'projects-index.json', schema: ProjectsIndexContent },
   map: { file: 'map.json', schema: MapContent },
+  about: { file: 'about.json', schema: AboutContent },
   /** The job page. It has the shape of a project page but is not a project. */
   titanIntake: { file: 'work/titan-intake.json', schema: ProjectPageContent },
 } as const;
