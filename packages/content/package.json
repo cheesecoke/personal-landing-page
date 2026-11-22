@@ -8,6 +8,8 @@
   ],
   "exports": {
     ".": "./src/index.ts",
+    "./hand": "./src/hand/index.ts",
+    "./hand/load": "./src/hand/load.ts",
     "./content.schema.json": "./content.schema.json"
   },
   "scripts": {

@@ -31,12 +31,44 @@ export const semantic = {
   accent: { signal: 'signal', warm: 'hinoki' },
   status: { build: 'ember', live: 'signal', private: 'ash' },
   fresh: { ring: 'hinoki', track: 'tick' },
+  /** The thread down the left gutter: its line, and the node the reader is on. */
+  thread: { line: 'signalDim', on: 'signal' },
 } as const satisfies Record<string, Record<string, PaletteName>>;
+
+/**
+ * Tones: colours the boards use between two palette steps. They are not palette colours and have
+ * no swatch; each exists for the one job its name says. Emitted as `--<group>-<role>`.
+ */
+export const tone = {
+  line: {
+    /** Every fifth tick on a tick scale (Home, the design system board). */
+    tickMajor: '#4A463D',
+    /** Diagram outlines, and the brighter major tick on project pages. */
+    outline: '#5A564D',
+  },
+  thread: {
+    /** Border of a thread node the reader has not reached. */
+    next: '#2C6A62',
+    /** Border of a thread node the reader has passed. */
+    past: '#4FB3A6',
+  },
+  text: {
+    /** Step labels inside diagrams (the at-work pipeline). */
+    diagram: '#D9D3C8',
+  },
+} as const satisfies Record<string, Record<string, string>>;
 
 /** Light. One glow per view. */
 export const glow = {
   signal: { color: 'signal', alpha: 0.6, blur: '12px' },
+  /** The lit part of the thread (its progress fill). */
+  thread: { color: 'signal', alpha: 0.5, blur: '8px' },
 } as const satisfies Record<string, { color: PaletteName; alpha: number; blur: string }>;
+
+/** Edges: the 1px inner highlight along the top of a panel. */
+export const edge = {
+  panel: { color: 'hinoki', alpha: 0.08 },
+} as const satisfies Record<string, { color: PaletteName; alpha: number }>;
 
 /** Mona Sans speaks. Tomorrow only measures (numerals, status words, dates). */
 export const font = {
@@ -125,6 +157,46 @@ export const type = {
     uppercase: true,
     color: 'smoke',
   },
+  /** Buttons. */
+  button: {
+    font: 'sans',
+    size: '14px',
+    weight: 600,
+    stretch: '100%',
+    lineHeight: '1',
+    tracking: '0',
+    color: 'bone',
+  },
+  /** Nav items. */
+  nav: {
+    font: 'sans',
+    size: '14px',
+    weight: 500,
+    stretch: '100%',
+    lineHeight: '1.4',
+    tracking: '0.005em',
+    color: 'ash',
+  },
+  /** Small text links with an arrow. */
+  link: {
+    font: 'sans',
+    size: '14px',
+    weight: 500,
+    stretch: '100%',
+    lineHeight: '1.4',
+    tracking: '0',
+    color: 'bone',
+  },
+  /** The hand-off link on project pages (main pages use h1). */
+  handoff: {
+    font: 'sans',
+    size: 'clamp(30px, 3.6vw, 50px)',
+    weight: 500,
+    stretch: '125%',
+    lineHeight: '1.05',
+    tracking: '-0.03em',
+    color: 'bone',
+  },
   'readout-numeral': {
     font: 'readout',
     size: 'clamp(36px, 4vw, 60px)',
@@ -185,6 +257,8 @@ export const ease = {
 export const duration = {
   nav: 600,
   hover: 400,
+  /** Link and hand-off arrows sliding on hover. */
+  arrow: 500,
   rise: 700,
   'mark-arc': 800,
   'fresh-in': 600,
@@ -192,6 +266,10 @@ export const duration = {
   'ar-draw': 1400,
   breathe: 9000,
   'thread-pulse': 11000,
+  /** A thread node changing state (next, on, past). */
+  'thread-node': 450,
+  /** The thread's progress fill following the reader. */
+  'thread-fill': 140,
   'canopy-intro': 5200,
   'canopy-grow': 2600,
   'canopy-shrink': 1000,
@@ -226,7 +304,9 @@ export const texture = {
 export const tokens = {
   palette,
   semantic,
+  tone,
   glow,
+  edge,
   font,
   type,
   layout,
