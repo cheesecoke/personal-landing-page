@@ -50,3 +50,12 @@ export {
   type ProjectIndexRow,
   type ProjectsMapSlotProps,
 } from './ProjectIndex/ProjectIndex';
+
+export {
+  BeyondSlots,
+  beyondSlotPositions,
+  type BeyondSlot,
+  type BeyondSlotPosition,
+  type BeyondSlotsProps,
+} from './BeyondSlots/BeyondSlots';
+export type { BeyondIconName } from './BeyondSlots/beyondIcons';
