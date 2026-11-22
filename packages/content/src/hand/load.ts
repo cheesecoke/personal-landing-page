@@ -6,6 +6,7 @@ import type { z } from 'zod';
 import { AboutContent } from './about';
 import { HomeContent } from './home';
 import { MapContent } from './map';
+import { BeyondContent, ContactContent, SiteContent } from './pages';
 import { ProjectPageContent } from './project-page';
 import { ProjectsIndexContent } from './projects-index';
 
@@ -20,6 +21,9 @@ const handFiles = {
   projectsIndex: { file: 'projects-index.json', schema: ProjectsIndexContent },
   map: { file: 'map.json', schema: MapContent },
   about: { file: 'about.json', schema: AboutContent },
+  beyond: { file: 'beyond.json', schema: BeyondContent },
+  contact: { file: 'contact.json', schema: ContactContent },
+  site: { file: 'site.json', schema: SiteContent },
   /** The job page. It has the shape of a project page but is not a project. */
   titanIntake: { file: 'work/titan-intake.json', schema: ProjectPageContent },
 } as const;
