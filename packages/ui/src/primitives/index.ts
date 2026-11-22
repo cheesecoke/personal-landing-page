@@ -35,3 +35,9 @@ export {
 
 export { RingMark, type RingMarkDetail, type RingMarkProps } from './RingMark/RingMark';
 export { Favicon, faviconLinks, type FaviconProps, type FaviconSize } from './Favicon/Favicon';
+
+export { Panel, type PanelProps } from './Panel/Panel';
+export { Caption, type CaptionProps } from './Caption/Caption';
+export { Figure, type FigureProps } from './Figure/Figure';
+export { Breadcrumb, type BreadcrumbItem, type BreadcrumbProps } from './Breadcrumb/Breadcrumb';
+export { Expander, ExpanderGroup, type ExpanderProps } from './Expander/Expander';
