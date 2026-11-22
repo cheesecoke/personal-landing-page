@@ -4,6 +4,8 @@ import { join } from 'node:path';
 import type { z } from 'zod';
 
 import { HomeContent } from './home';
+import { MapContent } from './map';
+import { ProjectsIndexContent } from './projects-index';
 
 /**
  * Build-time loader for hand-written content. Node only: routes call it from their loaders during
@@ -13,6 +15,8 @@ import { HomeContent } from './home';
 /** Every hand file: the key it loads under, its path inside the hand folder, and its schema. */
 const handFiles = {
   home: { file: 'home.json', schema: HomeContent },
+  projectsIndex: { file: 'projects-index.json', schema: ProjectsIndexContent },
+  map: { file: 'map.json', schema: MapContent },
 } as const;
 
 export type HandContent = {
