@@ -1,40 +1,58 @@
 import type { ReactNode } from 'react';
-import { Link, NavLink } from 'react-router';
+import { useLocation } from 'react-router';
 
-import { navItems } from '../paths';
+import { Grain, SiteFooter, SiteNav } from '@cwc/ui';
+
+import { RouterLink } from './RouterLink';
+import { currentNavHref, formatLastUpdate, shellLinks, site } from './site';
+
+export interface AppShellProps {
+  /** ISO date or datetime of the last content publish. Without it the footer shows no date. */
+  lastUpdate?: string;
+  children: ReactNode;
+}
 
 /**
- * Placeholder shell so every route renders inside one persistent layout. The real AppShell,
- * SiteNav and SiteFooter come from `@cwc/ui` and replace this file.
+ * The persistent layout: skip link, nav, the page in `main`, footer. The nav and footer stay
+ * mounted across navigations, so the nav timeline travels and only `main` cross-fades.
  */
-export function AppShell({ children }: { children: ReactNode }) {
+export function AppShell({ lastUpdate, children }: AppShellProps) {
+  const { pathname } = useLocation();
   return (
-    <>
-      <header className="mx-auto max-w-page px-gutter">
-        <nav
-          aria-label="Site"
-          className="flex min-h-touch flex-wrap items-center justify-between gap-x-8 border-b border-hairline"
-        >
-          <Link to="/" className="type-h3 no-underline">
-            Chase Cole
-          </Link>
-          <ul className="m-0 flex list-none gap-2 p-0">
-            {navItems.map((item) => (
-              <li key={item.to}>
-                <NavLink
-                  to={item.to}
-                  className="flex min-h-touch items-center px-3 type-body no-underline"
-                >
-                  {item.label}
-                </NavLink>
-              </li>
-            ))}
-          </ul>
-        </nav>
+    <div className="relative flex min-h-dvh flex-col overflow-x-clip bg-ground text-primary">
+      {/* TODO(primitives): swap to <SkipLink> */}
+      <a
+        href="#main"
+        className="sr-only type-link focus-visible:not-sr-only focus-visible:absolute focus-visible:top-2 focus-visible:left-2 focus-visible:z-10 focus-visible:flex focus-visible:min-h-touch focus-visible:items-center focus-visible:rounded-button focus-visible:bg-raised focus-visible:px-4"
+      >
+        {site.skipLabel}
+      </a>
+      <Grain />
+      <header className="relative">
+        <SiteNav
+          name={site.name}
+          label={site.navLabel}
+          items={shellLinks}
+          current={currentNavHref(pathname)}
+          linkAs={RouterLink}
+        />
       </header>
-      <main id="main" className="mx-auto max-w-page px-gutter py-16">
+      <main id="main" tabIndex={-1} className="app-main relative flex-1 outline-none">
         {children}
       </main>
-    </>
+      <SiteFooter
+        className="relative"
+        name={site.name}
+        tagline={site.tagline}
+        copyright={site.copyright}
+        navLabel={site.footerNavLabel}
+        links={shellLinks}
+        email={site.email}
+        linkAs={RouterLink}
+        lastUpdate={
+          lastUpdate ? { label: site.lastUpdateLabel, ...formatLastUpdate(lastUpdate) } : undefined
+        }
+      />
+    </div>
   );
 }
