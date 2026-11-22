@@ -6,7 +6,10 @@
     "slug": "distill",
     "name": "Distill",
     "parent": "ai-system",
-    "status": { "key": "next-version", "label": "Next version" },
+    "status": {
+      "key": "next-version",
+      "label": "Next version"
+    },
     "whereItsAt": "The next version of the pipeline."
   }
 }
