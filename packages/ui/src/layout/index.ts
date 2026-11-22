@@ -3,12 +3,18 @@ export { Cluster, type ClusterProps } from './Cluster/Cluster';
 export { Container, type ContainerProps, type ContainerWidth } from './Container/Container';
 export { Grid, type GridMin, type GridProps } from './Grid/Grid';
 export type { Align, Gap, Justify } from './internal/gap';
+export type { LinkComponent, SiteLink } from './internal/link';
 export {
   Section,
   type SectionMeasure,
   type SectionProps,
   type SectionSpace,
 } from './Section/Section';
+export {
+  SiteFooter,
+  type SiteFooterLastUpdate,
+  type SiteFooterProps,
+} from './SiteFooter/SiteFooter';
 export {
   SplitLayout,
   type SplitAlign,
