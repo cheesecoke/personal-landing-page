@@ -1,14 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, within } from 'storybook/test';
 
+import { RingArcs } from '../../../primitives';
 import { mapCopy } from '../internal/homeCopy';
 import { HomeStory } from '../internal/HomeStory';
 import { ProjectMapTeaser } from './ProjectMapTeaser';
 
 /** Stands in for the canopy teaser, at the heights the board gives it (460, and 360 on a phone). */
 const MapSlot = () => (
-  <div className="flex h-[360px] items-center justify-center rounded-panel border border-dashed border-hairline type-label md:h-[460px]">
-    Map teaser slot
+  <div className="flex h-[360px] items-center justify-center rounded-panel border border-dashed border-hairline md:h-[460px]">
+    <RingArcs />
   </div>
 );
 

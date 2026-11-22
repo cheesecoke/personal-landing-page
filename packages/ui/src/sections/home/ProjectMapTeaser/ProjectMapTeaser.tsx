@@ -9,8 +9,9 @@ export interface ProjectMapTeaserProps {
   /** The link under the title ("Open the map"). */
   link?: { label: string; href: string };
   /**
-   * Makes the whole map a link, with this accessible name ("Open the project map"). Leave it out
-   * when the map handles its own interaction.
+   * Makes the whole map one link, with this accessible name ("Open the project map"). The map is
+   * then a picture: it is hidden from assistive technology and the link's name stands in for it.
+   * Leave it out when the map handles its own interaction.
    */
   mapLink?: { label: string; href: string };
   /** The map teaser itself (the canopy package's teaser). It sets its own height. */
@@ -60,7 +61,7 @@ export function ProjectMapTeaser({
               aria-label={mapLink.label}
               className="relative block min-w-0"
             >
-              {children}
+              <div aria-hidden="true">{children}</div>
             </MapLink>
           ) : (
             <div className="relative min-w-0">{children}</div>
