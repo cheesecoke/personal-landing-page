@@ -7,9 +7,13 @@
     "**/*.css"
   ],
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./tokens.css": "./generated/tokens.css",
+    "./theme.css": "./generated/theme.css",
+    "./tokens.json": "./generated/tokens.json"
   },
   "scripts": {
+    "generate": "tsx scripts/generate.ts",
     "typecheck": "tsc --noEmit"
   }
 }
