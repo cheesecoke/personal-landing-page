@@ -15,6 +15,12 @@ export {
   type ArtifactMedia,
   type ProjectVideoData,
 } from './ArtifactList/ArtifactList';
+export {
+  BrainsThatFeedIt,
+  type BrainsThatFeedItProps,
+  type FeedItem,
+} from './BrainsThatFeedIt/BrainsThatFeedIt';
+export { BrainZones, type BrainZonesProps } from './BrainZones/BrainZones';
 export { BranchRings, type BranchRingsProps, type RingData } from './BranchRings/BranchRings';
 export {
   RING_THICKNESS,
