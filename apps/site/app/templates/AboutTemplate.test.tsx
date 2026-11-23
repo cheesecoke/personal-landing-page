@@ -61,13 +61,28 @@ describe('toRingsItems, on the real About content', () => {
 
   it('writes the role from live data when it is there', () => {
     const live = toRingsItems(about.rings, {
-      role: { title: 'Software Engineer', org: 'Titan Intake', since: '2026-01' },
-      sinceLabel: 'since',
+      title: 'Software Engineer',
+      org: 'Titan Intake',
+      since: '2026-01',
     });
     const titan = live.find((item) => item.id === 'titan-intake')!;
     const { container } = render(<p>{titan.kind === 'note' ? null : titan.summary}</p>);
     expect(container.querySelector('time')?.getAttribute('datetime')).toBe('2026-01');
     expect(container.textContent).toMatch(/^Software Engineer, since January 2026\. /);
+  });
+
+  it('keeps the hand-written role when the chapter has no word for "since"', () => {
+    const chapters = about.rings.chapters.map(({ sinceLabel: _, ...rest }) => rest);
+    const live = toRingsItems(
+      { ...about.rings, chapters },
+      { title: 'Software Engineer', org: 'Titan Intake', since: '2026-01' },
+    );
+    const titan = live.find((item) => item.id === 'titan-intake')!;
+    const { container } = render(<p>{titan.kind === 'note' ? null : titan.summary}</p>);
+    expect(container.querySelector('[data-current-role]')).toBeNull();
+    expect(container.textContent).toContain(
+      about.rings.chapters.find((entry) => entry.id === 'titan-intake')!.role,
+    );
   });
 });
 
