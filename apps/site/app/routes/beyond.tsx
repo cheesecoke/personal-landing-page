@@ -5,7 +5,10 @@ import { BeyondTemplate } from '../templates/BeyondTemplate';
 import type { Route } from './+types/beyond';
 
 export function loader() {
-  return { content: handContent().beyond };
+  const { beyond } = handContent();
+  // Notes for the author stay out of the published page: the slot shows its title and text only.
+  const slots = beyond.scene.slots.map(({ confirm: _confirm, ...slot }) => slot);
+  return { content: { ...beyond, scene: { ...beyond.scene, slots } } };
 }
 
 export const meta: Route.MetaFunction = ({ data }) =>
