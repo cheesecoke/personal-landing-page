@@ -649,6 +649,22 @@
   .row.d2 {
     min-height: 44px;
   }
+
+  /* The card's small controls: the links to related projects and the way back. */
+  .card .rel {
+    align-items: center;
+  }
+
+  .card .rel button {
+    display: inline-flex;
+    align-items: center;
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .card .back {
+    min-height: 44px;
+  }
 }
 
 /* ---------- teaser: the picture only, no chrome ---------- */
