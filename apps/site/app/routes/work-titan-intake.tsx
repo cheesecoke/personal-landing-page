@@ -1,7 +1,18 @@
-import { pageTitle, PlaceholderPage } from '../shell/PlaceholderPage';
+import { handContent } from '../content/hand.server';
+import { liveContent } from '../content/live.server';
+import { pageMeta } from '../content/meta';
+import { JobTemplate } from '../templates/JobTemplate';
+import type { Route } from './+types/work-titan-intake';
 
-export const meta = () => [{ title: pageTitle('Titan Intake') }];
+/** Titan Intake: its hand content. The job log is null unless its file says `enabled: true`. */
+export function loader() {
+  const content = handContent().titanIntake;
+  return { content, log: liveContent().titanLog };
+}
 
-export default function Route() {
-  return <PlaceholderPage title="Titan Intake" />;
+export const meta: Route.MetaFunction = ({ data }) =>
+  pageMeta({ title: data?.content.title, description: data?.content.hero.lead });
+
+export default function TitanIntake({ loaderData }: Route.ComponentProps) {
+  return <JobTemplate {...loaderData} />;
 }
