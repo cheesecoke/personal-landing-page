@@ -87,6 +87,14 @@ export interface StumpHeroProps {
 }
 
 /** A delay in milliseconds, as the custom property the overlay's animations read. */
+/*
+ * The hero swaps its wide stump for the phone one when its container is under 900px. The
+ * container is the page width less any scrollbar, so these viewport queries are the widths at
+ * which one layout is certainly hidden; its images are then not fetched at all.
+ */
+const WIDE_HIDDEN = '(max-width: 899.98px)';
+const PHONE_HIDDEN = '(min-width: 920px)';
+
 const delay = (ms: number) => ({ '--ar-delay': `${ms}ms` }) as CSSProperties;
 const percent = (value: number, total: number) => `${((value / total) * 100).toFixed(3)}%`;
 const at = (point: ScenePoint, scene: { width: number; height: number }): CSSProperties => ({
@@ -144,7 +152,7 @@ export function StumpHero({
       <section ref={heroRef} aria-labelledby={titleId} className={styles.hero}>
         <div aria-hidden="true" className={styles.wide}>
           <div className={styles.stage} style={{ aspectRatio: `${wide.width} / ${wide.height}` }}>
-            <Picture sources={image.sources}>
+            <Picture sources={image.sources} skipWhen={WIDE_HIDDEN}>
               <img
                 src={image.src}
                 width={image.width}
@@ -154,7 +162,7 @@ export function StumpHero({
               />
             </Picture>
             {litImage ? (
-              <Picture sources={litImage.sources}>
+              <Picture sources={litImage.sources} skipWhen={WIDE_HIDDEN}>
                 <img
                   src={litImage.src}
                   width={litImage.width}
@@ -451,7 +459,7 @@ export function StumpHero({
           className={styles.phoneStump}
           style={{ aspectRatio: `${phone.width} / ${phone.crop.height}` }}
         >
-          <Picture sources={phoneImage.sources}>
+          <Picture sources={phoneImage.sources} skipWhen={PHONE_HIDDEN}>
             <img
               src={phoneImage.src}
               width={phoneImage.width}
