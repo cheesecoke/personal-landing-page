@@ -1,14 +1,13 @@
 import {
   useId,
-  useLayoutEffect,
   useRef,
-  useState,
   type ComponentPropsWithoutRef,
   type CSSProperties,
   type ReactNode,
 } from 'react';
 
 import { cx, Expander, Heading, Panel, Readout } from '../../../primitives';
+import { useFirstView } from '../internal/useFirstView';
 import { LogEntry, type LogEntryData, type LogEntryFresh } from '../LogEntry/LogEntry';
 import styles from './CaptainsLog.module.css';
 
@@ -79,34 +78,8 @@ export function CaptainsLog({
   const headingId = useId();
   // Panel takes no ref: the header's parent is the panel.
   const ref = useRef<HTMLDivElement>(null);
-  const [rise, setRise] = useState<'armed' | 'in' | undefined>(undefined);
-
   // Arm the rise only when script runs, motion is allowed and the log is still off screen.
-  useLayoutEffect(() => {
-    const element = ref.current?.parentElement;
-    if (!element || typeof IntersectionObserver === 'undefined') return;
-    const reduced =
-      document.documentElement.dataset.motion === 'reduce' ||
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduced) return;
-    // The functional updates below run from the observer, not from the effect body.
-    let armed = false;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry) return;
-        if (entry.isIntersecting) {
-          setRise(armed ? 'in' : undefined);
-          observer.disconnect();
-        } else if (!armed) {
-          armed = true;
-          setRise('armed');
-        }
-      },
-      { threshold: 0.15 },
-    );
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, []);
+  const rise = useFirstView(ref, { parent: true });
 
   if (entries.length === 0) return null;
 
