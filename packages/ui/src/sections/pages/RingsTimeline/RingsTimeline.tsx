@@ -8,7 +8,15 @@ import {
   type ReactNode,
 } from 'react';
 
-import { cx, Heading, Readout, Text, TextLink } from '../../../primitives';
+import {
+  cx,
+  Heading,
+  Picture,
+  Readout,
+  Text,
+  TextLink,
+  type PictureSource,
+} from '../../../primitives';
 import type { LinkComponent, SectionLink } from '../internal/link';
 import styles from './RingsTimeline.module.css';
 
@@ -40,6 +48,8 @@ export interface RingsArtGeometry {
 export interface RingsArt extends RingsArtGeometry {
   src: string;
   alt: string;
+  /** Smaller modern formats of the same image (AVIF), best first. `src` is the fallback. */
+  sources?: readonly PictureSource[];
 }
 
 /** One paragraph inside an open chapter. `lead` is the few words set in Bone at its start. */
@@ -232,7 +242,9 @@ export function RingsTimeline({
           style={{ aspectRatio: `${art.frame.width} / ${art.frame.height}`, ...artStyle }}
         >
           <div className={styles.imgClip}>
-            <img src={art.src} alt={art.alt} className={styles.art} />
+            <Picture sources={art.sources}>
+              <img src={art.src} alt={art.alt} className={styles.art} />
+            </Picture>
           </div>
           <div aria-hidden="true" className={styles.overlay}>
             <svg

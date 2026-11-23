@@ -145,6 +145,27 @@ const withLatest = chapters.map((item) =>
 /** A chapter with a log shows its newest line under the row. Without one, the slot is not there. */
 export const WithLatest: Story = { args: { items: withLatest } };
 
+/**
+ * With modern formats: the image sits in a `<picture>` and is laid out exactly as without one.
+ */
+export const WithSources: Story = {
+  args: { art: { ...stumpArt, sources: [{ src: stumpArt.src, type: 'image/svg+xml' }] } },
+  play: async ({ canvasElement }) => {
+    const img = canvasElement.querySelector('picture > img')!;
+    await expect(canvasElement.querySelector('picture > source')).toHaveAttribute(
+      'srcset',
+      stumpArt.src,
+    );
+    // The traced rings are placed by the same rule as the image, so the two must coincide.
+    const traced = canvasElement.querySelector('svg[class*="artSvg"]')!.getBoundingClientRect();
+    const drawn = img.getBoundingClientRect();
+    await expect(drawn.width).toBeGreaterThan(200);
+    await expect(Math.abs(drawn.left - traced.left)).toBeLessThan(1);
+    await expect(Math.abs(drawn.top - traced.top)).toBeLessThan(1);
+    await expect(Math.abs(drawn.width - traced.width)).toBeLessThan(1);
+  },
+};
+
 /** Reduced motion: rings, leader and connector switch at once; the open ring's dot does not breathe. */
 export const Reduced: Story = {
   globals: { motion: 'reduce', viewport: { value: 'desktop' } },
