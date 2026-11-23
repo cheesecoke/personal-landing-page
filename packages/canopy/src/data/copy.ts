@@ -37,7 +37,7 @@ export const defaultCanopyCopy: CanopyCopy = {
   startHeading: 'Start here',
   moreHeading: 'More projects',
   keys: 'Drag to turn. Pinch or ⌘/Ctrl + scroll to zoom. Esc to go back.',
-  headline: 'My personal projects, and how they connect.',
+  headline: 'My personal projects, watch them grow.',
   hint: 'Pick a project to see what has not grown yet. Drag to turn the tree.',
   legend: { start: 'Start here', shoot: 'Not yet grown', flow: 'Feeds' },
   noTree: 'The tree could not load here. The list beside it works on its own.',

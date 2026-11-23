@@ -11,7 +11,7 @@ describe('Canopy on the server', () => {
   it('pre-renders the list, the heading and the flat drawing without touching the stage', () => {
     const html = renderToString(<Canopy variant="full" />);
     expect(html).toContain('12 personal projects.');
-    expect(html).toContain('My personal projects, and how they connect.');
+    expect(html).toContain('My personal projects, watch them grow.');
     expect(html).toMatch(/<noscript>.*data-canopy-flat="wide".*<\/noscript>/s);
     expect(html).not.toContain('<canvas');
     expect(html).toContain('data-canopy-mode="loading"');
