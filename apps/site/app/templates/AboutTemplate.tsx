@@ -175,7 +175,12 @@ export function AboutTemplate({ content, now = null, currentRole = null }: About
           <RingsTimeline
             title={rings.title}
             lead={rings.lead}
-            art={{ ...stumpRings, src: rings.image.src, alt: rings.image.alt }}
+            art={{
+              ...stumpRings,
+              src: rings.image.src,
+              alt: rings.image.alt,
+              sources: rings.image.sources,
+            }}
             items={toRingsItems(rings, currentRole)}
             ending={rings.ungrown}
             defaultSelected={rings.openChapter}
