@@ -17,3 +17,4 @@ export {
   type StumpScene,
 } from './StumpHero/scene';
 export { ProofRow, type ProofFact, type ProofRowProps } from './ProofRow/ProofRow';
+export { AtWorkPipeline, type AtWorkPipelineProps } from './AtWorkPipeline/AtWorkPipeline';
