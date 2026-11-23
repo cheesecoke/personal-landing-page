@@ -14,3 +14,5 @@ export type {
 export { defaultCanopyData } from './data/default';
 export { buildIndex, listRows, openShoots, statusTone } from './core/tree';
 export type { CanopyIndex, CanopyRow, IndexedNode } from './core/tree';
+export { canopyColors } from './core/colors';
+export type { CanopyColors } from './core/colors';
