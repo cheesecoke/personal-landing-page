@@ -125,6 +125,26 @@ interface Geo {
   y0: number;
   ex: number;
   my: number;
+  /**
+   * Set when the chapter's marker sits below the image, not beside it: the leader then leaves the
+   * ring heading down, and the connector runs down this lane (an x) to the marker's row.
+   */
+  lane?: number;
+}
+
+/** How far short of the image's foot a downward leader stops, in the image's own units. */
+const FOOT_INSET = 30;
+/** How far left of the chapter rows the downward connector runs, in px. */
+const LANE_OFFSET = 8;
+
+/** The lowest point of a ring: where its leader leaves when it heads down. */
+function ringFoot(ring: RingGeometry): { x: number; y: number } {
+  let foot = { x: ring.x, y: ring.y };
+  for (const pair of ring.points.trim().split(/\s+/)) {
+    const [x, y] = pair.split(',').map(Number);
+    if (x !== undefined && y !== undefined && y > foot.y) foot = { x, y };
+  }
+  return foot;
 }
 
 const isChapter = (item: RingsItem): item is RingsChapter => item.kind !== 'note';
@@ -134,7 +154,8 @@ const startsWithPunctuation = (text: ReactNode) => typeof text === 'string' && /
 
 /**
  * The About chapters as growth rings. Selecting a chapter lights its rings on the image and opens
- * its details; a dotted connector runs from the lit leader's end to the chapter's marker.
+ * its details; a dotted connector runs from the lit leader's end to the chapter's marker. The
+ * leader points right while the chapters sit beside the image, and down once they sit below it.
  */
 export function RingsTimeline({
   title,
@@ -171,13 +192,29 @@ export function RingsTimeline({
       if (!line) return;
       const lineBox = line.getBoundingClientRect();
       const markerBox = marker.getBoundingClientRect();
+      const ex = markerBox.left - (marker.dataset.ringMarkerKind === 'dot' ? 4 : 0) - gridBox.left;
+      const my = markerBox.top + markerBox.height / 2 - gridBox.top;
+      // The marker is under the image and not to its right (the list has moved below): a leader
+      // pointing right could never reach it, so it points down. Decided from where the two really
+      // are, so it holds at any width and after the list re-flows.
+      if (markerBox.left < imgBox.right && markerBox.top >= imgBox.bottom) {
+        const rowBox = (marker.closest('button') ?? marker).getBoundingClientRect();
+        next[id] = {
+          x0: Math.round(lineBox.left + lineBox.width / 2 - gridBox.left) + 0.5,
+          y0: Math.round(Math.min(lineBox.bottom, imgBox.bottom) - gridBox.top) + 0.5,
+          ex,
+          my,
+          lane: Math.round(rowBox.left - LANE_OFFSET - gridBox.left) + 0.5,
+        };
+        return;
+      }
       next[id] = {
         x0: Math.round(Math.min(lineBox.right, imgBox.right) - gridBox.left) + 0.5,
         y0: Math.round(lineBox.top + lineBox.height / 2 - gridBox.top) + 0.5,
         // End at the marker's visible edge: its box, plus the 4px ring a selected dot draws
         // (a box-shadow, which the box does not include).
-        ex: markerBox.left - (marker.dataset.ringMarkerKind === 'dot' ? 4 : 0) - gridBox.left,
-        my: markerBox.top + markerBox.height / 2 - gridBox.top,
+        ex,
+        my,
       };
     });
     const key = JSON.stringify(next);
@@ -219,6 +256,8 @@ export function RingsTimeline({
     '--art-width': pct(art.crop.width),
     '--art-height': pct(art.crop.height),
   } as CSSProperties;
+  // Where the image's foot falls in its own coordinate space: downward leaders end just above it.
+  const foot = ((100 - art.crop.top) / art.crop.height) * art.viewBox.height - FOOT_INSET;
   const emberRing = (index: number) =>
     chapters.some((chapter) => chapter.tone === 'ember' && chapter.rings.includes(index));
 
@@ -267,6 +306,8 @@ export function RingsTimeline({
               {chapters.map((chapter) => {
                 const ring = art.rings[chapter.rings[chapter.rings.length - 1] ?? -1];
                 if (!ring) return null;
+                const down = geo[chapter.id]?.lane !== undefined;
+                const from = down ? ringFoot(ring) : ring;
                 return (
                   <g
                     key={chapter.id}
@@ -278,16 +319,16 @@ export function RingsTimeline({
                     )}
                   >
                     <line
-                      x1={ring.x}
-                      y1={ring.y}
-                      x2={art.edge}
-                      y2={ring.y}
+                      x1={from.x}
+                      y1={from.y}
+                      x2={down ? from.x : art.edge}
+                      y2={down ? foot : from.y}
                       strokeWidth={1}
                       vectorEffect="non-scaling-stroke"
                     />
                     <circle
-                      cx={ring.x}
-                      cy={ring.y}
+                      cx={from.x}
+                      cy={from.y}
                       r={9}
                       vectorEffect="non-scaling-stroke"
                       className={styles.leaderDot}
@@ -316,7 +357,10 @@ export function RingsTimeline({
           {chapters.map((chapter) => {
             const g = geo[chapter.id];
             if (!g) return null;
-            const d = `M${g.x0} ${g.y0} V${g.my} H${g.ex}`;
+            const down = g.lane !== undefined;
+            const d = down
+              ? `M${g.x0} ${g.y0} H${g.lane} V${g.my} H${g.ex}`
+              : `M${g.x0} ${g.y0} V${g.my} H${g.ex}`;
             const maskId = `${uid}-cn-${chapter.id}`;
             const on = chapter.id === selected;
             return (
@@ -324,13 +368,22 @@ export function RingsTimeline({
                 key={chapter.id}
                 data-ring-connector={chapter.id}
                 data-on={on ? '' : undefined}
+                data-direction={down ? 'down' : 'right'}
                 className={cx(
                   styles.connectorGroup,
                   chapter.tone === 'ember' && styles.connectorEmber,
                   on && styles.connectorOn,
                 )}
               >
-                <mask id={maskId} maskUnits="userSpaceOnUse" x="0" y="0" width="100%" height="100%">
+                {/* The downward lane runs just left of the rows, so its mask starts left of them. */}
+                <mask
+                  id={maskId}
+                  maskUnits="userSpaceOnUse"
+                  x={down ? -4 * LANE_OFFSET : 0}
+                  y="0"
+                  width="100%"
+                  height="100%"
+                >
                   <path d={d} pathLength={1} className={styles.connectorDraw} />
                 </mask>
                 <path d={d} mask={`url(#${maskId})`} className={styles.connectorPath} />
