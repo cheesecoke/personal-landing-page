@@ -1,0 +1,51 @@
+/*
+ * The captain's log: entries on the log's own thread. Ported from the Captain's log board.
+ * Reduced motion is the default: the rise only exists inside the no-preference query.
+ */
+
+.list {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  margin: 0;
+  padding: 0 0 0 28px;
+  list-style: none;
+}
+
+/* The log's thread: it fades out at the foot. No travelling light in here. */
+.list::before {
+  position: absolute;
+  top: 6px;
+  bottom: 0;
+  left: 4px;
+  width: 1px;
+  content: '';
+  background: linear-gradient(
+    180deg,
+    var(--palette-signal-dim),
+    var(--palette-signal-dim) 70%,
+    transparent
+  );
+  opacity: 0.8;
+}
+
+/*
+ * First view: entries rise 8px and fade in, newest first, a short step apart (4/35 of `log-in`).
+ * `armed` is set by script once it knows the log is off screen, so without script, and under
+ * reduced motion, every entry is simply there.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion='reduce']) .log[data-rise] .list > li {
+    transition:
+      opacity var(--duration-log-in) var(--ease-out),
+      translate var(--duration-log-in) var(--ease-out);
+    transition-delay: calc(var(--log-index, 0) * var(--duration-log-in) * 4 / 35);
+  }
+
+  :root:not([data-motion='reduce']) .log[data-rise='armed'] .list > li {
+    opacity: 0;
+    translate: 0 8px;
+    transition: none;
+  }
+}
