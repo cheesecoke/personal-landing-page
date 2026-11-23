@@ -2,6 +2,7 @@
  * The Home board's copy, for stories. Stories only: the site reads its copy from content files and
  * passes it to these components as props.
  */
+import type { LatestEntry } from '../LatestLine/LatestLine';
 import type { ProjectPlate } from '../ProjectPlates/ProjectPlates';
 import type { ProofFact } from '../ProofRow/ProofRow';
 import type { StumpHeroProject, StumpHeroRing } from '../StumpHero/StumpHero';
@@ -116,3 +117,36 @@ export const plateAlts = {
   'ai-system':
     'Diagram of my plan-to-pull-request pipeline: intake, evidence, plan, code and PR, with a brain that feeds lessons back into planning.',
 } as const;
+
+export const mapCopy = {
+  title: 'How my projects connect.',
+  link: { label: 'Open the map', href: '/projects' },
+  mapLink: { label: 'Open the project map', href: '/projects' },
+};
+
+export const handoffCopy = {
+  'aria-label': 'Next',
+  label: 'Next',
+  next: { label: 'Projects', href: '/projects' },
+  aside: { label: 'Building with agents too? Write to me.', href: '/contact' },
+};
+
+/** Sample entries from the captain's log board. The release is the board's example, not a real one. */
+export const latestUpdate: LatestEntry = {
+  project: 'PAS',
+  href: '/projects/pas',
+  kind: 'update',
+  date: '2026-11-20',
+  dateLabel: '20 Nov 2026',
+  text: 'Replies now match my Yes or No answers.',
+};
+
+export const latestRelease: LatestEntry = {
+  project: 'Duo Decide',
+  href: '/projects/duo-decide',
+  kind: 'release',
+  date: '2026-11-20',
+  dateLabel: '20 Nov 2026',
+  version: 'v1.0.0',
+  text: 'Voting and three-round polls for two people.',
+};

@@ -29,3 +29,6 @@ export {
   type PlateFrame,
   type ProjectTileProps,
 } from './ProjectPlates/ProjectTile';
+export { ProjectMapTeaser, type ProjectMapTeaserProps } from './ProjectMapTeaser/ProjectMapTeaser';
+export { HomeHandoff, type HomeHandoffProps } from './HomeHandoff/HomeHandoff';
+export { LatestLine, type LatestEntry, type LatestLineProps } from './LatestLine/LatestLine';
