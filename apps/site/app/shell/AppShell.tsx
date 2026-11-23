@@ -6,7 +6,18 @@ import { Grain, SiteFooter, SiteNav, SkipLink } from '@cwc/ui';
 import { RouterLink } from './RouterLink';
 import { currentNavHref, formatLastUpdate, shellLinks, site } from './site';
 
+/** The footer's words: the `footer` of hand content's `site.json`. */
+export interface ShellFooter {
+  name: string;
+  role: string;
+  copyright: string;
+  navLabel: string;
+  email: { label: string; href: string };
+}
+
 export interface AppShellProps {
+  /** The site name and the footer copy, from hand content. */
+  footer: ShellFooter;
   /** ISO date or datetime of the last content publish. Without it the footer shows no date. */
   lastUpdate?: string;
   children: ReactNode;
@@ -16,7 +27,7 @@ export interface AppShellProps {
  * The persistent layout: skip link, nav, the page in `main`, footer. The nav and footer stay
  * mounted across navigations, so the nav timeline travels and only `main` cross-fades.
  */
-export function AppShell({ lastUpdate, children }: AppShellProps) {
+export function AppShell({ footer, lastUpdate, children }: AppShellProps) {
   const { pathname } = useLocation();
   return (
     <div className="relative flex min-h-dvh flex-col overflow-x-clip bg-ground text-primary">
@@ -24,7 +35,7 @@ export function AppShell({ lastUpdate, children }: AppShellProps) {
       <Grain />
       <header className="relative">
         <SiteNav
-          name={site.name}
+          name={footer.name}
           label={site.navLabel}
           items={shellLinks}
           current={currentNavHref(pathname)}
@@ -36,12 +47,12 @@ export function AppShell({ lastUpdate, children }: AppShellProps) {
       </main>
       <SiteFooter
         className="relative"
-        name={site.name}
-        tagline={site.tagline}
-        copyright={site.copyright}
-        navLabel={site.footerNavLabel}
+        name={footer.name}
+        tagline={footer.role}
+        copyright={footer.copyright}
+        navLabel={footer.navLabel}
         links={shellLinks}
-        email={site.email}
+        email={footer.email.label}
         linkAs={RouterLink}
         lastUpdate={
           lastUpdate ? { label: site.lastUpdateLabel, ...formatLastUpdate(lastUpdate) } : undefined
