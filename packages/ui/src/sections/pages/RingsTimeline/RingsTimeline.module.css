@@ -104,7 +104,11 @@
   opacity: 1;
 }
 
-/* The leader: from the ring out to the image's edge, with a circle where it leaves the ring. */
+/*
+ * The leader: from the ring out to the image's edge, with a circle where it leaves the ring. It
+ * heads right while the chapters sit beside the image, and down to the image's foot once they sit
+ * below it (the component measures which).
+ */
 .leader {
   opacity: 0;
   stroke: var(--accent-signal);
@@ -123,7 +127,10 @@
   stroke-width: 1.5;
 }
 
-/* The connector: one small circle on the leader's end, then a dotted right-angled line to the marker. */
+/*
+ * The connector: one small circle on the leader's end, then a dotted right-angled line to the marker.
+ * The board drops it in one column; here it turns down with the leader and runs to the marker below.
+ */
 .connector {
   position: absolute;
   top: 0;
@@ -433,10 +440,6 @@
     margin-top: 8px;
     margin-right: 0;
     margin-left: 0;
-  }
-
-  .connector {
-    display: none;
   }
 }
 
