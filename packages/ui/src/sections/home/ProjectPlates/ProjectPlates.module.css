@@ -1,0 +1,161 @@
+/*
+ * Home's project plates: three framed images of unequal width, each with a status line, a name
+ * and one sentence. One column under a 560px slot, where each plate takes its phone crop.
+ * Ported from the Home board.
+ */
+
+.gallery {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 48px 24px;
+  align-items: start;
+  padding: 0;
+  margin: 12px 0 0;
+  list-style: none;
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+/* The plate: a hairline frame the image is cropped into. */
+.plate {
+  position: relative;
+  display: block;
+  aspect-ratio: var(--plate-aspect-phone, var(--plate-aspect));
+  overflow: hidden;
+  background-color: var(--bg-ground);
+  border: 1px solid var(--line-hairline);
+  border-radius: var(--radius-panel);
+}
+
+.image {
+  position: absolute;
+  top: var(--plate-top-phone, var(--plate-top));
+  left: var(--plate-left-phone, var(--plate-left));
+  display: block;
+  width: var(--plate-width-phone, var(--plate-width));
+  max-width: none;
+  height: auto;
+}
+
+/* Corner ticks, 8px in from each corner. */
+.corner {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border: 0 solid var(--line-tick);
+}
+
+.cornerTopLeft {
+  top: 8px;
+  left: 8px;
+  border-top-width: 1px;
+  border-left-width: 1px;
+}
+
+.cornerTopRight {
+  top: 8px;
+  right: 8px;
+  border-top-width: 1px;
+  border-right-width: 1px;
+}
+
+.cornerBottomLeft {
+  bottom: 8px;
+  left: 8px;
+  border-bottom-width: 1px;
+  border-left-width: 1px;
+}
+
+.cornerBottomRight {
+  right: 8px;
+  bottom: 8px;
+  border-right-width: 1px;
+  border-bottom-width: 1px;
+}
+
+/* The lit edge on the featured plate: flush with the frame's top-left corner. */
+.litEdge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 72px;
+  height: 1px;
+  background: var(--accent-signal);
+  box-shadow: var(--glow-signal);
+}
+
+.meta {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 16px;
+  margin-top: 20px;
+}
+
+.status {
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
+.nameRow {
+  display: flex;
+  align-items: flex-end;
+  min-height: 36px;
+  margin-top: 10px;
+}
+
+.summary {
+  max-width: 40ch;
+  margin-top: 6px;
+}
+
+.tile:hover .plate {
+  border-color: var(--thread-line);
+}
+
+.tile:hover .name {
+  color: var(--accent-signal);
+}
+
+@container (width >= 560px) {
+  .gallery {
+    grid-template-columns: var(--plates-columns);
+    row-gap: 40px;
+  }
+
+  .plate {
+    aspect-ratio: var(--plate-aspect);
+  }
+
+  .image {
+    top: var(--plate-top);
+    left: var(--plate-left);
+    width: var(--plate-width);
+  }
+}
+
+/* The rise on hover is motion; the colour changes above are not. */
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion='reduce']) .tile {
+    transition: transform var(--duration-rise) var(--ease-out);
+  }
+
+  :root:not([data-motion='reduce']) .tile:hover {
+    transform: translateY(-4px);
+  }
+
+  :root:not([data-motion='reduce']) .plate {
+    transition: border-color var(--duration-rise);
+  }
+
+  :root:not([data-motion='reduce']) .name {
+    transition: color var(--duration-hover);
+  }
+}

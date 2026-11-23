@@ -18,3 +18,14 @@ export {
 } from './StumpHero/scene';
 export { ProofRow, type ProofFact, type ProofRowProps } from './ProofRow/ProofRow';
 export { AtWorkPipeline, type AtWorkPipelineProps } from './AtWorkPipeline/AtWorkPipeline';
+export {
+  ProjectPlates,
+  type ProjectPlate,
+  type ProjectPlatesProps,
+} from './ProjectPlates/ProjectPlates';
+export {
+  ProjectTile,
+  type PlateCrop,
+  type PlateFrame,
+  type ProjectTileProps,
+} from './ProjectPlates/ProjectTile';
