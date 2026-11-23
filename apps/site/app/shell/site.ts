@@ -30,15 +30,14 @@ const ringedLinks = shellLinks.map((link) =>
 export const navLinks = (releaseRing: boolean) => (releaseRing ? ringedLinks : shellLinks);
 
 /**
- * Which nav item a URL belongs to: Home for `/`, Projects for every project page and the job
- * page, the item itself for About, Beyond and Contact. Anything else (the 404 page) has none.
+ * Which nav item a URL belongs to: Home for `/`, Projects for every project page, About for the
+ * job page (it is reached from About, as its breadcrumb says), the item itself for About, Beyond
+ * and Contact. Anything else (the 404 page) has none.
  */
 export function currentNavHref(pathname: string): string | undefined {
   const path = pathname.length > 1 ? pathname.replace(/\/+$/, '') : pathname;
   if (path === '/' || path === '') return '/';
-  if (path === '/projects' || path.startsWith('/projects/') || path.startsWith('/work/')) {
-    return '/projects';
-  }
+  if (path.startsWith('/work/')) return '/about';
   return navItems.find((item) => path === item.to || path.startsWith(`${item.to}/`))?.to;
 }
 
