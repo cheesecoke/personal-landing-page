@@ -1,0 +1,222 @@
+{
+  "schemaVersion": 1,
+  "title": "About · Rings",
+  "rings": {
+    "title": "Rings",
+    "lead": "One ring for each chapter, from the center out. Select a ring for the details.",
+    "image": {
+      "src": "/media/stump/stump-top.webp",
+      "width": 2000,
+      "height": 1600,
+      "alt": "A stylised tree stump seen from above, its growth rings drawn as thin lines of light, one ring glowing orange",
+      "sources": [{ "src": "/media/stump/stump-top.avif", "type": "image/avif" }]
+    },
+    "chapters": [
+      {
+        "id": "roots",
+        "label": "Roots",
+        "summary": "I came to engineering through design, and I still think like an artist.",
+        "ring": 0,
+        "tone": "signal",
+        "details": [
+          [
+            { "text": "Digital Arts, BA", "strong": true },
+            ", 2013. I studied design before I wrote any production code."
+          ],
+          [
+            { "text": "Concept first.", "strong": true },
+            " The thing I learned in school and have carried through my whole career is the concept: what are you building, and why? What is it trying to say or solve? Once that is clear, I use any and all tools to get there."
+          ]
+        ]
+      },
+      {
+        "id": "truecar",
+        "label": "TrueCar",
+        "years": "2014–2019",
+        "summary": "The go-to frontend engineer on a platform migration for 600+ partners. Two hackathon wins.",
+        "ring": 2,
+        "tone": "signal",
+        "details": [
+          [
+            { "text": "Junior to senior.", "strong": true },
+            " I worked on four product teams in four years and was promoted along the way. Every move meant a new codebase, and I was productive fast each time."
+          ],
+          [
+            { "text": "The MPP migration.", "strong": true },
+            " The company moved its Multi-Partner Platform off a legacy stack to React/Redux, with Node.js middleware and Cypress test coverage. I was the go-to CSS and frontend engineer, which is why they pulled me onto it. I led the frontend side: the assets, the components, and a one-to-one check of the new build against the legacy code. The platform got faster, more reliable, and quicker to release for every partner on it."
+          ],
+          [
+            { "text": "Hackathon winner.", "strong": true },
+            " My team won the TrueCar Hackathon in 2017 and again in 2019."
+          ],
+          [
+            { "text": "Mentoring.", "strong": true },
+            " I shared frontend practices through pairing and code reviews, and I mentored the junior developers coming up behind me."
+          ]
+        ]
+      },
+      {
+        "id": "tradesy",
+        "label": "Tradesy",
+        "years": "2019–2020",
+        "summary": "Sole engineer on a growth team at a resale marketplace. Owned the move to React.",
+        "ring": 3,
+        "tone": "signal",
+        "details": [
+          [
+            { "text": "Influencer pages.", "strong": true },
+            " As the growth team's only engineer, I built the influencer pages myself. I learned PHP backend work so I could ship every feature end to end."
+          ],
+          [
+            { "text": "Legacy to React.", "strong": true },
+            " I owned the migration of the legacy frontend to React."
+          ],
+          [
+            { "text": "Shared component library.", "strong": true },
+            " I set up a shared component library along the way, so new features started from common parts instead of from scratch."
+          ]
+        ]
+      },
+      {
+        "id": "wildland-fire",
+        "label": "Wildland fire",
+        "years": "2022–2024",
+        "summary": "Some time on a wildland fire crew: academy, engine, then a hotshot crew. Top Cadet, then Rookie of the Year.",
+        "ring": 4,
+        "tone": "ember",
+        "details": [
+          [
+            { "text": "A break on purpose.", "strong": true },
+            " I stepped away from software to fight wildfire. I trained at the Rio Hondo Wildland Fire Academy and graduated Top Cadet in 2022."
+          ],
+          [
+            { "text": "20+ fires in one season.", "strong": true },
+            " I spent a year on Engine 324, filling in on a hotshot crew twice, then a year on the Trinity hotshot crew. Trinity named me Rookie of the Year for first-year leadership."
+          ],
+          [
+            { "text": "Decisions under pressure.", "strong": true },
+            " I worked long assignments in remote terrain where the stakes were high, on a tight crew where every role depended on the others. The lesson I brought back: stay calm, and do the job in front of you."
+          ]
+        ]
+      },
+      {
+        "id": "back-to-software",
+        "label": "Back to software",
+        "years": "2025",
+        "summary": "I came back from the fireline to a field that had changed. For me, AI is a dream come true: a chance to grow and work twice as fast.",
+        "ring": null,
+        "tone": "signal"
+      },
+      {
+        "id": "porchpass",
+        "label": "PorchPass",
+        "years": "2025–2026",
+        "summary": "Owned the core dealer tools and led AI adoption across the company.",
+        "ring": 5,
+        "tone": "signal",
+        "details": [
+          [
+            { "text": "Company-wide AI adoption.", "strong": true },
+            " People were running LLM experiments on their own. I turned those into shared decisions about which tools to use, how to roll them out, and how to keep them safe."
+          ],
+          [
+            { "text": "Reliable dealer tools.", "strong": true },
+            " I owned the core dealer tools end to end in React/TypeScript. I built custom UI components and hardened the API integrations so the tools held up for dealer partners."
+          ],
+          [
+            { "text": "A modern frontend.", "strong": true },
+            " I worked with product, design, and backend to rebuild the frontend architecture around reusable components and responsive design. Features shipped faster, and the UI became consistent across the platform."
+          ]
+        ]
+      },
+      {
+        "id": "titan-intake",
+        "label": "Titan Intake",
+        "years": "2026–now",
+        "role": "Senior Software Engineer, AI, since January 2026.",
+        "sinceLabel": "since",
+        "summary": "I build the pipeline between a product spec and shipped code.",
+        "ring": 6,
+        "tone": "signal",
+        "details": [
+          "I build agent pipelines that turn a product spec into tested code, and the evaluation and memory layers that help them improve over time. I also teach the team how to work with AI."
+        ],
+        "more": { "label": "More about the work", "href": "/work/titan-intake" },
+        "logTeaser": {
+          "eyebrow": "Latest from the log",
+          "link": { "label": "The monthly log", "href": "/work/titan-intake#log" }
+        }
+      }
+    ],
+    "openChapter": "titan-intake",
+    "ungrown": "Not yet grown."
+  },
+  "person": {
+    "label": "Outside work and rules I work by",
+    "portrait": {
+      "stills": {
+        "normal": {
+          "src": "/media/portrait/normal-still.webp",
+          "width": 864,
+          "height": 1080,
+          "alt": "Chase Cole, head and shoulders, in a dark overshirt over a white t-shirt, on a black background"
+        },
+        "cyber": {
+          "src": "/media/portrait/cyber-still.webp",
+          "width": 864,
+          "height": 1080,
+          "alt": "Chase Cole with cyberware: a bionic left eye, a metal jaw plate and a black jacket with a teal collar light"
+        }
+      },
+      "clips": {
+        "normalIdle": { "src": "/media/portrait/normal-idle.mp4", "width": 864, "height": 1080 },
+        "cyberIdle": { "src": "/media/portrait/cyber-idle.mp4", "width": 864, "height": 1080 },
+        "normalGlance": {
+          "src": "/media/portrait/normal-glance.mp4",
+          "width": 864,
+          "height": 1080
+        },
+        "cyberGlance": { "src": "/media/portrait/cyber-glance.mp4", "width": 864, "height": 1080 },
+        "toCyber": { "src": "/media/portrait/to-cyber.mp4", "width": 864, "height": 1080 },
+        "toNormal": { "src": "/media/portrait/to-normal.mp4", "width": 864, "height": 1080 }
+      },
+      "glance": {
+        "normal": { "start": 0.79, "hold": 3.2, "up": 3.2 },
+        "cyber": { "start": 0.88, "hold": 3.2, "up": 3.2 }
+      },
+      "toggle": { "label": "Cyberware", "on": "On", "off": "Off" },
+      "caption": "AI portrait, made from my own photos. The cyberware is not real."
+    },
+    "paragraphs": [
+      "Software engineer since 2014, with some time on a wildland fire crew along the way. I build products people use, developer tools, and AI systems. My background is web, and I keep learning outward from it: backend systems, hardware, networking, and how they all fit together.",
+      "Outside work I balance being active with being still. In Colorado that means hiking, running and biking. I've trained in martial arts for years, most recently aikido, and I keep a Zen meditation practice. I travel often, and I'm just as happy at home or at dinner with friends."
+    ],
+    "rules": {
+      "title": "Rules I work by",
+      "items": [
+        "With AI, experiment and test together. Build the harness around what you need to know.",
+        "Stay adaptable. Let go of what's ready to go, and learn what comes next.",
+        "Focus alone. Understand and build with a team.",
+        "Stay calm under pressure, and do the job in front of you."
+      ]
+    }
+  },
+  "tools": {
+    "id": "tools",
+    "title": "What I build with",
+    "listLabel": "Agent tools, from tried to current",
+    "groups": [
+      { "label": "Tried", "tools": ["Warp"] },
+      { "label": "Also", "tools": ["Codex", "Claude app"] },
+      { "label": "Current", "tools": ["Claude Code", "Herdr"] }
+    ],
+    "facts": [{ "term": "Editor", "value": "Neovim with LazyVim" }],
+    "link": { "label": "Let me know what else I should try.", "href": "/contact" }
+  },
+  "now": { "id": "now", "title": "Now" },
+  "next": {
+    "label": "Next page",
+    "eyebrow": "Next",
+    "link": { "label": "Contact", "href": "/contact" }
+  }
+}

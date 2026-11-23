@@ -1,0 +1,153 @@
+{
+  "schemaVersion": 1,
+  "slug": "pas",
+  "path": "/projects/pas",
+  "title": "PAS: Atti and Lifebox",
+  "breadcrumb": {
+    "label": "Breadcrumb",
+    "items": [{ "label": "Projects", "href": "/projects" }, { "label": "PAS" }]
+  },
+  "hero": {
+    "status": "Daily use",
+    "title": "PAS",
+    "subtitle": "Atti and Lifebox",
+    "lead": "My personal assistant system. Atti is the assistant I text; Lifebox is an experiment planned as its phone app.",
+    "figure": {
+      "type": "image",
+      "image": {
+        "src": "/media/projects/atti/atti-hero.webp",
+        "width": 1600,
+        "height": 1000,
+        "alt": "Concept drawing A-01 of the Atti pod: a behind-the-ear unit with one button, bone-conduction audio and a privacy LED."
+      },
+      "caption": "Concept drawing: the Atti pod"
+    }
+  },
+  "sections": [
+    {
+      "type": "whereItsAt",
+      "id": "where-its-at",
+      "title": "Where it's at",
+      "paragraphs": [
+        "Atti has run my reminders, notes, calendar and morning brief on Telegram since 28 October 2026. Lifebox is an experiment in whether an app's interface can be shaped for each person who uses it. It is planned as Atti's phone app."
+      ],
+      "facts": [
+        {
+          "value": "177",
+          "unit": "commits by Atti",
+          "caption": "Its own writes to my personal brain since October 28."
+        },
+        { "value": "1,478", "unit": "test cases", "caption": "Across Atti and its memory engine." },
+        {
+          "value": "Tiered by risk",
+          "caption": "Reads run on their own. Logs save at once with an Undo. Bigger changes run by tier."
+        }
+      ]
+    },
+    { "type": "log", "id": "log", "label": "Captain's log" },
+    {
+      "type": "family",
+      "label": "The PAS family",
+      "members": [
+        {
+          "name": "PAS",
+          "status": "Daily use",
+          "line": "My personal assistant system.",
+          "label": "PAS, personal assistant system"
+        },
+        {
+          "name": "Atti",
+          "status": "Daily use",
+          "line": "The assistant I text. It remembers, keeps my commitments and runs my day.",
+          "label": "Open Atti, the assistant",
+          "href": "/projects/pas/atti"
+        },
+        {
+          "name": "Lifebox",
+          "status": "Experiment",
+          "line": "One interface per person. Planned as Atti's phone app.",
+          "label": "Open Lifebox, the phone app experiment",
+          "href": "/projects/pas/lifebox"
+        }
+      ],
+      "figure": {
+        "image": {
+          "src": "/media/projects/lifebox/lifebox-hero.webp",
+          "width": 1600,
+          "height": 1000,
+          "alt": "Three visual directions for Life Inbox's Now screen (Quiet Ink, Night Garden, Swiss Utility), design mockups."
+        },
+        "caption": "Lifebox design mockups: three visual directions"
+      }
+    },
+    {
+      "type": "figures",
+      "label": "Details",
+      "figures": [
+        {
+          "image": {
+            "src": "/media/projects/atti/atti-detail-lifecycle.webp",
+            "width": 1200,
+            "height": 800,
+            "alt": "Atti's task lifecycle as a state diagram: how a job moves from queued to done, and what happens when it stalls or expires."
+          },
+          "caption": "Atti as software: how a job moves from queued to done, and what happens when it stalls"
+        }
+      ]
+    },
+    {
+      "type": "goDeeper",
+      "id": "go-deeper",
+      "title": "Go deeper",
+      "cards": {
+        "label": "The projects inside PAS",
+        "items": [
+          {
+            "name": "Atti",
+            "status": "Daily use",
+            "line": "The assistant I text. It remembers, keeps my commitments and runs my day.",
+            "href": "/projects/pas/atti"
+          },
+          {
+            "name": "Lifebox",
+            "status": "Experiment",
+            "line": "One interface per person. Planned as Atti's phone app.",
+            "href": "/projects/pas/lifebox"
+          }
+        ]
+      },
+      "expanders": [
+        {
+          "title": "What I'm building",
+          "paragraphs": [
+            "An assistant that remembers, keeps my commitments and handles the routine work of my day. Claude is the model; Atti is the harness, the memory, the persona and the channels around it. Tools are tiered by risk, so reads and simple logs just happen. Telegram first; then a console, voice and, later, always-with-you hardware."
+          ]
+        },
+        {
+          "title": "What I tried",
+          "paragraphs": [
+            "A small, fast model routed messages until full agent runs took over. Memory search started as a keyword ranker with a fixed test: the right memory came back first for 8 of 9 questions, the bar an embedding model has to beat. A weekly review turns replies I flag into fixes."
+          ]
+        },
+        {
+          "title": "What didn't work",
+          "paragraphs": [
+            "The outbox gave up after about seven minutes and silently lost nudges; it now retries until a deadline. Forwarded messages triggered actions; now they are saved as notes. Message text leaked into commit subjects; subjects are now fixed words."
+          ]
+        },
+        {
+          "title": "Open questions and next",
+          "paragraphs": [
+            "A console for heavier work like planning. Hands-free voice sessions; the spec is written. Lifebox as the phone app, where the open problem is one iOS build per person, at 30 to 60 minutes each. Later, hardware. Whether it ever goes beyond me is open."
+          ]
+        }
+      ]
+    }
+  ],
+  "next": {
+    "label": "Next",
+    "eyebrow": "Next project",
+    "link": { "label": "Duo Decide", "href": "/projects/duo-decide" },
+    "back": { "label": "Back to the map", "href": "/projects" }
+  }
+}

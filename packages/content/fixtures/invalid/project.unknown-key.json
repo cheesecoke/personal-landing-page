@@ -1,0 +1,165 @@
+{
+  "expectPath": "summary",
+  "data": {
+    "schemaVersion": 1,
+    "visibility": "public",
+    "slug": "duo-decide",
+    "name": "Duo Decide",
+    "parent": null,
+    "kind": "product",
+    "state": "growing",
+    "status": {
+      "key": "in-build",
+      "label": "In build",
+      "since": "2025-08"
+    },
+    "whereItsAt": "Voting, three-round polls, option lists, history and real-time sync work on iOS and the web. The redesign shipped in October. November went to App Store readiness: an iOS 26 build, over-the-air updates, archive and soft delete, and a native accessibility pass.",
+    "log": [
+      {
+        "id": "2026-11-05",
+        "date": "2026-11-05",
+        "kind": "update",
+        "lines": [
+          "Over-the-air updates, so fixes skip a store review.",
+          "Decided decisions can be archived; deletes became soft.",
+          "Native audit: a crash fix, touch targets, Dynamic Type."
+        ]
+      },
+      {
+        "id": "2026-11-04",
+        "date": "2026-11-04",
+        "kind": "update",
+        "lines": [
+          "Decision options became a row list, with tappable links.",
+          "A 3D yellow heart became the app icon."
+        ]
+      },
+      {
+        "id": "2026-10-07",
+        "date": "2026-10-07",
+        "kind": "update",
+        "lines": ["Vote mode is one pick by the partner again."]
+      },
+      {
+        "id": "2026-10-06",
+        "date": "2026-10-06",
+        "kind": "update",
+        "lines": ["Redesign v2 merged."]
+      }
+    ],
+    "release": null,
+    "shoots": [
+      {
+        "id": "app-store-release",
+        "label": "App Store release",
+        "kind": "goal",
+        "state": "open",
+        "note": "The goal: ship it on the App Store.",
+        "resolved": null
+      },
+      {
+        "id": "who-wins-a-split-vote",
+        "label": "Who wins a split vote?",
+        "kind": "question",
+        "state": "answered",
+        "resolved": {
+          "date": "2026-10-07",
+          "text": "In round 3 of a poll, the partner who didn't start it makes the final pick."
+        }
+      },
+      {
+        "id": "notifications",
+        "label": "Notifications",
+        "kind": "idea",
+        "state": "open",
+        "note": "Tell you when your partner votes, or a poll moves to the next round.",
+        "resolved": null
+      },
+      {
+        "id": "plan-after-deciding",
+        "label": "Plan after deciding",
+        "kind": "idea",
+        "state": "open",
+        "note": "Once a decision is made, plan it together: when, where, notes and links, kept in history.",
+        "resolved": null
+      },
+      {
+        "id": "when-ai-may-merge",
+        "label": "When AI may merge",
+        "kind": "question",
+        "state": "open",
+        "note": "Open question: which tests and checks let the AI pipeline merge a change without review?",
+        "resolved": null
+      }
+    ],
+    "rings": [
+      {
+        "id": "2025-q3",
+        "label": "2025 Q3",
+        "weight": 2,
+        "kind": "period",
+        "text": "First commits on the couples app."
+      },
+      {
+        "id": "2025-q4",
+        "label": "2025 Q4",
+        "weight": 3,
+        "kind": "period",
+        "text": "A busy quarter."
+      },
+      {
+        "id": "2026-q1",
+        "label": "2026 Q1",
+        "weight": 4,
+        "kind": "period",
+        "text": "The busiest quarter so far."
+      },
+      {
+        "id": "2026-q2",
+        "label": "2026 Q2",
+        "weight": 2,
+        "kind": "period",
+        "text": "Google sign-in on the web."
+      },
+      {
+        "id": "2026-q3",
+        "label": "2026 Q3",
+        "weight": 1,
+        "kind": "period",
+        "text": "A lean quarter. The AI system opened its first pull requests here."
+      },
+      {
+        "id": "2026-q4",
+        "label": "2026 Q4",
+        "weight": 3,
+        "kind": "period",
+        "text": "Redesign v2 merged on 6 Oct. Over-the-air updates on 5 Nov."
+      }
+    ],
+    "facts": [
+      {
+        "key": "test-cases",
+        "value": "1,167",
+        "label": "test cases",
+        "asOf": "2026-11-20"
+      },
+      {
+        "key": "sql-migrations",
+        "value": "24",
+        "label": "SQL migrations",
+        "asOf": "2026-11-20"
+      },
+      {
+        "key": "end-to-end-flows",
+        "value": "6",
+        "label": "end-to-end flows",
+        "asOf": "2026-11-20"
+      }
+    ],
+    "fresh": {
+      "changedAt": "2026-11-05",
+      "changeKind": "update"
+    },
+    "summary": "A decision app for couples."
+  }
+}

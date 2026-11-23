@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "visibility": "public",
+  "slug": "thread-quest",
+  "name": "Thread Quest",
+  "parent": null,
+  "kind": "product",
+  "state": "growing",
+  "status": {
+    "key": "being-expanded",
+    "label": "Being expanded",
+    "since": "2026-11"
+  },
+  "whereItsAt": "On the back burner since late 2024, after hitting a wall on affiliate marketing. In November 2026 I read every line of it again and wrote a rebuild plan.",
+  "log": [
+    {
+      "id": "2026-11-20",
+      "date": "2026-11-20",
+      "kind": "update",
+      "lines": ["A full assessment and a rebuild plan."]
+    },
+    {
+      "id": "2024-12-10",
+      "date": "2024-12-10",
+      "kind": "update",
+      "lines": ["Affiliate links paused until the program approves."]
+    },
+    {
+      "id": "2024-12-09",
+      "date": "2024-12-09",
+      "kind": "update",
+      "lines": ["Several tries to get affiliate tracking working."]
+    }
+  ],
+  "release": null,
+  "shoots": [
+    {
+      "id": "buy-inside-the-app",
+      "label": "Buy inside the app",
+      "kind": "idea",
+      "state": "open",
+      "note": "Later: buying without leaving the app. It needs legal work first, so for now each piece opens on the store's site.",
+      "resolved": null
+    },
+    {
+      "id": "ai-gathered-pieces",
+      "label": "AI-gathered pieces",
+      "kind": "idea",
+      "state": "open",
+      "note": "Use AI to gather clothes you like into your closet.",
+      "resolved": null
+    },
+    {
+      "id": "shopping-browser-plugin",
+      "label": "Shopping browser plugin",
+      "kind": "idea",
+      "state": "open",
+      "note": "Capture pieces while you shop.",
+      "resolved": null
+    }
+  ],
+  "rings": [],
+  "facts": [
+    {
+      "key": "commits",
+      "value": "64",
+      "label": "commits",
+      "asOf": "2026-11-20"
+    }
+  ],
+  "fresh": {
+    "changedAt": "2026-11-20",
+    "changeKind": "update"
+  }
+}

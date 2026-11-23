@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "visibility": "name-only",
+  "slug": "business-brain",
+  "name": "Business brain",
+  "parent": "personal-brain",
+  "status": {
+    "key": "running",
+    "label": "Running"
+  }
+}

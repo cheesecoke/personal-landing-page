@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "visibility": "public",
+  "slug": "thread-quest",
+  "name": "Thread Quest",
+  "parent": null,
+  "kind": "product",
+  "state": "growing",
+  "status": {
+    "key": "being-expanded",
+    "label": "Being expanded"
+  },
+  "log": [],
+  "release": null,
+  "shoots": [],
+  "rings": [],
+  "facts": [],
+  "fresh": null
+}

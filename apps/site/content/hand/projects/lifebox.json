@@ -1,0 +1,219 @@
+{
+  "schemaVersion": 1,
+  "slug": "lifebox",
+  "path": "/projects/pas/lifebox",
+  "title": "Lifebox",
+  "breadcrumb": {
+    "label": "Breadcrumb",
+    "items": [
+      { "label": "Projects", "href": "/projects" },
+      { "label": "PAS", "href": "/projects/pas" },
+      { "label": "Lifebox" }
+    ]
+  },
+  "hero": {
+    "status": "Experiment",
+    "title": "Lifebox",
+    "lead": "An experiment in whether an app's interface can be shaped for each person who uses it, instead of one design for everyone. It is planned as Atti's phone app.",
+    "figure": {
+      "type": "image",
+      "image": {
+        "src": "/media/projects/lifebox/now-pair-alex-vs-blair-composed.webp",
+        "width": 991,
+        "height": 1000,
+        "alt": "Lifebox's Now screen for Alex and Blair, the app's two sample people, side by side. Alex sees four things as large cards with action buttons, starting with dog food. Blair sees three compact rows with check circles, starting with concert tickets."
+      },
+      "caption": "The same Now screen for two people: one app, assembled from each person's data.",
+      "captionNote": "Working title in the app: Life Inbox."
+    }
+  },
+  "sections": [
+    {
+      "type": "compare",
+      "id": "idea",
+      "title": "The idea",
+      "lead": "Stable frame, adaptive content.",
+      "intro": "One codebase, with a different configuration for each person. The frame of the app stays stable and the content adapts: what shows on Now, in what order, and how dense it is.",
+      "cards": [
+        {
+          "title": "Testing for a crowd",
+          "marks": ["A", "B"],
+          "text": "Split people into A and B, and keep what wins.",
+          "label": "Testing for a crowd: people are split into group A and group B, and the version that wins is kept."
+        },
+        {
+          "title": "An app built for one person",
+          "tag": "n = 1",
+          "marks": ["W1", "W2", "W3", "W4"],
+          "text": "A few signals a week, too few to split. Judge a change from week three, and drop the first days of each test block.",
+          "label": "An app built for one person: four weekly blocks. The first days of each block are dropped, and changes are judged from week three."
+        }
+      ],
+      "outro": "What carries over from crowd testing: generate, constrain, measure, keep what works. What doesn't: the statistics.",
+      "figure": {
+        "image": {
+          "src": "/media/projects/lifebox/lifebox-detail-directions.webp",
+          "width": 1200,
+          "height": 800,
+          "alt": "Four visual directions for the Lifebox Now screen, design mockups side by side."
+        },
+        "caption": "Concept · four visual directions for the Now screen (working title Life Inbox), not the running app"
+      }
+    },
+    {
+      "type": "figures",
+      "id": "memory",
+      "title": "Memory adapts too",
+      "paragraphs": [
+        "Alex's Memory opens on recent purchases. Blair's opens on saved places.",
+        "Both are the app's built-in sample people, running the same code."
+      ],
+      "figures": [
+        {
+          "image": {
+            "src": "/media/projects/lifebox/memory-alex-recent-purchases-phone.webp",
+            "width": 462,
+            "height": 1000,
+            "alt": "Alex's Memory screen in Lifebox, sample data. It opens on Recent purchases: dog food and running shoes, then Coming up: a concert."
+          },
+          "caption": "Alex"
+        },
+        {
+          "image": {
+            "src": "/media/projects/lifebox/memory-blair-saved-places-phone.webp",
+            "width": 462,
+            "height": 1000,
+            "alt": "Blair's Memory screen in Lifebox, sample data. It opens on Saved places, such as a bakery and a coffee shop, then Upcoming: a concert and a birthday dinner."
+          },
+          "caption": "Blair"
+        }
+      ]
+    },
+    {
+      "type": "whereItsAt",
+      "id": "where-its-at",
+      "title": "Where it's at",
+      "paragraphs": [
+        "An Expo and React Native app. You drop in short notes, and it turns them into structured memories and events, looks for patterns, and brings back what matters in a feed called Now. It is not released, and the hardest problem, shipping a different build to each person, is still open."
+      ],
+      "facts": [
+        {
+          "value": "n = 1",
+          "caption": "Each app is tuned for one person, so there is no crowd to average over."
+        },
+        {
+          "value": "30–60 min",
+          "caption": "One iOS build and release, which this design needs per person."
+        },
+        { "value": "4", "unit": "visual directions", "caption": "Explored for the Now screen." }
+      ]
+    },
+    { "type": "log", "id": "log", "label": "Captain's log" },
+    {
+      "type": "ladder",
+      "label": "Details",
+      "stepsLabel": "Personal, then popular, then community, then core",
+      "steps": ["Personal", "Popular", "Community", "Core"],
+      "text": "When a personal change keeps winning for several people who opted in, it could become a candidate default, climbing from personal to popular to community to core. An idea, not built."
+    },
+    {
+      "type": "goDeeper",
+      "id": "go-deeper",
+      "title": "Go deeper",
+      "feature": {
+        "id": "grow",
+        "title": "Grow your own app",
+        "text": "You tell the app what you want in your own words. When the change fits the layout settings it already has, it makes it right away and keeps an Undo. Anything else can be sent on as an idea for a later build.",
+        "stepsLabel": "Three steps, from request to change",
+        "steps": [
+          {
+            "label": "Step 1",
+            "image": {
+              "src": "/media/projects/lifebox/grow-tell-lifebox-compose-phone.webp",
+              "width": 462,
+              "height": 1000,
+              "alt": "The Tell Life Inbox sheet in Lifebox, with An idea selected and the request: Can this be smaller? I only need a quick glance."
+            },
+            "text": "Alex asks in plain words: \"Can this be smaller? I only need a quick glance.\""
+          },
+          {
+            "label": "Step 2",
+            "image": {
+              "src": "/media/projects/lifebox/grow-i-can-do-that-now-phone.webp",
+              "width": 462,
+              "height": 1000,
+              "alt": "Lifebox answers I can do that now: show What matters now as compact rows, undo it anytime. A Do it button sits above Send it as an idea instead."
+            },
+            "text": "The app can make this change itself, so it offers to do it now."
+          },
+          {
+            "label": "Step 3",
+            "image": {
+              "src": "/media/projects/lifebox/grow-done-undo-compact-phone.webp",
+              "width": 462,
+              "height": 1000,
+              "alt": "Alex's Now screen after the change: the same four items as compact rows with check circles, and a sheet that says Done, undo anytime, with an Undo button."
+            },
+            "text": "Now switches to compact rows, and Undo stays one tap away."
+          }
+        ]
+      },
+      "artifactsLabel": "Dated artifacts",
+      "artifacts": [
+        {
+          "stamp": "2026.318",
+          "date": "14 Nov 2026",
+          "title": "A crowd, or one person",
+          "text": "How AI-run website testing compares with an app built for one person. The loop carries over; the statistics don't.",
+          "source": "Research note · adaptive interfaces"
+        },
+        {
+          "stamp": "2026.292",
+          "date": "19 Oct 2026",
+          "title": "Planned as Atti's phone app",
+          "text": "Capture goes in, and a Now feed of open tasks comes out.",
+          "source": "Doc · Atti plan, personal brain"
+        },
+        {
+          "stamp": "2026.280",
+          "date": "7 Oct 2026",
+          "title": "Stable Frame, Adaptive Content",
+          "text": "A design paper, draft 2: what may adapt, and how to test a change when the sample is one person.",
+          "source": "Doc · design paper, draft 2"
+        }
+      ],
+      "expanders": [
+        {
+          "title": "What I'm building",
+          "paragraphs": [
+            "One codebase, with a different configuration for each person. The frame of the app stays stable and the content adapts: what shows on Now, in what order, and how dense it is. Every change is visible, explained in one line, and can be undone. The app only accepts configuration that passes a schema; it never runs code an AI wrote."
+          ]
+        },
+        {
+          "title": "What I tried",
+          "paragraphs": [
+            "I wrote a design paper, \"Stable Frame, Adaptive Content\", on what may adapt and how to test a change when the sample is one person. It sets two rules: judge a change from week three, and drop the first days of each test block so novelty doesn't count as success. I explored four visual directions for the Now screen. Lifebox's rules for reading dates and intents in plain text now also run inside Atti. I also studied AI tools that generate website variants and keep whatever converts. Their loop carries over: generate, constrain, measure, keep what works. Their statistics don't."
+          ]
+        },
+        {
+          "title": "What didn't work",
+          "paragraphs": [
+            "Releases. Apps ship one release to everybody, and one iOS build takes 30 to 60 minutes. A separate one for each person is the whole point here, and no approach to that works yet. Crowd-style testing doesn't work either: one person gives a few signals a week, too few to split, so layout changes must never be tested that way."
+          ]
+        },
+        {
+          "title": "Open questions and next",
+          "paragraphs": [
+            "Can Atti propose one change at a time from what my personal brain already knows, and can the brain guide those choices without its contents leaving my machine? When a personal change keeps winning for several people who opted in, it could become a candidate default, climbing from personal to popular to community to core. And who approves a low-risk change: the user each time, or Atti on its own once they opt in?"
+          ]
+        }
+      ]
+    }
+  ],
+  "next": {
+    "label": "Next",
+    "eyebrow": "Next project",
+    "link": { "label": "Duo Decide", "href": "/projects/duo-decide" },
+    "back": { "label": "Back to PAS", "href": "/projects/pas" }
+  }
+}

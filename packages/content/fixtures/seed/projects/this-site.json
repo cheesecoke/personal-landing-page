@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "visibility": "name-only",
+  "slug": "this-site",
+  "name": "This site",
+  "parent": null,
+  "status": {
+    "key": "in-build",
+    "label": "In build"
+  }
+}

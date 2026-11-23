@@ -1,0 +1,97 @@
+/*
+ * The AI system's timeline: stops on a warm line that ends at the next version.
+ * Ported from the AI system board (`ai-tl`, `ai-stop`, `ai-dot`). The section is a query
+ * container: the line runs down the side until the section is 804px wide (a 900px page), then
+ * across the top with one column per stop.
+ */
+
+.root {
+  container-type: inline-size;
+}
+
+.list {
+  --line-start: color-mix(in srgb, var(--palette-cedar) 47%, var(--bg-ground));
+
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 28px;
+  margin: 0;
+  padding: 0 0 0 28px;
+  list-style: none;
+}
+
+.list::before {
+  position: absolute;
+  top: 6px;
+  bottom: 24px;
+  left: 5px;
+  width: 1px;
+  content: '';
+  background: linear-gradient(
+    180deg,
+    var(--line-start),
+    var(--palette-cedar) 75%,
+    var(--palette-signal-dim)
+  );
+}
+
+.stop {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.dot {
+  position: absolute;
+  top: 3px;
+  left: -28px;
+  box-sizing: border-box;
+  width: 11px;
+  height: 11px;
+  background: var(--bg-ground);
+  border: 1px solid var(--accent-warm);
+  border-radius: 50%;
+}
+
+/* The next version: not yet grown, so its ring is dashed, with a soft light. */
+.dotNext {
+  top: 0;
+  left: -31px;
+  width: 17px;
+  height: 17px;
+  border: 1px dashed var(--accent-signal);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--accent-signal) 30%, transparent);
+}
+
+@container (width >= 804px) {
+  .list {
+    grid-template-columns: repeat(var(--stops, 5), minmax(0, 1fr));
+    gap: 0 28px;
+    padding: 36px 0 0;
+  }
+
+  .list::before {
+    inset: 5px 8% auto 0;
+    width: auto;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      var(--line-start),
+      var(--palette-cedar) 75%,
+      var(--palette-signal-dim)
+    );
+  }
+
+  .dot {
+    top: -36px;
+    left: 0;
+  }
+
+  .dotNext {
+    top: -39px;
+    left: -3px;
+  }
+}

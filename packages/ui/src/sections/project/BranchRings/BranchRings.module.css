@@ -1,0 +1,68 @@
+/*
+ * Branch rings: a project's cross-section beside the list that controls it.
+ * Ported from the Branch rings board. The panel is a query container: the ring stacks above its
+ * list until the panel is about 556px wide (the board switches at a 620px page).
+ */
+
+.panel {
+  container-type: inline-size;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px 40px;
+  align-items: center;
+}
+
+@container (width >= 556px) {
+  .grid {
+    grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
+  }
+}
+
+.row {
+  color: var(--text-secondary);
+}
+
+.row:hover,
+.row[aria-pressed='true'] {
+  color: var(--text-primary);
+}
+
+.row:focus-visible {
+  outline-offset: 2px;
+}
+
+/* The growing arc: its dash is `--arc` of 100. */
+.arc {
+  stroke-dasharray: var(--arc) 100;
+}
+
+/*
+ * Selecting a ring cross-fades its colour over `hover`. The teal arc draws once, the first time
+ * the panel scrolls into view, over `mark-arc`. Reduced motion: both are instant.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion='reduce']) .ring,
+  :root:not([data-motion='reduce']) .bar {
+    transition:
+      stroke var(--duration-hover),
+      stroke-opacity var(--duration-hover),
+      background-color var(--duration-hover),
+      opacity var(--duration-hover);
+  }
+
+  :root:not([data-motion='reduce']) .row {
+    transition: color var(--duration-hover);
+  }
+
+  :root:not([data-motion='reduce']) .panel[data-arc] .arc {
+    transition: stroke-dashoffset var(--duration-mark-arc) var(--ease-out);
+  }
+
+  :root:not([data-motion='reduce']) .panel[data-arc='armed'] .arc {
+    transition: none;
+    stroke-dashoffset: var(--arc);
+  }
+}

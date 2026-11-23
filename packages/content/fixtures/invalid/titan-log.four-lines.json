@@ -1,0 +1,23 @@
+{
+  "expectPath": "entries.0.lines",
+  "data": {
+    "schemaVersion": 1,
+    "enabled": true,
+    "role": "Senior Software Engineer, AI",
+    "since": "2026-01",
+    "entries": [
+      {
+        "month": "2026-10",
+        "lines": ["One line.", "Two lines.", "Three lines.", "Four lines."]
+      },
+      {
+        "month": "2026-09",
+        "lines": ["Added a memory layer so the pipeline learns from past runs."]
+      },
+      {
+        "month": "2026-08",
+        "lines": ["Moved the pipeline’s starting point from tickets to the product spec."]
+      }
+    ]
+  }
+}

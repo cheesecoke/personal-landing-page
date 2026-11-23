@@ -1,0 +1,140 @@
+/*
+ * The at-work pipeline diagram: steps on one line that warms from wood to Signal, ending in the
+ * lit step. Horizontal from a 700px slot, a vertical rail below. Ported from the Home board.
+ */
+
+.rail,
+.railVertical {
+  /* The line's first colour has no token yet. */
+  --pipeline-start: #5a4a38; /* token-lint-ignore: no token yet (pipeline line start) */
+  --pipeline-line: var(--pipeline-start), var(--palette-cedar) 70%, var(--accent-signal);
+  --pipeline-glow: 0 0 12px color-mix(in srgb, var(--accent-signal) 50%, transparent);
+}
+
+.rail {
+  position: relative;
+  display: none;
+  padding: 8px 0;
+}
+
+.railVertical {
+  position: relative;
+}
+
+/* The arc behind the last step: a hairline circle with one lit quarter. */
+.arc {
+  position: absolute;
+  top: 50%;
+  width: 64px;
+  height: 64px;
+  margin: -32px 0 0 -32px;
+  border: 1px solid var(--line-hairline);
+  border-bottom-color: var(--thread-line);
+  border-radius: 50%;
+  transform: rotate(-35deg);
+}
+
+.labels {
+  position: relative;
+  display: grid;
+  min-height: 16px;
+}
+
+.label {
+  font-family: var(--font-readout);
+  font-size: var(--type-readout-status-size);
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--text-diagram);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.labels .label {
+  text-align: center;
+}
+
+.labelLit {
+  color: var(--accent-signal);
+}
+
+.track {
+  position: relative;
+  height: 36px;
+}
+
+.line {
+  position: absolute;
+  top: 50%;
+  height: 1px;
+  background: linear-gradient(90deg, var(--pipeline-line));
+}
+
+.chevron {
+  position: absolute;
+  top: 50%;
+  margin: -4px 0 0 -3px;
+  stroke: var(--palette-cedar);
+}
+
+.dot {
+  position: absolute;
+  top: 50%;
+  box-sizing: border-box;
+  width: 9px;
+  height: 9px;
+  margin: -4.5px 0 0 -4.5px;
+  background: var(--bg-ground);
+  border: 1px solid var(--accent-warm);
+  border-radius: 50%;
+}
+
+.dotLit {
+  width: 13px;
+  height: 13px;
+  margin: -6.5px 0 0 -6.5px;
+  border-color: var(--accent-signal);
+  box-shadow: var(--pipeline-glow);
+}
+
+.core {
+  position: absolute;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  margin: -2px 0 0 -2px;
+  background: var(--accent-signal);
+  border-radius: 50%;
+}
+
+.lineVertical {
+  position: absolute;
+  top: 17px;
+  bottom: 17px;
+  left: 6px;
+  width: 1px;
+  background: linear-gradient(180deg, var(--pipeline-line));
+}
+
+.row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 34px;
+  padding-left: 28px;
+}
+
+.row .dot {
+  left: 6px;
+}
+
+@container (width >= 700px) {
+  .rail {
+    display: block;
+  }
+
+  .railVertical {
+    display: none;
+  }
+}

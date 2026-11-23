@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "visibility": "public",
+  "slug": "ai-system",
+  "name": "AI system",
+  "parent": null,
+  "kind": "system",
+  "state": "growing",
+  "status": {
+    "key": "first-version",
+    "label": "First version",
+    "since": "2026-05"
+  },
+  "whereItsAt": "My first agent pipeline ran from May to September 2026. It took real tasks from a ticket to a pull request, on its own code and on Duo Decide. I'm now building the next version, Distill, with a coworker, and this pipeline is being retired as Distill takes over.",
+  "log": [
+    {
+      "id": "2026-09-19",
+      "date": "2026-09-19",
+      "from": "2026-09-14",
+      "kind": "update",
+      "lines": [
+        "Spoken output for agent sessions.",
+        "Brain dumps now file straight into my personal brain.",
+        "Board fix: the live run stream stays connected."
+      ]
+    },
+    {
+      "id": "2026-07-18",
+      "date": "2026-07-18",
+      "kind": "update",
+      "lines": ["An audit showed the lesson loop starved; fixes filed."]
+    },
+    {
+      "id": "2026-07-06",
+      "date": "2026-07-06",
+      "kind": "update",
+      "lines": ["The daemon runs tickets on its own."]
+    }
+  ],
+  "release": null,
+  "shoots": [
+    {
+      "id": "rebuild-as-distill",
+      "label": "Rebuild as Distill",
+      "kind": "goal",
+      "state": "open",
+      "note": "The next version of the pipeline.",
+      "resolved": null
+    },
+    {
+      "id": "model-cascade-with-a-verifier",
+      "label": "Model cascade with a verifier",
+      "kind": "idea",
+      "state": "open",
+      "note": "Try a cheaper model first and let a verifier decide when to escalate.",
+      "resolved": null
+    },
+    {
+      "id": "reranked-memory-search",
+      "label": "Reranked memory search",
+      "kind": "idea",
+      "state": "open",
+      "note": "Rerank what the brain retrieves; paraphrased questions are the gap today.",
+      "resolved": null
+    }
+  ],
+  "rings": [
+    {
+      "id": "2026-q2",
+      "label": "2026 Q2",
+      "weight": 4,
+      "kind": "period",
+      "text": "Built from May."
+    },
+    {
+      "id": "2026-q3",
+      "label": "2026 Q3",
+      "weight": 4,
+      "kind": "period",
+      "text": "Ran real tasks on itself and on Duo Decide."
+    }
+  ],
+  "facts": [
+    {
+      "key": "commits",
+      "value": "609",
+      "label": "commits",
+      "asOf": "2026-11-20"
+    },
+    {
+      "key": "recorded-runs",
+      "value": "175",
+      "label": "recorded runs",
+      "asOf": "2026-11-22"
+    }
+  ],
+  "fresh": {
+    "changedAt": "2026-09-19",
+    "changeKind": "update"
+  }
+}

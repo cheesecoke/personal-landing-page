@@ -1,0 +1,26 @@
+{
+  "expectPath": "entries.0.month",
+  "data": {
+    "schemaVersion": 1,
+    "enabled": true,
+    "role": "Senior Software Engineer, AI",
+    "since": "2026-01",
+    "entries": [
+      {
+        "month": "2026-10-31",
+        "lines": [
+          "Built an evaluation harness for agent pipeline stages.",
+          "Taught a session on agent workflows for people outside engineering."
+        ]
+      },
+      {
+        "month": "2026-09",
+        "lines": ["Added a memory layer so the pipeline learns from past runs."]
+      },
+      {
+        "month": "2026-08",
+        "lines": ["Moved the pipeline’s starting point from tickets to the product spec."]
+      }
+    ]
+  }
+}

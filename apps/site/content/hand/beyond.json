@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "title": "Beyond",
+  "header": {
+    "title": "Beyond",
+    "lead": "Where I'll build in public: the real work, as it happens, including what fails.",
+    "status": "Not open yet",
+    "note": "A short intro video, then the work sessions."
+  },
+  "scene": {
+    "label": "What will be here",
+    "image": {
+      "src": "/media/stump/stump-hero.webp",
+      "width": 2400,
+      "height": 1500,
+      "alt": "",
+      "sources": [{ "src": "/media/stump/stump-hero.avif", "type": "image/avif" }]
+    },
+    "slots": [
+      {
+        "title": "Work sessions",
+        "text": "Screen and voice while I build my AI system. Long and calm.",
+        "size": "regular"
+      },
+      {
+        "title": "Clips",
+        "text": "One moment from a session, 60 to 90 seconds, with a note.",
+        "size": "regular"
+      },
+      {
+        "title": "References",
+        "text": "The notes and links behind the work.",
+        "size": "regular",
+        "confirm": ["[CONFIRM: what References holds]"]
+      },
+      {
+        "id": "one-rep",
+        "title": "One Rep",
+        "text": "Ten reps between work sessions, and a simple way to log them.",
+        "size": "small"
+      }
+    ]
+  },
+  "next": {
+    "label": "Next page",
+    "eyebrow": "Next",
+    "link": { "label": "Contact", "href": "/contact" }
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "visibility": "public",
+  "slug": "atti",
+  "name": "Atti",
+  "parent": "pas",
+  "kind": "system",
+  "state": "growing",
+  "status": {
+    "key": "daily-use",
+    "label": "Daily use",
+    "since": "2026-10-28"
+  },
+  "whereItsAt": "Live on Telegram since 28 October 2026 and in use every day. It captures reminders and to-dos, keeps my calendar, sends a morning brief and writes what it learns into my personal brain. Since 5 November I can also talk to it hands-free through an iPhone Shortcut.",
+  "log": [
+    {
+      "id": "2026-11-20",
+      "date": "2026-11-20",
+      "kind": "update",
+      "lines": ["Replies now match my Yes or No answers."]
+    },
+    {
+      "id": "2026-11-18",
+      "date": "2026-11-18",
+      "kind": "update",
+      "lines": ["One Yes now confirms a whole list of calendar events."]
+    },
+    {
+      "id": "2026-11-10",
+      "date": "2026-11-10",
+      "kind": "update",
+      "lines": [
+        "Logs save at once with an Undo, no confirmation needed.",
+        "A watchdog brings the assistant back after downtime."
+      ]
+    },
+    {
+      "id": "2026-11-05",
+      "date": "2026-11-05",
+      "kind": "update",
+      "lines": ["Hands-free: talk to Atti through an iPhone Shortcut."]
+    },
+    {
+      "id": "2026-10-29",
+      "date": "2026-10-29",
+      "kind": "update",
+      "lines": ["Live replay evals, and flags for quiet failures."]
+    },
+    {
+      "id": "2026-10-28",
+      "date": "2026-10-28",
+      "kind": "update",
+      "lines": ["Atti goes live on Telegram."]
+    }
+  ],
+  "release": null,
+  "shoots": [
+    {
+      "id": "decision-model-router",
+      "label": "Decision-model router",
+      "kind": "question",
+      "state": "open",
+      "note": "Can a small decision model route messages faster and cheaper than a general model, at similar accuracy?",
+      "resolved": null
+    },
+    {
+      "id": "context-engine",
+      "label": "Context engine",
+      "kind": "question",
+      "state": "open",
+      "note": "A context engine that hands each agent only the slice of memory it needs.",
+      "resolved": null
+    },
+    {
+      "id": "spec-to-draft-pr",
+      "label": "Spec to draft PR",
+      "kind": "idea",
+      "state": "open",
+      "note": "Turn a spec from a chat into a draft pull request. Built, parked for now.",
+      "resolved": null
+    }
+  ],
+  "rings": [],
+  "facts": [
+    {
+      "key": "commits-by-atti",
+      "value": "177",
+      "label": "commits by Atti",
+      "asOf": "2026-11-20"
+    },
+    {
+      "key": "test-cases",
+      "value": "1,478",
+      "label": "test cases",
+      "asOf": "2026-11-20"
+    }
+  ],
+  "fresh": {
+    "changedAt": "2026-11-20",
+    "changeKind": "update"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "@cwc/tokens",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": "./src/index.ts",
+    "./tokens.css": "./generated/tokens.css",
+    "./theme.css": "./generated/theme.css",
+    "./tokens.json": "./generated/tokens.json",
+    "./fonts.css": "./fonts/fonts.css",
+    "./fonts/*": "./fonts/*",
+    "./base.css": "./base.css",
+    "./styles.css": "./styles.css"
+  },
+  "scripts": {
+    "generate": "tsx scripts/generate.ts",
+    "typecheck": "tsc --noEmit"
+  }
+}

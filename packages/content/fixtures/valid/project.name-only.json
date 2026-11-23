@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "visibility": "name-only",
+  "slug": "distill",
+  "name": "Distill",
+  "parent": "ai-system",
+  "status": {
+    "key": "next-version",
+    "label": "Next version"
+  }
+}

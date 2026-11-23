@@ -1,0 +1,467 @@
+/*
+ * The Home hero: the headline on the left, the stump render behind and to the right with an AR
+ * overlay drawn over it. Ported from the Home board (Main, and its phone layout).
+ *
+ * The hero is full width, so its own width is the frame: the board's viewport steps are container
+ * queries here. Under 900px the wide stump goes and the phone render, with its list, takes over.
+ */
+
+.frame {
+  /* Motion the tokens do not name yet: one place to swap them for tokens. */
+  --hero-ar-fade: 1.6s; /* token-lint-ignore: no token yet (AR marks fading in) */
+  --hero-ar-node: 6s; /* token-lint-ignore: no token yet (node shimmer) */
+  --hero-ar-pulse: 7s; /* token-lint-ignore: no token yet (light along the wire) */
+  --hero-ar-pulse-delay: 2.4s; /* token-lint-ignore: no token yet */
+  --hero-line-draw: 0.9s; /* token-lint-ignore: no token yet (line under the headline) */
+  --hero-line-delay: 0.5s; /* token-lint-ignore: no token yet */
+
+  /* Height of a header drawn over the hero's top (the site nav). The stump runs behind it. */
+  --hero-lift: var(--stump-hero-lift, 0px);
+
+  position: relative;
+  margin-top: calc(-1 * var(--hero-lift));
+  container: stump-hero / inline-size;
+}
+
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  min-height: 720px;
+  padding-top: var(--hero-lift);
+  overflow: hidden;
+}
+
+/* The wide render and everything pinned to it. */
+.wide {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* The image box: the stump sits right of centre and the box grows with the frame, within limits. */
+.stage {
+  --stage-width: min(max(1100px, 110%), 1560px);
+
+  position: absolute;
+  top: 50%;
+  left: calc(50% - 0.488 * var(--stage-width));
+  width: var(--stage-width);
+  transform: translateY(-50%);
+}
+
+.fill {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.overlay {
+  overflow: visible;
+}
+
+.floorFade {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 200px;
+  background-image: linear-gradient(180deg, transparent, var(--bg-ground));
+}
+
+/* AR strokes. Signal for what is live, the dim Signal for structure, Ash for ring leaders. */
+.arSignal {
+  stroke: var(--accent-signal);
+}
+
+.arDim {
+  stroke: var(--thread-line);
+}
+
+.arLeader {
+  stroke: var(--text-secondary);
+}
+
+.arCore {
+  fill: var(--text-primary);
+}
+
+.arMark {
+  fill: var(--bg-ground);
+  stroke: var(--status-live);
+}
+
+.arMark[data-tone='ember'] {
+  stroke: var(--status-build);
+}
+
+/* The travelling light is motion only. */
+.arPulse {
+  display: none;
+}
+
+.sprout {
+  display: none;
+}
+
+/* The line under the headline's last word. */
+.headlineLine {
+  position: absolute;
+  height: 24px;
+  opacity: 0.8;
+  pointer-events: none;
+  mask-image: linear-gradient(90deg, transparent, black 40px);
+}
+
+.headlineLineStroke {
+  position: absolute;
+  top: 11.5px;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: var(--accent-signal);
+  box-shadow: var(--glow-signal);
+  transform-origin: 0 50%;
+}
+
+.marker {
+  display: inline-block;
+  width: 0;
+  height: 0;
+}
+
+.nav {
+  position: relative;
+}
+
+.body {
+  position: relative;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  padding: 48px 0 24px;
+}
+
+.text {
+  max-width: min(580px, calc(50cqw - 96px));
+}
+
+.headline {
+  margin-top: 20px;
+}
+
+.lead {
+  max-width: 34ch;
+  margin-top: 28px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 40px;
+}
+
+/* Callouts: a name and a status readout on a dim plate. */
+.calloutPlate {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 3px 6px;
+  border-radius: 2px;
+  background-color: color-mix(in srgb, var(--bg-ground) 72%, transparent);
+}
+
+.calloutLink {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: var(--touch-target);
+  padding: 0 2px;
+  text-decoration: none;
+  pointer-events: auto;
+  transform: translate(16px, -50%);
+}
+
+.callout {
+  position: absolute;
+  align-items: center;
+  margin: 0;
+  transform: translate(-50%, calc(-100% - 12px));
+}
+
+.calloutName {
+  display: inline-flex;
+  gap: 7px;
+  align-items: center;
+  font-family: var(--font-readout);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  white-space: nowrap;
+}
+
+.calloutStatus {
+  font-family: var(--font-readout);
+  font-size: var(--type-readout-status-size);
+  font-weight: 400;
+  line-height: 1.3;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: var(--type-readout-status-tracking);
+  white-space: nowrap;
+}
+
+.calloutDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--status-live);
+}
+
+.calloutDot[data-tone='ember'] {
+  background: var(--status-build);
+}
+
+.calloutLink:hover .calloutName {
+  color: var(--accent-signal);
+}
+
+/* The phone render and the list that replaces the floating labels. */
+.phoneStump {
+  position: relative;
+  display: none;
+  width: 100%;
+  max-width: 640px;
+  margin: 16px auto 0;
+}
+
+.phoneImage {
+  object-fit: cover;
+  object-position: 50% 84%;
+}
+
+.phoneList {
+  position: relative;
+  display: none;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: calc(var(--container-max) + 2 * var(--gutter));
+  padding-inline: var(--gutter);
+  margin: 8px auto 0;
+}
+
+.phoneRows {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  border-bottom: 1px solid var(--line-hairline);
+}
+
+.phoneRow {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 52px;
+  color: var(--text-primary);
+  text-decoration: none;
+  border-top: 1px solid var(--line-hairline);
+}
+
+.phoneRow:hover {
+  color: var(--accent-signal);
+}
+
+.phoneRowText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.phoneRowName {
+  font-family: var(--font-readout);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+}
+
+.phoneRowStatus {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  font-family: var(--font-readout);
+  font-size: var(--type-readout-status-size);
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: var(--type-readout-status-tracking);
+}
+
+/* The fire ring's callout has a second position for a frame that cuts the image's right side. */
+.narrowOnly {
+  display: none;
+}
+
+@container stump-hero (width >= 1180px) {
+  .sprout {
+    display: inline;
+  }
+}
+
+@container stump-hero (width < 1300px) {
+  .wideOnly {
+    display: none;
+  }
+
+  g.narrowOnly {
+    display: inline;
+  }
+
+  p.narrowOnly {
+    display: flex;
+  }
+
+  .calloutShift {
+    transform: translate(-66%, calc(-100% - 12px));
+  }
+}
+
+@container stump-hero (width < 900px) {
+  .hero {
+    min-height: 0;
+  }
+
+  .wide {
+    display: none;
+  }
+
+  .text {
+    max-width: none;
+  }
+
+  .phoneStump,
+  .phoneList {
+    display: block;
+  }
+
+  .body {
+    padding-top: 48px;
+    padding-bottom: 0;
+  }
+}
+
+@keyframes stump-breathe {
+  0%,
+  100% {
+    opacity: 0;
+  }
+
+  45%,
+  60% {
+    opacity: 1;
+  }
+}
+
+@keyframes stump-ar-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes stump-ar-fade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes stump-ar-node {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes stump-ar-pulse {
+  from {
+    stroke-dashoffset: 1.08;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes stump-line-draw {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Motion is opt-in. With reduced motion the overlay is drawn and still, and no light travels. */
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion='reduce']) .breathe {
+    animation: stump-breathe var(--duration-breathe) ease-in-out infinite;
+  }
+
+  :root:not([data-motion='reduce']) .arDraw {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: stump-ar-draw var(--duration-ar-draw) var(--ease-standard) forwards;
+    animation-delay: var(--ar-delay, 0s);
+  }
+
+  :root:not([data-motion='reduce']) .arFade {
+    animation: stump-ar-fade var(--hero-ar-fade) ease-out both;
+    animation-delay: var(--ar-delay, 0s);
+  }
+
+  :root:not([data-motion='reduce']) .arNode {
+    animation: stump-ar-node var(--hero-ar-node) ease-in-out infinite;
+    animation-delay: var(--ar-delay, 0s);
+  }
+
+  :root:not([data-motion='reduce']) .arPulse {
+    display: inline;
+    stroke-dasharray: 0.08 1;
+    stroke-dashoffset: 1.08;
+    opacity: 0.9;
+    animation: stump-ar-pulse var(--hero-ar-pulse) linear var(--hero-ar-pulse-delay) infinite;
+  }
+
+  :root:not([data-motion='reduce']) .headlineLineStroke {
+    animation: stump-line-draw var(--hero-line-draw) var(--ease-out) var(--hero-line-delay) both;
+  }
+
+  :root:not([data-motion='reduce']) .calloutName,
+  :root:not([data-motion='reduce']) .phoneRow {
+    transition: color var(--duration-hover);
+  }
+}

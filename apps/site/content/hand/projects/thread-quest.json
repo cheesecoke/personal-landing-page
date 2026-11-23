@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "slug": "thread-quest",
+  "path": "/projects/thread-quest",
+  "title": "Thread Quest",
+  "breadcrumb": {
+    "label": "Breadcrumb",
+    "items": [{ "label": "Projects", "href": "/projects" }, { "label": "Thread Quest" }]
+  },
+  "hero": {
+    "status": "Being expanded",
+    "title": "Thread Quest",
+    "lead": "A closet and style tool. Save the clothes you like into your own closet, and build outfits from them."
+  },
+  "sections": [
+    {
+      "type": "whereItsAt",
+      "id": "where-its-at",
+      "title": "Where it's at",
+      "paragraphs": [
+        "On the back burner since late 2024, after hitting a wall on affiliate marketing. In November 2026 I read every line of it again and wrote a rebuild plan."
+      ],
+      "facts": [
+        {
+          "value": "64",
+          "unit": "commits",
+          "caption": "62 in 2024, built with Next.js and Google sign-in. Two in November 2026."
+        },
+        {
+          "value": "Closet and outfits",
+          "caption": "Save pieces you like, then build named outfits."
+        },
+        { "value": "Not live", "caption": "No public release yet." }
+      ]
+    },
+    { "type": "log", "id": "log", "label": "Captain's log" },
+    {
+      "type": "goDeeper",
+      "id": "go-deeper",
+      "title": "Go deeper",
+      "artifactsLabel": "Dated artifacts",
+      "expanders": [
+        {
+          "id": "building",
+          "title": "What I'm building",
+          "countLabel": "2 artifacts",
+          "paragraphs": [
+            "A closet and style tool. You collect pieces of clothing you like into your own closet and build your own outfits from them. Each piece opens on the store's site, so you buy it there. Collecting from any store, anywhere, is the focus for now."
+          ],
+          "artifacts": [
+            {
+              "stamp": "2026.324",
+              "date": "20 Nov 2026",
+              "title": "The rebuild plan",
+              "text": "Keep the name and the closet and outfit idea, and rebuild the rest on a tested backend.",
+              "source": "Doc · Thread Quest assessment"
+            },
+            {
+              "stamp": "2024.269",
+              "date": "25 Sep 2024",
+              "title": "Outfits",
+              "text": "A closet page with saved pieces by category, and named outfits with a due date and a status.",
+              "source": "Pull request · thread-quest #2"
+            }
+          ]
+        },
+        {
+          "id": "tried",
+          "title": "What I tried",
+          "countLabel": "1 artifact",
+          "paragraphs": [
+            "A catalog of men's clothing with filters, a closet you save pieces to, and named outfits built from it. I wired in an affiliate program to fund it."
+          ],
+          "artifacts": [
+            {
+              "stamp": "2024.344",
+              "date": "9 Dec 2024",
+              "title": "Affiliate tracking",
+              "text": "Several tries to get affiliate tracking working.",
+              "source": "Commits · thread-quest, December 2024"
+            }
+          ]
+        },
+        {
+          "id": "didnt-work",
+          "title": "What didn't work",
+          "countLabel": "1 artifact",
+          "paragraphs": [
+            "Affiliate marketing took several tries to wire up, then stalled waiting on approval. A catalog copied from stores goes stale."
+          ],
+          "artifacts": [
+            {
+              "stamp": "2024.345",
+              "date": "10 Dec 2024",
+              "title": "Affiliate links paused",
+              "text": "Paused until the affiliate program approves, and the project went to the back burner.",
+              "source": "Commit · thread-quest, 10 Dec 2024"
+            }
+          ]
+        },
+        {
+          "id": "next",
+          "title": "Open questions and next",
+          "paragraphs": [
+            "Buying inside the app is an idea for later, because of the legal work it involves. Until then, each piece opens on the store's site. Other ideas, not plans yet: AI that gathers pieces you like into your closet, and a browser plugin that captures items while you shop."
+          ]
+        }
+      ]
+    }
+  ],
+  "next": {
+    "label": "Next",
+    "eyebrow": "Next",
+    "link": { "label": "About", "href": "/about" },
+    "back": { "label": "Back to the map", "href": "/projects" }
+  }
+}

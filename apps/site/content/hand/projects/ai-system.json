@@ -1,0 +1,325 @@
+{
+  "schemaVersion": 1,
+  "slug": "ai-system",
+  "path": "/projects/ai-system",
+  "title": "AI system",
+  "breadcrumb": {
+    "label": "Breadcrumb",
+    "items": [{ "label": "Projects", "href": "/projects" }, { "label": "AI system" }]
+  },
+  "hero": {
+    "status": "First version",
+    "title": "AI system",
+    "lead": "My first agent pipeline: it takes a task from plan to code to pull request, and learns from its own runs.",
+    "figure": {
+      "type": "image",
+      "image": {
+        "src": "/media/projects/ai-system/ai-system-hero.webp",
+        "width": 1600,
+        "height": 1000,
+        "alt": "Diagram of the personal pipeline: intake, evidence, plan, code, pull request, with revision loops and a brain that feeds lessons back into planning."
+      },
+      "caption": "Pipeline diagram"
+    }
+  },
+  "sections": [
+    {
+      "type": "whereItsAt",
+      "id": "where-its-at",
+      "title": "Where it's at",
+      "paragraphs": [
+        "My first agent pipeline ran from May to September 2026. It took real tasks from a ticket to a pull request, on its own code and on Duo Decide. I'm now building the next version, Distill, with a coworker, and this pipeline is being retired as Distill takes over."
+      ],
+      "facts": [
+        {
+          "value": "609",
+          "unit": "commits",
+          "caption": "Built May to September 2026, with 251 test files."
+        },
+        {
+          "value": "175",
+          "unit": "recorded runs",
+          "caption": "Every run in the ledger, July to September 2026. Counted November 2026."
+        },
+        {
+          "value": "Built its own last two pieces",
+          "caption": "Once the daemon ran, it finished its own milestone."
+        }
+      ]
+    },
+    {
+      "type": "timeline",
+      "id": "timeline",
+      "title": "From the first pipeline to Distill",
+      "label": "Milestones, oldest first",
+      "stops": [
+        {
+          "stamp": "2026.130",
+          "date": "10 May 2026",
+          "title": "First commit",
+          "text": "A pipeline that plans, writes code and opens a pull request, with a budget on every stage from day one."
+        },
+        {
+          "stamp": "2026.154",
+          "date": "3 Jun 2026",
+          "title": "The board",
+          "text": "A local board shows every run as a line of stages, with live status, spend and the pull request."
+        },
+        {
+          "stamp": "2026.182",
+          "date": "1 Jul 2026",
+          "title": "The ledger",
+          "text": "Every run is recorded as an episode. In August the board's Memory view joined each run to what it left behind."
+        },
+        {
+          "stamp": "2026.186",
+          "date": "5 Jul 2026",
+          "title": "Lessons",
+          "text": "Repeated failures become ranked lessons the planner can pull, behind a gate built to say no."
+        },
+        {
+          "tag": "Next version",
+          "title": "Distill",
+          "link": { "label": "What it is", "href": "#distill" }
+        }
+      ],
+      "figure": {
+        "image": {
+          "src": "/media/projects/ai-system/board-run-all-stages-passed-desktop.webp",
+          "width": 1600,
+          "height": 1000,
+          "alt": "The pipeline board showing one finished run: evidence, plan, code and pull request stages all passed, with token counts and run metrics. Spend figures are masked."
+        },
+        "caption": "The board, 4 Sep 2026: one run passes evidence, plan, code and pull request. Spend is masked."
+      }
+    },
+    {
+      "type": "prose",
+      "id": "distill",
+      "title": "Distill",
+      "paragraphs": [
+        "Distill is the next version: a code factory, the execution layer that takes a ticket through to a pull request."
+      ]
+    },
+    {
+      "type": "figures",
+      "label": "Details",
+      "figures": [
+        {
+          "image": {
+            "src": "/media/projects/ai-system/ai-system-detail-relay.webp",
+            "width": 1200,
+            "height": 800,
+            "alt": "One run as a relay of short-lived agent sessions (evidence, plan, critics, executor, challenger, reviewer), coordinated by deterministic code and connected only by files."
+          },
+          "caption": "One run · a relay of short agent sessions, connected by files"
+        }
+      ]
+    },
+    { "type": "log", "id": "log", "label": "Captain's log" },
+    {
+      "type": "goDeeper",
+      "id": "go-deeper",
+      "title": "Go deeper",
+      "artifactsLabel": "Dated artifacts",
+      "expanders": [
+        {
+          "id": "building",
+          "title": "What I'm building",
+          "countLabel": "3 artifacts",
+          "paragraphs": [
+            "One system that runs the whole loop (plan, build, check, open a pull request) and gets better from its own history. The rule of the house: the model picks what; code picks where and how."
+          ],
+          "artifacts": [
+            {
+              "stamp": "2026.187",
+              "date": "6 Jul 2026",
+              "title": "The daemon",
+              "text": "Tickets moved to In Progress run on their own: it dispatches, retries, parks and writes back. It built its own last two pieces.",
+              "source": "Pull request · ai-system #64 · roadmap M3",
+              "media": [
+                {
+                  "kind": "image",
+                  "image": {
+                    "src": "/media/projects/ai-system/board-project-ai-system-desktop.webp",
+                    "width": 1600,
+                    "height": 1000,
+                    "alt": "The board page for the ai-system project: its config, the latest run with all four stages passed, and recent runs."
+                  }
+                }
+              ]
+            },
+            {
+              "stamp": "2026.154",
+              "date": "3 Jun 2026",
+              "title": "The board",
+              "text": "Agents building UI read the board's design-system mocks before they touch it. Here it moves from the dashboard into one run.",
+              "source": "Commit · feat(ui): local pipeline progress board",
+              "media": [
+                {
+                  "kind": "video",
+                  "video": {
+                    "src": "/media/projects/ai-system/board-dashboard-to-run-loop.mp4",
+                    "width": 1440,
+                    "height": 900,
+                    "poster": "/media/projects/ai-system/board-loop-poster.webp",
+                    "label": "Eight-second screen recording of the board: the dashboard, a project page, then one run and its spec. Spend is masked."
+                  }
+                }
+              ]
+            },
+            {
+              "stamp": "2026.324",
+              "date": "20 Nov 2026",
+              "title": "The architecture map",
+              "text": "51 parts, coloured by maturity: 20 built, 30 partial, 1 still needed.",
+              "source": "Doc · architecture/architecture.json",
+              "media": [
+                {
+                  "kind": "image",
+                  "image": {
+                    "src": "/media/projects/ai-system/architecture-diagram-maturity-desktop.webp",
+                    "width": 1600,
+                    "height": 1000,
+                    "alt": "The ai-system architecture graph, every part coloured green, yellow or red by how built it is."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "tried",
+          "title": "What I tried",
+          "countLabel": "3 artifacts",
+          "paragraphs": [
+            "A panel of twelve critic personas debating each plan. An evidence stage that reproduces the problem before any planning. A ledger that records every run, and a weekly job that ranks repeated failures into lessons. A board with its own design system, so agents building UI could read the mocks. Spend caps per run and per stage from the first day."
+          ],
+          "artifacts": [
+            {
+              "stamp": "2026.260",
+              "date": "17 Sep 2026",
+              "title": "Spend caps",
+              "text": "Three Duo Decide runs stopped at the code stage when they reached their spend cap, and waited there to resume.",
+              "source": "Capture · the board, spend masked",
+              "media": [
+                {
+                  "kind": "image",
+                  "image": {
+                    "src": "/media/projects/ai-system/board-dashboard-awaiting-approval-desktop.webp",
+                    "width": 1600,
+                    "height": 1000,
+                    "alt": "The board dashboard with three Duo Decide runs paused at the code stage after reaching their budget. Spend figures are masked."
+                  }
+                }
+              ]
+            },
+            {
+              "stamp": "2026.185",
+              "date": "4 Jul 2026",
+              "title": "First proof",
+              "text": "Five runs on two repos finished with no interventions, and the first two lessons came out of them.",
+              "source": "Roadmap · M1 exit, pull request #43"
+            },
+            {
+              "stamp": "2026.183",
+              "date": "2 Jul 2026",
+              "title": "Data first",
+              "text": "An inventory found lots of code, zero real runs and an empty ledger. I stopped adding features and fed it real tickets.",
+              "source": "Roadmap · Why this order"
+            }
+          ]
+        },
+        {
+          "id": "didnt-work",
+          "title": "What didn't work",
+          "countLabel": "3 artifacts",
+          "paragraphs": [
+            "The lesson loop was wired but starved. When I audited it in July, 60 of 73 runs had pulled in no lessons at all. The gate was doing its job: every lesson was about how runs fail, so it rightly said no to product work. The weekly job that made lessons had also run once and never again, because it was scheduled for an hour when my machine was asleep. Real improvement was coming from the pipeline's own review loop, not from the lessons."
+          ],
+          "artifacts": [
+            {
+              "stamp": "2026.199",
+              "date": "18 Jul 2026",
+              "title": "The lesson loop starved",
+              "text": "60 of 73 runs pulled in no lessons. The weekly job had run once, at an hour my machine was asleep.",
+              "source": "Roadmap · lessons audit",
+              "media": [
+                {
+                  "kind": "image",
+                  "image": {
+                    "src": "/media/projects/ai-system/board-memory-run-ledger-desktop.webp",
+                    "width": 1600,
+                    "height": 1000,
+                    "alt": "The board's Memory view: a table of runs with status, repo, tokens and whether each run produced memory. Spend is masked."
+                  }
+                }
+              ]
+            },
+            {
+              "stamp": "2026.280",
+              "date": "7 Oct 2026",
+              "title": "The doc was wrong",
+              "text": [
+                "The pipeline followed Duo Decide's voting doc to the letter, and vote decisions stuck for three months. ",
+                { "text": "The Duo Decide story", "href": "/projects/duo-decide#didnt-work" },
+                "."
+              ],
+              "source": "Pull request · duo-decide #25"
+            },
+            {
+              "stamp": "2026.324",
+              "date": "20 Nov 2026",
+              "title": "Not built for phones",
+              "text": "The board was made for a desk. On a phone, the sidebar fills the top half of the screen.",
+              "source": "Capture · the board at phone width",
+              "media": [
+                {
+                  "kind": "image",
+                  "image": {
+                    "src": "/media/projects/ai-system/board-run-all-stages-passed-phone.webp",
+                    "width": 600,
+                    "height": 1299,
+                    "alt": "The board on a phone: a finished run, with the sidebar filling the top of the screen."
+                  }
+                },
+                {
+                  "kind": "image",
+                  "image": {
+                    "src": "/media/projects/ai-system/board-dashboard-phone.webp",
+                    "width": 600,
+                    "height": 1299,
+                    "alt": "The board dashboard on a phone, with the sidebar filling the top of the screen."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "next",
+          "title": "Open questions and next",
+          "countLabel": "1 artifact",
+          "paragraphs": [
+            "What carries forward to the next version is the habit: run real work first, record every run, and measure before trusting a stage. Still open: a cheaper model first, with a verifier deciding when to escalate, and better memory search for questions worded differently from the lesson."
+          ],
+          "artifacts": [
+            {
+              "stamp": "2026.242",
+              "date": "30 Aug 2026",
+              "title": "The top lesson",
+              "text": "Repeated retries at the code stage: seen 23 times across 3 repos. One of 14 lessons the ledger produced.",
+              "source": "Lesson page · retry-code"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "next": {
+    "label": "Next",
+    "eyebrow": "Next project",
+    "link": { "label": "Personal brain", "href": "/projects/personal-brain" },
+    "back": { "label": "Back to the map", "href": "/projects" }
+  }
+}
