@@ -5,6 +5,7 @@ import { freshCandidates, statusKeyTone, toFreshProp } from '../content/live';
 import { liveContent } from '../content/live.server';
 import { pageMeta } from '../content/meta';
 import { factKey, HomeTemplate, type HomeFresh, type HomeLive } from '../templates/HomeTemplate';
+import { HomeTemplateMap } from '../templates/HomeTemplateMap';
 import type { Route } from './+types/home';
 
 const named = <T,>(values: readonly (T | undefined)[]) =>
@@ -62,7 +63,7 @@ function HomePage({ content, live, candidates }: Route.ComponentProps['loaderDat
     const mark = toFreshProp(markFor(id));
     if (mark) fresh[id] = mark;
   }
-  return <HomeTemplate content={content} live={live} fresh={fresh} />;
+  return <HomeTemplate content={content} live={live} fresh={fresh} map={<HomeTemplateMap />} />;
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
