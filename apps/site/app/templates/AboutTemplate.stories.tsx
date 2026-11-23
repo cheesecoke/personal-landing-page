@@ -105,10 +105,7 @@ export const WithLiveData: Story = {
   args: {
     // Stand-in lines: nothing is published yet.
     now: { month: '2026-11', text: 'The line about this month goes here.' },
-    currentRole: {
-      role: { title: 'Senior Software Engineer, AI', org: 'Titan Intake', since: '2026-01' },
-      sinceLabel: 'since',
-    },
+    currentRole: { title: 'Senior Software Engineer, AI', org: 'Titan Intake', since: '2026-01' },
   },
   globals: { viewport: { value: 'desktop' } },
   play: async ({ canvasElement }) => {

@@ -34,13 +34,6 @@ type Chapter = Rings['chapters'][number];
  */
 const hiddenDetails: Record<string, readonly number[]> = { 'wildland-fire': [0, 1] };
 
-/** What live data can put in front of the current job's summary. */
-export interface AboutCurrentRole {
-  role: CurrentRole;
-  /** The word between the title and the month ("since"). */
-  sinceLabel: string;
-}
-
 /**
  * The chapters as the `RingsTimeline` section takes them.
  *
@@ -50,8 +43,12 @@ export interface AboutCurrentRole {
  * has no years and is the dashed root; the warm chapter and the current job are filled dots.
  * A dashed rule (time passed) sits above the first chapter, the one after the root, and the one
  * after a note.
+ *
+ * `role` is the live current role. The chapter that carries a hand-written role line shows it
+ * instead, written as "<title>, since <Month Year>." with the chapter's `sinceLabel` as the word
+ * in the middle. Without live data, or without that word, the hand-written line shows.
  */
-export function toRingsItems(rings: Rings, current?: AboutCurrentRole | null): RingsItem[] {
+export function toRingsItems(rings: Rings, role?: CurrentRole | null): RingsItem[] {
   const ringed = rings.chapters.filter((chapter) => chapter.ring !== null);
   const ringsOf = (chapter: Chapter): number[] => {
     const next = ringed[ringed.indexOf(chapter) + 1];
@@ -82,8 +79,8 @@ export function toRingsItems(rings: Rings, current?: AboutCurrentRole | null): R
       // The current job opens with the role: live data when there is some, else the hand line.
       summary: chapter.role ? (
         <CurrentRoleBlock
-          role={current?.role ?? null}
-          sinceLabel={current?.sinceLabel ?? ''}
+          role={chapter.sinceLabel ? (role ?? null) : null}
+          sinceLabel={chapter.sinceLabel}
           fallback={chapter.role}
         >
           {chapter.summary}
@@ -155,7 +152,7 @@ export interface AboutTemplateProps {
   /** Live data: the Now line. Without it there is no Now section. */
   now?: NowEntry | null;
   /** Live data: the current role. Without it the current job's ring shows the hand-written line. */
-  currentRole?: AboutCurrentRole | null;
+  currentRole?: CurrentRole | null;
 }
 
 /**
