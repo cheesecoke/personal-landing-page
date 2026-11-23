@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect } from 'storybook/test';
+import { expect, waitFor } from 'storybook/test';
 
 import { RingMark } from './RingMark';
 
@@ -17,7 +17,18 @@ const arcOf = (root: HTMLElement) =>
 /** 24px, as it sits beside the name. Hover it: the arc grows from 25 to 50. */
 export const Default: Story = {
   play: async ({ canvasElement }) => {
-    await expect(arcOf(canvasElement)).toBe('25 100');
+    // The test browser's pointer may be resting where the mark is drawn, which starts the hover
+    // transition, and a read then lands part way through it. Take the mark out from under the
+    // pointer (the 1px nudge makes the browser look again at what is hovered) and wait for the
+    // arc to come to rest.
+    canvasElement.style.pointerEvents = 'none';
+    canvasElement.style.paddingTop = '1px';
+    try {
+      await waitFor(() => expect(arcOf(canvasElement)).toBe('25 100'), { timeout: 3000 });
+    } finally {
+      canvasElement.style.pointerEvents = '';
+      canvasElement.style.paddingTop = '';
+    }
   },
 };
 
