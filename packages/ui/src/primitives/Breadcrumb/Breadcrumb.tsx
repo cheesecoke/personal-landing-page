@@ -45,7 +45,9 @@ export function Breadcrumb({
               ) : (
                 <Link
                   href={item.href}
-                  className="inline-flex min-h-touch items-center text-secondary no-underline hover:text-signal motion-ok:transition-colors motion-ok:duration-hover"
+                  // A short name ("PAS") is narrower than a touch target: `after` widens what can
+                  // be tapped to 44px without moving the trail.
+                  className="relative inline-flex min-h-touch items-center text-secondary no-underline after:absolute after:inset-y-0 after:left-1/2 after:w-full after:min-w-touch after:-translate-x-1/2 hover:text-signal motion-ok:transition-colors motion-ok:duration-hover"
                 >
                   {item.label}
                 </Link>

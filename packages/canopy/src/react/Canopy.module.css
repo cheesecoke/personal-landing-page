@@ -642,6 +642,15 @@
   outline-offset: 2px;
 }
 
+/* A finger needs taller rows than a pointer does (a tablet shows the list, not the chips). */
+@media (pointer: coarse) {
+  .row,
+  .row.d1,
+  .row.d2 {
+    min-height: 44px;
+  }
+}
+
 /* ---------- teaser: the picture only, no chrome ---------- */
 .root.teaser {
   display: block;
