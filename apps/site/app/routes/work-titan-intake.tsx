@@ -12,7 +12,11 @@ export function loader() {
 }
 
 export const meta: Route.MetaFunction = ({ data }) =>
-  pageMeta({ title: data?.content.title, description: data?.content.hero.lead });
+  pageMeta({
+    path: '/work/titan-intake',
+    title: data?.content.title,
+    description: data?.content.hero.lead,
+  });
 
 export default function TitanIntake({ loaderData }: Route.ComponentProps) {
   return <JobTemplate {...loaderData} />;

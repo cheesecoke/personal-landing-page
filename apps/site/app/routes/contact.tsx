@@ -8,7 +8,11 @@ export function loader() {
 }
 
 export const meta: Route.MetaFunction = ({ data }) =>
-  pageMeta({ title: data?.content.title, description: data?.content.header.lead });
+  pageMeta({
+    path: '/contact',
+    title: data?.content.title,
+    description: data?.content.header.lead,
+  });
 
 export default function Contact({ loaderData }: Route.ComponentProps) {
   return <ContactTemplate content={loaderData.content} />;

@@ -21,7 +21,7 @@ export function loader() {
 }
 
 export const meta: Route.MetaFunction = ({ data }) =>
-  pageMeta({ title: data?.content.title, description: data?.description });
+  pageMeta({ path: '/about', title: data?.content.title, description: data?.description });
 
 export default function About({ loaderData }: Route.ComponentProps) {
   return (

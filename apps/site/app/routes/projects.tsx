@@ -57,7 +57,11 @@ const canopyLink = ({ href, className, children }: CanopyLinkProps) => (
 );
 
 export const meta: Route.MetaFunction = ({ data }) =>
-  pageMeta({ title: data?.content.title, description: data?.content.header.lead });
+  pageMeta({
+    path: '/projects',
+    title: data?.content.title,
+    description: data?.content.header.lead,
+  });
 
 /**
  * The new marks, decided in the browser once the page has hydrated: three at most, the same
