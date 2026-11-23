@@ -12,6 +12,7 @@ import {
   familySlug,
   freshCandidates,
   liveContent,
+  markerSlots,
   projectBySlug,
   publicProjectBySlug,
   statusKeyTone,
@@ -86,6 +87,18 @@ describe('freshCandidates', () => {
     const order = ['pas', 'atti', 'lifebox', 'ai-system', 'personal-brain', 'duo-decide'];
     const marks = selectFreshMarks(freshCandidates(seedContent.projects, order), '2026-11-22');
     expect(Object.keys(marks)).toEqual(['pas', 'personal-brain', 'thread-quest']);
+  });
+});
+
+describe('markerSlots', () => {
+  it('keeps room on the rows whose change has not run out on the day of the build', () => {
+    const candidates = freshCandidates(seedContent.projects);
+    // 2026-11-22: everything from November is inside its 14 days; the September one is not.
+    expect(markerSlots(candidates, '2026-11-22').sort()).toEqual(
+      ['atti', 'lifebox', 'pas', 'personal-brain', 'thread-quest'].sort(),
+    );
+    expect(markerSlots(candidates, '2026-11-18')).toContain('duo-decide');
+    expect(markerSlots(candidates, '2027-06-01')).toEqual([]);
   });
 });
 
