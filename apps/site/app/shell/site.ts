@@ -1,17 +1,12 @@
 import { navItems } from '../paths';
 
 /**
- * The words the shell shows on every page, taken from the SiteNav and SiteFooter boards.
- * TODO(content): move these to hand content once it has a site-wide file; the title and the year
- * then come from the live data (current role, last publish).
+ * The shell's own words: the accessible names it needs on every page. The name, role, copyright
+ * and address come from hand content (`site.json`), through the root loader.
+ * TODO(content): these three have no home in hand content yet.
  */
 export const site = {
-  name: 'Chase Cole',
-  tagline: 'Senior Software Engineer, AI · Titan Intake',
-  copyright: '© 2026 Chase Cole',
-  email: 'chasewcole@gmail.com',
   navLabel: 'Site',
-  footerNavLabel: 'Footer',
   skipLabel: 'Skip to content',
   lastUpdateLabel: 'Last update',
 } as const;
