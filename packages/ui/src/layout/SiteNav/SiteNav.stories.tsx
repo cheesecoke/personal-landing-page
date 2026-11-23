@@ -15,7 +15,13 @@ const meta = {
   title: 'Layout/SiteNav',
   component: SiteNav,
   parameters: { layout: 'fullscreen' },
-  args: { name: 'Chase Cole', label: 'Site', items, current: '/' },
+  args: {
+    name: 'Chase Cole',
+    label: 'Site',
+    menu: { open: 'Menu', close: 'Close', home: 'Home' },
+    items,
+    current: '/',
+  },
   argTypes: {
     current: { control: 'select', options: ['/', ...items.map((item) => item.href)] },
   },
@@ -143,13 +149,13 @@ export const Reduced: Story = {
   },
 };
 
-/** Under `md` the name has its own row and the links spread across the row below. */
+/** Under `md` the header is one row: the name and the menu button. */
 export const Phone: Story = {
   args: { current: '/projects' },
   globals: { viewport: { value: 'phone' } },
 };
 
-/** Home on a phone: the name is on its own row, so the line is hidden. */
+/** Home on a phone. */
 export const PhoneHome: Story = { globals: { viewport: { value: 'phone' } } };
 
 export const Tablet: Story = {

@@ -35,15 +35,17 @@ export function AppShell({ footer, lastUpdate, children }: AppShellProps) {
   const { pathname } = useLocation();
   const { navRing } = useFreshness();
   /*
-   * Home's hero runs up behind the header: `--stump-hero-lift` is the header's height (the name
-   * and the links on two rows under `md`, one row from it), and the header stacks above the page.
+   * Home's hero runs up behind the header: `--stump-hero-lift` is the header's height (one row:
+   * the name and the menu button under `md`, the name and the pages from it; with scripting off
+   * the phone header has the pages on a second row), and the header stacks above the page.
    */
   const overHero = currentNavHref(pathname) === '/';
   return (
     <div
       className={cx(
         'relative flex min-h-dvh flex-col overflow-x-clip bg-ground text-primary',
-        overHero && '[--stump-hero-lift:107px] md:[--stump-hero-lift:88px]',
+        overHero &&
+          '[--stump-hero-lift:56px] max-md:noscript:[--stump-hero-lift:97px] md:[--stump-hero-lift:88px]',
       )}
     >
       <SkipLink>{site.skipLabel}</SkipLink>
@@ -54,6 +56,8 @@ export function AppShell({ footer, lastUpdate, children }: AppShellProps) {
           label={site.navLabel}
           items={navLinks(navRing)}
           current={currentNavHref(pathname)}
+          menu={site.menu}
+          locationKey={pathname}
           linkAs={RouterLink}
         />
       </header>

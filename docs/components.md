@@ -45,7 +45,7 @@ where it animates.
 | Component         | Notes                                                                       | Status  |
 | ----------------- | --------------------------------------------------------------------------- | ------- |
 | AppShell          | lives in `apps/site/app/shell`: nav, `main`, footer, skip link              | in site |
-| SiteNav           | with NavTimeline and the release nav ring                                   | in site |
+| SiteNav           | with NavTimeline, the release nav ring and the phone menu (under `md`)      | in site |
 | SiteFooter        | with "Last update · date"                                                   | in site |
 | Container         |                                                                             | in site |
 | Section           |                                                                             | in site |

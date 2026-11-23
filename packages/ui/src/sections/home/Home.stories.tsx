@@ -55,6 +55,7 @@ function HomeSections() {
           <SiteNav
             name="Chase Cole"
             label="Site"
+            menu={{ open: 'Menu', close: 'Close', home: 'Home' }}
             current="/"
             items={[
               { label: 'Projects', href: '/projects' },

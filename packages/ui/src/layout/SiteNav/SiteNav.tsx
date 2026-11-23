@@ -1,9 +1,11 @@
 import { useRef, type HTMLAttributes } from 'react';
 
-import { RingMark, VisuallyHidden } from '../../primitives';
+import { VisuallyHidden } from '../../primitives';
 import { Container } from '../Container/Container';
 import { cx } from '../internal/cx';
 import type { LinkComponent, SiteLink } from '../internal/link';
+import { NavMark } from './NavMark';
+import { SiteNavMenu, type SiteNavMenuLabels } from './SiteNavMenu';
 import { useNavTimeline, type NavTimelineState } from './useNavTimeline';
 
 export interface SiteNavItem extends SiteLink {
@@ -28,6 +30,13 @@ export interface SiteNavProps extends HTMLAttributes<HTMLElement> {
   current?: string;
   /** Accessible name of the nav. */
   label: string;
+  /** The words of the phone menu (under `md`): its open and close buttons and its Home row. */
+  menu: SiteNavMenuLabels;
+  /**
+   * Changes when the reader moves to another URL (the pathname). The phone menu closes when it
+   * does. Default: `current`.
+   */
+  locationKey?: string;
   /** The element or component for the links. Default `a`. It receives `href`. */
   linkAs?: LinkComponent;
 }
@@ -35,7 +44,7 @@ export interface SiteNavProps extends HTMLAttributes<HTMLElement> {
 const linkMotion = 'motion-ok:transition-colors motion-ok:duration-hover motion-ok:ease-[ease]';
 
 export interface NavTimelineProps extends NavTimelineState {
-  /** Hide the line under `md` (Home on a phone: the name has its own row). */
+  /** Hide the line under `md` (the phone header has no row of pages for it to run to). */
   hideOnPhone?: boolean;
 }
 
@@ -64,8 +73,9 @@ export function NavTimeline({ x, measured, animate, hideOnPhone = false }: NavTi
 
 /**
  * The site header nav: the name and logo on the left, the pages on the right, and the timeline
- * line that grows to the page the reader is on. Under `md` the name takes its own row and the
- * links spread across the row below.
+ * line that grows to the page the reader is on. Under `md` the pages move into a menu: the header
+ * is the name and one menu button, and the timeline is drawn inside the menu instead. With
+ * scripting off there is no menu: the pages show as a second row.
  */
 export function SiteNav({
   name,
@@ -73,6 +83,8 @@ export function SiteNav({
   items,
   current,
   label,
+  menu,
+  locationKey,
   linkAs: Link = 'a',
   className,
   ...rest
@@ -97,28 +109,14 @@ export function SiteNav({
     <Container as="nav" aria-label={label} className={className} {...rest}>
       <div
         ref={rowRef}
-        className="relative flex flex-wrap items-stretch justify-between gap-x-8 border-b border-hairline pt-2.5 md:min-h-[88px] md:pt-0"
+        className="relative flex min-h-14 items-stretch justify-between gap-x-8 border-b border-hairline max-md:noscript:flex-wrap md:min-h-[88px] md:flex-wrap"
       >
-        <div
-          ref={homeRef}
-          className="relative flex min-h-12 basis-full items-center md:min-h-0 md:basis-auto"
-        >
-          {/* TODO(tokens): the wordmark (18px, 600, 125% width) has no type role yet. */}
-          <Link
-            href={homeHref}
-            aria-current={isHome ? 'page' : undefined}
-            className={cx(
-              'group/mark inline-flex h-12 items-center gap-2.5 md:h-auto md:min-h-touch font-sans text-[18px] leading-none font-semibold tracking-[-0.01em] whitespace-nowrap text-primary no-underline [font-stretch:125%] hover:text-signal',
-              linkMotion,
-            )}
-          >
-            <RingMark size={24} />
-            <span>{name}</span>
-          </Link>
+        <div ref={homeRef} className="relative flex items-center max-md:noscript:basis-full">
+          <NavMark name={name} href={homeHref} current={isHome} linkAs={Link} />
         </div>
         <div
           ref={linksRef}
-          className="-mx-3 flex basis-full items-stretch justify-between md:-mr-3 md:ml-0 md:basis-auto md:justify-start md:gap-2"
+          className="-mr-3 flex items-stretch gap-2 max-md:hidden max-md:noscript:-ml-3 max-md:noscript:flex max-md:noscript:basis-full max-md:noscript:justify-between max-md:noscript:gap-0"
         >
           {items.map((item) => {
             const on = item.href === current;
@@ -150,7 +148,16 @@ export function SiteNav({
             );
           })}
         </div>
-        {current === undefined ? null : <NavTimeline {...timeline} hideOnPhone={isHome} />}
+        <SiteNavMenu
+          name={name}
+          homeHref={homeHref}
+          items={items}
+          current={current}
+          labels={menu}
+          locationKey={locationKey}
+          linkAs={Link}
+        />
+        {current === undefined ? null : <NavTimeline {...timeline} hideOnPhone />}
       </div>
     </Container>
   );
