@@ -16,3 +16,11 @@ export { buildIndex, listRows, openShoots, statusTone } from './core/tree';
 export type { CanopyIndex, CanopyRow, IndexedNode } from './core/tree';
 export { canopyColors } from './core/colors';
 export type { CanopyColors } from './core/colors';
+export type {
+  CanopyHandle,
+  CanopyMode,
+  CanopyOptions,
+  CanopyPerf,
+  CanopySelection,
+  CanopySnapshot,
+} from './core';
