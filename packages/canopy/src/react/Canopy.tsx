@@ -46,7 +46,10 @@ export interface CanopyProps {
   /** The tree to draw. Shoot `state` may change between renders; the stage animates the change. */
   data?: CanopyData;
   copy?: CanopyCopy;
-  /** Stage height on wide screens. Default 800px (`full`) or 460px (`teaser`). */
+  /**
+   * Stage height on wide screens. Default 800px (`full`) or 460px (`teaser`). The full tree grows
+   * past it when its list is longer, so the list and the key hints under it are never cut off.
+   */
   height?: number | string;
   /** Render the card's link with the app's router. Left out, a plain `<a>` is used. */
   renderLink?: (props: CanopyLinkProps) => ReactNode;

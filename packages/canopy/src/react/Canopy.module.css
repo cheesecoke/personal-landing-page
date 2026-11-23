@@ -14,8 +14,10 @@
   display: grid;
   grid-template-columns: 312px minmax(0, 1fr);
   width: 100%;
-  height: var(--canopy-height, 800px);
-  min-height: 600px;
+
+  /* At least the stage height, and taller when the list needs it: the list never scrolls. */
+  height: auto;
+  min-height: max(600px, var(--canopy-height, 800px));
   background: var(--bg-ground);
   color: var(--text-primary);
   color-scheme: dark;
