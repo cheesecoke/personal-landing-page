@@ -1,11 +1,12 @@
 import { z } from 'zod';
 
+import { isoToday } from '../today';
+
 /** In every file. A bump is a coordinated change in the site and in the job that publishes. */
 export const SCHEMA_VERSION = 1;
 export const schemaVersionSchema = z.literal(SCHEMA_VERSION);
 
-/** Today as `YYYY-MM-DD` (UTC). Content dates are plain calendar dates with no time zone. */
-export const isoToday = (now: Date = new Date()): string => now.toISOString().slice(0, 10);
+export { isoToday };
 
 const isRealDate = (value: string) => {
   const date = new Date(`${value}T00:00:00Z`);

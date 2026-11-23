@@ -1,7 +1,7 @@
 import { createContext, useContext, useMemo, useSyncExternalStore, type ReactNode } from 'react';
 
 import { hasNavRing, selectFreshMarks, type FreshCandidate, type FreshMark } from '../freshness';
-import { isoToday } from '../schema/shared';
+import { isoToday } from '../today';
 
 /** What a component can ask about freshness. */
 export interface Freshness {
