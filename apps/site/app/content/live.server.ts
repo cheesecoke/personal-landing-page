@@ -1,5 +1,8 @@
+import { createRequire } from 'node:module';
+import { dirname, join, resolve } from 'node:path';
+
 import type { LiveContent } from '@cwc/content';
-import { loadLiveContent, resolveLiveDir } from '@cwc/content/node';
+import { loadLiveContent } from '@cwc/content/node';
 
 /**
  * Live data for route loaders. Node only (the `.server` name keeps it out of the browser bundle):
@@ -14,9 +17,22 @@ import { loadLiveContent, resolveLiveDir } from '@cwc/content/node';
  */
 const cache = new Map<string, LiveContent>();
 
+/**
+ * The seed data folder inside `@cwc/content`. The package finds it relative to its own source
+ * file, which no longer holds once the build has bundled that file into the server bundle, so it
+ * is looked up here through the package's exports, from the folder the build runs in.
+ */
+export function seedLiveDir(): string {
+  const require = createRequire(join(process.cwd(), 'package.json'));
+  return join(dirname(require.resolve('@cwc/content/content.schema.json')), 'fixtures', 'seed');
+}
+
+/** The folder to read: `CONTENT_LIVE_DIR`, else the seed data. */
+export const defaultLiveDir = (): string => process.env.CONTENT_LIVE_DIR || seedLiveDir();
+
 /** Everything in the live folder, read and validated once per folder per build. */
-export function liveContent(dir?: string): LiveContent {
-  const resolved = resolveLiveDir(dir);
+export function liveContent(dir: string = defaultLiveDir()): LiveContent {
+  const resolved = resolve(dir);
   let content = cache.get(resolved);
   if (!content) {
     content = loadLiveContent(resolved);
