@@ -134,6 +134,7 @@
         "label": "Titan Intake",
         "years": "2026–now",
         "role": "Senior Software Engineer, AI, since January 2026.",
+        "sinceLabel": "since",
         "summary": "I build the pipeline between a product spec and shipped code.",
         "ring": 6,
         "tone": "signal",
