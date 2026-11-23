@@ -46,16 +46,16 @@ where it animates.
 | AppShell          | lives in `apps/site/app/shell`: nav, `main`, footer, skip link | in site     |
 | SiteNav           | with NavTimeline and the release nav ring                      | in site     |
 | SiteFooter        | with "Last update · date"                                      | in site     |
-| Container         |                                                                | story       |
+| Container         |                                                                | in site     |
 | Section           |                                                                | story       |
 | Stack             |                                                                | story       |
 | Cluster           |                                                                | story       |
 | Grid              |                                                                | story       |
 | SplitLayout       |                                                                | story       |
-| Thread            | with ThreadScope, ThreadColumn, ThreadNode; follows the reader | story       |
+| Thread            | with ThreadScope, ThreadColumn, ThreadNode; follows the reader | in site     |
 | ThreadSection     | a section with its node on the thread                          | story       |
-| PageHeader        |                                                                | story       |
-| HandoffFooter     |                                                                | story       |
+| PageHeader        |                                                                | in site     |
+| HandoffFooter     |                                                                | in site     |
 | GoDeeper          |                                                                | story       |
 | FreshnessProvider | non-visual: holds "now", ranks, enforces the per-page cap      | not started |
 
@@ -69,7 +69,7 @@ where it animates.
 | ProjectPlates     |                                                     | not started |
 | ProjectTile       | with ProjectStateBadge                              | not started |
 | CanopyMap         | `teaser`, `full`; wraps `packages/canopy`           | not started |
-| ProjectIndex      | rows with ProjectStateBadge + NewMarker             | not started |
+| ProjectIndex      | rows with ProjectStateBadge + NewMarker             | in site     |
 | WhereItsAt        |                                                     | not started |
 | CaptainsLog       | log entries on the thread, newest first             | not started |
 | LogEntry          | kind `update` or `release`                          | not started |
@@ -77,20 +77,20 @@ where it animates.
 | ShootItem         | `open`, `grown`, `answered`; plus ShootList         | not started |
 | BranchRings       | one ring per stretch of work or per release         | not started |
 | TitanLog          | CaptainsLog variant; renders nothing while disabled | not started |
-| CurrentRoleBlock  | tenure computed from a date                         | not started |
-| NowBlock          |                                                     | not started |
+| CurrentRoleBlock  | tenure computed from a date                         | in site     |
+| NowBlock          |                                                     | in site     |
 | LatestLine        |                                                     | not started |
 | DetailsStrip      |                                                     | not started |
 | PasFamily         |                                                     | not started |
 | AiSystemEvolution |                                                     | not started |
 | BrainsThatFeedIt  |                                                     | not started |
-| RingsTimeline     |                                                     | not started |
-| Portrait          |                                                     | not started |
-| BuildWith         |                                                     | not started |
-| FieldNotes        |                                                     | not started |
+| RingsTimeline     |                                                     | in site     |
+| Portrait          |                                                     | in site     |
+| BuildWith         |                                                     | in site     |
+| FieldNotes        |                                                     | in site     |
 | TitanFlow         |                                                     | not started |
-| BeyondSlots       |                                                     | not started |
-| ContactDoor       |                                                     | not started |
+| BeyondSlots       |                                                     | in site     |
+| ContactDoor       |                                                     | in site     |
 
 ## Tier 4. Page templates (`apps/site/app/templates`)
 
@@ -99,10 +99,10 @@ Each takes fixture data in Storybook and has a `NoLiveData` story.
 | Template         | Status      |
 | ---------------- | ----------- |
 | HomeTemplate     | not started |
-| ProjectsTemplate | not started |
+| ProjectsTemplate | in site     |
 | ProjectTemplate  | not started |
 | JobTemplate      | not started |
-| AboutTemplate    | not started |
-| BeyondTemplate   | not started |
-| ContactTemplate  | not started |
+| AboutTemplate    | in site     |
+| BeyondTemplate   | in site     |
+| ContactTemplate  | in site     |
 | NotFound         | not started |
