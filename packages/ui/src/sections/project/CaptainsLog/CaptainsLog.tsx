@@ -30,6 +30,19 @@ export interface CaptainsLogProps extends Omit<
   fresh?: LogEntryFresh | null;
   /** The label beside a release's version ("Release notes"). */
   releaseLabel?: ReactNode;
+  /** A line under the header (the job log's role and start month). */
+  header?: ReactNode;
+  /**
+   * How an entry's date is printed, when it is not a day: the job log is month-granular. Returns
+   * the printed date, its `datetime` and the stardate.
+   */
+  describeDate?: (entry: LogEntryData) => {
+    dateLabel?: string;
+    dateTime?: string;
+    stardate?: string;
+  };
+  /** Most lines shown per entry. Default 4. */
+  maxLines?: number;
   /** How many entries show before the rest fold away. Default 3. */
   visible?: number;
   /**
@@ -67,6 +80,9 @@ export function CaptainsLog({
   quiet = false,
   fresh,
   releaseLabel,
+  header,
+  describeDate,
+  maxLines,
   visible = 3,
   moreLabel,
   defaultMoreOpen,
@@ -110,6 +126,7 @@ export function CaptainsLog({
           </Readout>
         ) : null}
       </div>
+      {header ? <div className="-mt-3">{header}</div> : null}
       <ol className={styles.list}>
         {shown.map((entry, position) => (
           <LogEntry
@@ -118,8 +135,10 @@ export function CaptainsLog({
             latest={position === 0 && !quiet}
             fresh={position === 0 && !quiet ? fresh : null}
             releaseLabel={releaseLabel}
+            maxLines={maxLines}
             hydrated={hydrated}
             style={index(position)}
+            {...describeDate?.(entry)}
           />
         ))}
       </ol>
@@ -132,7 +151,13 @@ export function CaptainsLog({
         >
           <ol className={styles.list}>
             {older.map((entry) => (
-              <LogEntry key={entry.id} entry={entry} releaseLabel={releaseLabel} />
+              <LogEntry
+                key={entry.id}
+                entry={entry}
+                releaseLabel={releaseLabel}
+                maxLines={maxLines}
+                {...describeDate?.(entry)}
+              />
             ))}
           </ol>
         </Expander>
