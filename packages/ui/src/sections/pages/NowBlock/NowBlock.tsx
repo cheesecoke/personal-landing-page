@@ -40,7 +40,11 @@ export function NowBlock({
 }: NowBlockProps) {
   if (!now) return null;
   return (
-    <section aria-labelledby={titleId} className={cx('relative flex flex-col gap-3', className)}>
+    <section
+      aria-labelledby={titleId}
+      data-live="now"
+      className={cx('relative flex flex-col gap-3', className)}
+    >
       {node ? <ThreadNode placement="column" top={4} /> : null}
       <h2
         id={titleId}

@@ -37,6 +37,7 @@ export function LatestLine({ label, entry, linkAs, className }: LatestLineProps)
   if (!entry) return null;
   return (
     <p
+      data-live="latest-line"
       data-kind={entry.kind}
       className={cx('m-0 flex flex-wrap items-baseline gap-x-4 gap-y-1', className)}
     >
