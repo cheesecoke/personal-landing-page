@@ -1,4 +1,15 @@
 // Project and job page sections. One folder per component, story beside it.
+export {
+  ArtifactCard,
+  ArtifactList,
+  ProjectVideo,
+  stampToIso,
+  type ArtifactCardProps,
+  type ArtifactData,
+  type ArtifactListProps,
+  type ArtifactMedia,
+  type ProjectVideoData,
+} from './ArtifactList/ArtifactList';
 export { BranchRings, type BranchRingsProps, type RingData } from './BranchRings/BranchRings';
 export {
   RING_THICKNESS,
