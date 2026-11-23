@@ -109,14 +109,15 @@ describe('node states', () => {
     expect(previous).toBe(nodes.length - 1);
   });
 
-  it('has no node on while the reader is above the first one', () => {
-    expect(activeNode([800, 1600], 360)).toBe(-1);
+  it('has the first node on while the reader is still above it (a tall page header)', () => {
+    expect(activeNode([800, 1600], 360)).toBe(0);
+    expect(activeNode([], 360)).toBe(-1);
     expect(nodeState(0, -1)).toBe('next');
   });
 
   it('turns a node on half a pixel early (sub-pixel layout)', () => {
-    expect(activeNode([360.4], 360)).toBe(0);
-    expect(activeNode([360.6], 360)).toBe(-1);
+    expect(activeNode([100, 360.4], 360)).toBe(1);
+    expect(activeNode([100, 360.6], 360)).toBe(0);
   });
 
   it('lights every node on a page that does not scroll, the last one on', () => {
@@ -165,7 +166,16 @@ describe('fill', () => {
   it('steps to the active node with reduced motion', () => {
     const nodes = [300, 1200];
     expect(fillTarget({ reader: 1500, on: 1, nodes, reduced: true, atEnd: false })).toBe(1200);
-    expect(fillTarget({ reader: 100, on: -1, nodes, reduced: true, atEnd: false })).toBe(-Infinity);
+    expect(fillTarget({ reader: 100, on: 0, nodes, reduced: true, atEnd: false })).toBe(300);
+    expect(fillTarget({ reader: 100, on: -1, nodes: [], reduced: true, atEnd: false })).toBe(
+      -Infinity,
+    );
+  });
+
+  it('reaches the first node while the reader is still above it', () => {
+    expect(
+      fillTarget({ reader: 100, on: 0, nodes: [300, 1200], reduced: false, atEnd: false }),
+    ).toBe(300);
   });
 
   it('completes at the end even with reduced motion', () => {

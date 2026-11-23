@@ -58,12 +58,14 @@ export function isAtEnd(scroll: number, view: ThreadView): boolean {
 }
 
 /**
- * Index of the node the reader is on: the last node at or above the reader position, or -1 when
- * the reader is above them all. `nodes` are node centres, sorted top to bottom.
+ * Index of the node the reader is on: the last node at or above the reader position. The first
+ * node is on from the top of the page, even while it still sits below the reader (a tall page
+ * header), so a thread always has one node lit. -1 only when there are no nodes.
+ * `nodes` are node centres, sorted top to bottom.
  */
 export function activeNode(nodes: readonly number[], reader: number): number {
-  let on = -1;
-  for (let i = 0; i < nodes.length; i++) {
+  let on = nodes.length > 0 ? 0 : -1;
+  for (let i = 1; i < nodes.length; i++) {
     const y = nodes[i];
     if (y !== undefined && y <= reader + 0.5) on = i;
   }
@@ -76,8 +78,9 @@ export function nodeState(index: number, on: number): ThreadNodeState {
 }
 
 /**
- * How far down the fill reaches. With motion it follows the reader. With reduced motion it steps
- * to the active node (nothing lit above the first node), except at the end, where it completes.
+ * How far down the fill reaches. With motion it follows the reader, and never stops short of the
+ * first node (which is on from the top of the page). With reduced motion it steps to the active
+ * node, except at the end, where it completes.
  */
 export function fillTarget(input: {
   reader: number;
@@ -87,7 +90,7 @@ export function fillTarget(input: {
   atEnd: boolean;
 }): number {
   const { reader, on, nodes, reduced, atEnd } = input;
-  if (!reduced || atEnd) return reader;
+  if (!reduced || atEnd) return Math.max(reader, nodes[0] ?? -Infinity);
   return on >= 0 ? (nodes[on] ?? -Infinity) : -Infinity;
 }
 
