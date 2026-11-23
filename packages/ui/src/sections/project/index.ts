@@ -54,6 +54,10 @@ export {
 } from './ShootList/ShootItem';
 export { ShootList, type ShootListProps } from './ShootList/ShootList';
 export { PasFamily, type FamilyMember, type PasFamilyProps } from './PasFamily/PasFamily';
+export { GrowSteps, type GrowStep, type GrowStepsProps } from './PhoneCaptures/GrowSteps';
+export { HeroCapture, type HeroCaptureProps } from './PhoneCaptures/HeroCapture';
+export { PhoneFigures, type PhoneFiguresProps } from './PhoneCaptures/PhoneFigures';
+export { PhoneFrame, type PhoneFrameProps } from './PhoneCaptures/PhoneFrame';
 export {
   cropMargins,
   ProjectFigure,
