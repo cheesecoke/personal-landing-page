@@ -116,6 +116,16 @@ export const Phone: Story = {
 
 export const Tablet: Story = { globals: { viewport: { value: 'tablet' } } };
 
+/** With modern formats: the stump sits in a `<picture>` and is laid out exactly as without one. */
+export const WithSources: Story = {
+  args: { art: { ...stump(), sources: [{ src: stump().src, type: 'image/svg+xml' }] } },
+  play: async ({ canvasElement }) => {
+    const img = canvasElement.querySelector('picture > img')!;
+    await expect(canvasElement.querySelector('picture > source')).toBeTruthy();
+    await expect(img.getBoundingClientRect().width).toBeGreaterThan(200);
+  },
+};
+
 /** Reduced motion: every point is lit and still. */
 export const Reduced: Story = {
   globals: { motion: 'reduce', viewport: { value: 'desktop' } },

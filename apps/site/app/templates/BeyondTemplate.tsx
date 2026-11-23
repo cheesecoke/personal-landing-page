@@ -64,7 +64,12 @@ export function BeyondTemplate({ content }: BeyondTemplateProps) {
 
       <BeyondSlots
         aria-label={scene.label}
-        art={{ src: scene.image.src, width: scene.image.width, height: scene.image.height }}
+        art={{
+          src: scene.image.src,
+          width: scene.image.width,
+          height: scene.image.height,
+          sources: scene.image.sources,
+        }}
         slots={toSlots(scene.slots)}
       />
 

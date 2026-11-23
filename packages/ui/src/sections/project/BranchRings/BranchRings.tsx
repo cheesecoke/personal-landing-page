@@ -88,6 +88,7 @@ export function BranchRings({
     <Panel
       as="section"
       aria-labelledby={headingId}
+      data-live="branch-rings"
       data-arc={arc}
       className={cx(
         styles.panel,

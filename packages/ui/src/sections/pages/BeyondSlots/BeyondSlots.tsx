@@ -1,6 +1,6 @@
 import type { CSSProperties, ReactNode } from 'react';
 
-import { ConfirmMarker, cx } from '../../../primitives';
+import { ConfirmMarker, cx, Picture, type PictureSource } from '../../../primitives';
 import { beyondIcons, type BeyondIconName } from './beyondIcons';
 import styles from './BeyondSlots.module.css';
 
@@ -37,8 +37,11 @@ export interface BeyondSlot {
 export interface BeyondSlotsProps {
   /** The section's accessible name ("What will be here"). */
   'aria-label': string;
-  /** The stump image behind the slots. Decoration: it has no alt text. */
-  art: { src: string; width?: number; height?: number };
+  /**
+   * The stump image behind the slots. Decoration: it has no alt text. `sources` are smaller
+   * modern formats of the same image (AVIF), best first; `src` is the fallback.
+   */
+  art: { src: string; width?: number; height?: number; sources?: readonly PictureSource[] };
   /** Up to four slots, nearest the stump first. */
   slots: BeyondSlot[];
   /**
@@ -77,13 +80,15 @@ export function BeyondSlots({
     <div className={cx(styles.root, className)}>
       <section aria-label={ariaLabel} className={cx(styles.scene, overlap && styles.overlap)}>
         <div aria-hidden="true" className={styles.art}>
-          <img
-            src={art.src}
-            width={art.width}
-            height={art.height}
-            alt=""
-            className={styles.stump}
-          />
+          <Picture sources={art.sources}>
+            <img
+              src={art.src}
+              width={art.width}
+              height={art.height}
+              alt=""
+              className={styles.stump}
+            />
+          </Picture>
           <svg viewBox="0 0 1440 600" preserveAspectRatio="none" className={styles.arcs}>
             {arcs.map((arc) => (
               <ellipse

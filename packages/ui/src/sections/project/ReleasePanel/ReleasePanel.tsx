@@ -72,6 +72,7 @@ export function ReleasePanel({
       as="section"
       litEdge="no-glow"
       aria-labelledby={headingId}
+      data-live="release-panel"
       className={cx('flex flex-col gap-5 px-[clamp(18px,3vw,32px)] pt-6 pb-5.5', className)}
       {...rest}
     >

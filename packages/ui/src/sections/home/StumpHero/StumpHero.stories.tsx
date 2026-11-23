@@ -106,6 +106,33 @@ export const Reduced: Story = {
   },
 };
 
+const withSource = <Art extends { src: string }>(art: Art) => ({
+  ...art,
+  sources: [{ src: art.src, type: 'image/svg+xml' }],
+});
+
+/**
+ * With modern formats: each render sits in a `<picture>` and still fills the stage exactly, under
+ * the drawn overlay.
+ */
+export const WithSources: Story = {
+  args: {
+    image: withSource(stumpWideArt),
+    litImage: withSource(stumpWideLitArt),
+    phoneImage: { ...withSource(stumpPhoneArt), alt: heroCopy.phoneAlt },
+  },
+  play: async ({ canvasElement }) => {
+    const images = [...canvasElement.querySelectorAll('picture > img')];
+    await expect(images.length).toBe(3);
+    const wide = images[0]!.getBoundingClientRect();
+    const stage = images[0]!.closest('picture')!.parentElement!.getBoundingClientRect();
+    await expect(wide.width).toBeGreaterThan(200);
+    await expect(Math.abs(wide.width - stage.width)).toBeLessThan(1);
+    await expect(Math.abs(wide.height - stage.height)).toBeLessThan(1);
+    await expect(Math.abs(wide.left - stage.left)).toBeLessThan(1);
+  },
+};
+
 export const PhoneReduced: Story = {
   globals: { viewport: { value: 'phone' }, motion: 'reduce' },
 };
