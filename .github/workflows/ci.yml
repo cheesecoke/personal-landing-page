@@ -28,6 +28,8 @@ jobs:
       - run: pnpm lint
       - run: pnpm test
       - run: pnpm build
+      # The site with no live data at all: every page still builds and shows no empty shell.
+      - run: pnpm build:empty
       - run: pnpm build-storybook
       - run: pnpm exec playwright install --with-deps chromium
       - run: pnpm test:stories

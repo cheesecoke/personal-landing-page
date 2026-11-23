@@ -15,6 +15,7 @@
     "test": "vitest run --project unit --project dom",
     "test:stories": "vitest run --project stories",
     "build": "turbo run build",
+    "build:empty": "pnpm --filter site build:empty",
     "dev": "turbo run dev --filter=site",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",

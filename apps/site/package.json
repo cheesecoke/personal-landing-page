@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "react-router dev",
     "build": "react-router build && node scripts/postbuild.mjs",
+    "build:empty": "node scripts/build-empty.mjs",
     "preview": "serve build/client --listen 4173",
     "typecheck": "react-router typegen && tsc --noEmit"
   },
