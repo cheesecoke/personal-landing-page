@@ -50,6 +50,8 @@ export interface GoDeeperProps {
   intro?: ReactNode;
   /** Max width. `deeper` (1056px): rows that open to artifact cards. `log` (760px): text rows. */
   measure?: Exclude<SectionMeasure, 'full'>;
+  /** An anchor for the section. */
+  id?: string;
   /** Put a node on the thread beside the section. Default `true`. */
   node?: boolean;
   className?: string;
@@ -101,13 +103,19 @@ export function GoDeeper({
   artifactsLabel,
   intro,
   measure = 'deeper',
+  id,
   node = true,
   className,
 }: GoDeeperProps) {
   const headingId = useId();
   const Wrapper = node ? ThreadSection : Section;
   return (
-    <Wrapper aria-labelledby={headingId} measure={measure} className={className}>
+    <Wrapper
+      id={id}
+      aria-labelledby={headingId}
+      measure={measure}
+      className={cx('scroll-mt-6', className)}
+    >
       <Heading level={2} role="label" id={headingId} className="mb-4">
         {title}
       </Heading>
