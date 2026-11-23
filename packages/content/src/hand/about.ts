@@ -13,6 +13,11 @@ const Chapter = z
     years: Text.optional(),
     /** Printed before the summary on the current job's ring: the role and when it began. */
     role: Text.optional(),
+    /**
+     * The word between the title and the start month ("since") when live data supplies the
+     * current role: "<title>, since <Month Year>." Without it the hand-written `role` line shows.
+     */
+    sinceLabel: Text.optional(),
     summary: Text,
     /** Which ring of the stump drawing lights for this chapter (0 is the centre). None: a note between rings. */
     ring: z.number().int().min(0).nullable(),
