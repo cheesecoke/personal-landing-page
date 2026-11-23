@@ -2,6 +2,7 @@
  * The Home board's copy, for stories. Stories only: the site reads its copy from content files and
  * passes it to these components as props.
  */
+import type { ProofFact } from '../ProofRow/ProofRow';
 import type { StumpHeroProject, StumpHeroRing } from '../StumpHero/StumpHero';
 
 export const heroCopy = {
@@ -26,4 +27,28 @@ export const heroProjects: StumpHeroProject[] = [
 export const heroRings: StumpHeroRing[] = [
   { name: 'Titan Intake', detail: 'Now', tone: 'signal' },
   { name: 'Wildland fire', detail: '2022–24', tone: 'ember' },
+];
+
+export const proofFacts: ProofFact[] = [
+  {
+    key: 'spec-to-code',
+    kind: 'phrase',
+    value: 'Spec to tested code',
+    caption: 'At work: agents build, engineers review.',
+    href: '/work/titan-intake',
+  },
+  {
+    key: 'atti-commits',
+    value: '177',
+    unit: 'commits by Atti',
+    caption: "My assistant's own writes to my brain.",
+    href: '/projects/pas',
+  },
+  {
+    key: 'duo-tests',
+    value: '1,167',
+    unit: 'test cases',
+    caption: 'Duo Decide, run in CI.',
+    href: '/projects/duo-decide',
+  },
 ];
