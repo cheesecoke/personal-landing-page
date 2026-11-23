@@ -9,6 +9,7 @@ import {
   toStardate,
   useHydrated,
 } from '../../../primitives';
+import { LogLines } from '../internal/LogLines';
 import { formatLogDate } from './logDate';
 
 /** One entry of a project log, as the publish job writes it. */
@@ -107,17 +108,7 @@ export function LogEntry({
           {releaseLabel ? <span className="type-label text-secondary">{releaseLabel}</span> : null}
         </div>
       ) : null}
-      <ul className="m-0 flex list-none flex-col gap-1.5 p-0">
-        {entry.lines.slice(0, maxLines).map((line) => (
-          <li
-            key={line}
-            className="grid grid-cols-[10px_minmax(0,1fr)] gap-2.5 text-[15px] leading-[1.45] text-primary"
-          >
-            <span aria-hidden="true" className="mt-[0.72em] h-px bg-cedar" />
-            <span>{line}</span>
-          </li>
-        ))}
-      </ul>
+      <LogLines lines={entry.lines.slice(0, maxLines)} />
     </li>
   );
 }
