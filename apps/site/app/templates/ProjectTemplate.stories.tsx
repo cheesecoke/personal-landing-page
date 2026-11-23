@@ -94,6 +94,11 @@ export const NoUpdate: Story = {
     const distill = canvasElement.querySelector<HTMLElement>('#distill')!;
     await expect(distill.querySelectorAll('p')).toHaveLength(1);
     await expect(distill.querySelector('img, video')).toBeNull();
+    // The cropped image under it is pulled up over the block; the sentence stays on top.
+    const sentence = distill.querySelector('p')!;
+    sentence.scrollIntoView({ block: 'center' });
+    const box = sentence.getBoundingClientRect();
+    await expect(document.elementFromPoint(box.left + 8, box.top + box.height / 2)).toBe(sentence);
   },
 };
 

@@ -214,6 +214,9 @@ function renderSection(
           label={section.label ?? ''}
           figures={section.figures.map(toFigure)}
           narrow={context.look.detailsNarrow}
+          // A cropped image is pulled up over the section before it; its empty ground must not
+          // cover that section's text.
+          className={cropFor(section.figures[0]!.image.src) ? 'z-0!' : undefined}
         />
       );
     case 'timeline': {
