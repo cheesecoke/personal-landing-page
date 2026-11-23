@@ -2,11 +2,12 @@ import { handContent } from '../content/hand.server';
 import { liveContent, publicProjectBySlug } from '../content/live.server';
 import { pageMeta } from '../content/meta';
 import { ProjectTemplate } from '../templates/ProjectTemplate';
+import { withoutConfirms } from '../templates/ProjectTemplate.map';
 import type { Route } from './+types/project-pas-lifebox';
 
 /** Lifebox: its hand content, its live file when one is published, and the day of the build. */
 export function loader() {
-  const content = handContent().projects.lifebox;
+  const content = withoutConfirms(handContent().projects.lifebox);
   return {
     content,
     project: publicProjectBySlug(liveContent(), content.slug) ?? null,
