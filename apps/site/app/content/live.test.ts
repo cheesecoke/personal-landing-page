@@ -1,4 +1,4 @@
-import { mkdtempSync } from 'node:fs';
+import { existsSync, mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
@@ -8,6 +8,7 @@ import { selectFreshMarks, statusKeySchema } from '@cwc/content';
 import { seedContent } from '@cwc/content/fixtures';
 
 import {
+  defaultLiveDir,
   familySlug,
   freshCandidates,
   liveContent,
@@ -20,6 +21,18 @@ import { statusTone } from './status';
 
 afterEach(() => vi.unstubAllEnvs());
 
+describe('defaultLiveDir', () => {
+  it('finds the seed data in the content package', () => {
+    vi.stubEnv('CONTENT_LIVE_DIR', '');
+    expect(existsSync(join(defaultLiveDir(), 'meta.json'))).toBe(true);
+  });
+
+  it('can be pointed elsewhere', () => {
+    vi.stubEnv('CONTENT_LIVE_DIR', '/somewhere/else');
+    expect(defaultLiveDir()).toBe('/somewhere/else');
+  });
+});
+
 describe('liveContent', () => {
   it('reads the seed data when no folder is set, once', () => {
     vi.stubEnv('CONTENT_LIVE_DIR', '');
@@ -27,6 +40,7 @@ describe('liveContent', () => {
     expect(content.projects.map((project) => project.slug)).toEqual(
       seedContent.projects.map((project) => project.slug),
     );
+    expect(content.meta?.publishedAt).toBeTruthy();
     expect(liveContent()).toBe(content);
   });
 
