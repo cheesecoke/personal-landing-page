@@ -1,5 +1,8 @@
+import { useMemo } from 'react';
+
 import { FreshnessProvider, useFreshness } from '@cwc/content/react';
 
+import { freshShoots, toCanopyCopy, toCanopyData, withCanopyFresh } from '../content/canopy';
 import { handContent } from '../content/hand.server';
 import { freshCandidates, statusKeyTone, toFreshProp } from '../content/live';
 import { liveContent } from '../content/live.server';
@@ -13,10 +16,11 @@ const named = <T,>(values: readonly (T | undefined)[]) =>
 
 /**
  * Home's hand content, and from live data only what the page shows: the status of each project
- * the stump and the plates name, the facts the proof row names, and the plates' change dates.
+ * the stump and the plates name, the facts the proof row names, the plates' change dates, and
+ * the project tree (the same data and words as on Projects).
  */
 export function loader() {
-  const { home } = handContent();
+  const { home, map } = handContent();
   const { projects } = liveContent();
   const plateSlugs = named(home.ownTime.plates.map((plate) => plate.project));
   const slugs = new Set([
@@ -48,6 +52,11 @@ export function loader() {
     candidates: freshCandidates(projects, plateSlugs).filter((candidate) =>
       plateSlugs.includes(candidate.id),
     ),
+    map: {
+      data: toCanopyData(map, projects),
+      shoots: freshShoots(projects),
+      words: { headline: map.headline, hint: map.hint, labels: map.labels },
+    },
   };
 }
 
@@ -73,8 +82,11 @@ function preloadImage(image: HeroImage, media: string) {
 }
 
 /** The plates' new marks, decided in the browser once the page has hydrated. */
-function HomePage({ content, live, candidates }: Route.ComponentProps['loaderData']) {
-  const { markFor } = useFreshness();
+function HomePage({ content, live, candidates, map }: Route.ComponentProps['loaderData']) {
+  const { markFor, marks } = useFreshness();
+  // The tree carries the same new marks as the plates above it.
+  const tree = useMemo(() => withCanopyFresh(map.data, marks, map.shoots), [map, marks]);
+  const copy = useMemo(() => toCanopyCopy(map.words), [map.words]);
   const fresh: HomeFresh = {};
   for (const { id } of candidates) {
     const mark = toFreshProp(markFor(id));
@@ -86,7 +98,12 @@ function HomePage({ content, live, candidates }: Route.ComponentProps['loaderDat
       {/* The hero render is the largest paint: fetch the one this screen shows, early. */}
       {preloadImage(wide, '(min-width: 900px)')}
       {preloadImage(phone, '(max-width: 899.98px)')}
-      <HomeTemplate content={content} live={live} fresh={fresh} map={<HomeTemplateMap />} />
+      <HomeTemplate
+        content={content}
+        live={live}
+        fresh={fresh}
+        map={<HomeTemplateMap data={tree} copy={copy} />}
+      />
     </>
   );
 }
