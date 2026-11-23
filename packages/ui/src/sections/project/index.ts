@@ -34,6 +34,8 @@ export {
   type DetailsFigure,
   type DetailsStripProps,
 } from './DetailsStrip/DetailsStrip';
+export { DuoLensMark } from './DrawnMarks/DuoLensMark';
+export { RingsDecor } from './DrawnMarks/RingsDecor';
 export { LinkCards, type LinkCardData, type LinkCardsProps } from './LinkCards/LinkCards';
 export {
   LogEntry,
