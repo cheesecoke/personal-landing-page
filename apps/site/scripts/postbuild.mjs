@@ -3,7 +3,7 @@
 import { copyFileSync, existsSync, readFileSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 
-const out = join(import.meta.dirname, '..', 'build', 'client');
+const out = join(import.meta.dirname, '..', process.env.SITE_BUILD_DIR || 'build', 'client');
 const pathsSource = readFileSync(join(import.meta.dirname, '..', 'app', 'paths.ts'), 'utf8');
 const pagePaths = [
   ...pathsSource
@@ -23,4 +23,4 @@ const missing = pagePaths.filter(
 if (pagePaths.length === 0 || missing.length > 0) {
   throw new Error(`postbuild: no pre-rendered HTML for ${missing.join(', ') || 'any page'}`);
 }
-console.log(`postbuild: ${pagePaths.length} pages + 404.html in build/client`);
+console.log(`postbuild: ${pagePaths.length} pages + 404.html in ${out}`);
