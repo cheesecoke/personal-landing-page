@@ -5,6 +5,7 @@ import { freshCandidates, statusKeyTone, toFreshProp } from '../content/live';
 import { liveContent } from '../content/live.server';
 import { pageMeta } from '../content/meta';
 import { factKey, HomeTemplate, type HomeFresh, type HomeLive } from '../templates/HomeTemplate';
+import { HomeTemplateMap } from '../templates/HomeTemplateMap';
 import type { Route } from './+types/home';
 
 const named = <T,>(values: readonly (T | undefined)[]) =>
@@ -85,7 +86,7 @@ function HomePage({ content, live, candidates }: Route.ComponentProps['loaderDat
       {/* The hero render is the largest paint: fetch the one this screen shows, early. */}
       {preloadImage(wide, '(min-width: 900px)')}
       {preloadImage(phone, '(max-width: 899.98px)')}
-      <HomeTemplate content={content} live={live} fresh={fresh} />
+      <HomeTemplate content={content} live={live} fresh={fresh} map={<HomeTemplateMap />} />
     </>
   );
 }
