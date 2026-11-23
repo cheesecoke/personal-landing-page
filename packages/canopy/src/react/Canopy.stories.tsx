@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 
 import type { CanopyHandle } from '../core';
+import { defaultCanopyData } from '../data/default';
+import type { CanopyData, CanopyShootState } from '../types';
 import { Canopy } from './Canopy';
 
 /** The live stage of the story on screen, for play functions. */
@@ -15,6 +17,21 @@ const stageReady = () =>
     },
     { timeout: 10000 },
   );
+
+/** The default tree with some of Duo Decide's shoots moved on. */
+function withShootStates(states: Record<string, CanopyShootState>, fresh?: string): CanopyData {
+  return {
+    ...defaultCanopyData,
+    nodes: defaultCanopyData.nodes.map((n) => ({
+      ...n,
+      shoots: n.shoots?.map((shoot) => ({
+        ...shoot,
+        state: states[shoot.id] ?? shoot.state,
+        fresh: shoot.id === fresh ? { left: 0.9, label: 'New · 2d' } : null,
+      })),
+    })),
+  };
+}
 
 const meta = {
   title: 'Sections/Canopy',
@@ -116,6 +133,42 @@ export const ReducedMotion: Story = {
     handle.focus('pas');
     handle.advance(1 / 60);
     await expect(handle.state().grow.pas).toBe(1);
+  },
+};
+
+/** Shoot states: open is dashed, grown is solid (the fresh one holds the glow), answered is a knot. */
+export const ShootStates: Story = {
+  args: {
+    data: withShootStates(
+      { 'duo-app-store': 'grown', 'duo-split-vote': 'answered', 'duo-notifications': 'grown' },
+      'duo-app-store',
+    ),
+  },
+  globals: desktop,
+  play: async ({ canvasElement }) => {
+    const handle = await stageReady();
+    await userEvent.click(within(canvasElement).getByRole('button', { name: /^Duo Decide/ }));
+    handle.advance(4);
+    const shoots = handle.state().shoots;
+    await expect(shoots['duo-app-store']).toMatchObject({ state: 'grown', solid: 1, knot: 0 });
+    await expect(shoots['duo-split-vote']).toMatchObject({ state: 'answered', solid: 0, knot: 1 });
+    await expect(shoots['duo-ai-merge']).toMatchObject({ state: 'open', solid: 0, knot: 0 });
+  },
+};
+
+/** `grow(id)` opens the shoot's project and draws the shoot solid over `canopy-grow`. */
+export const GrowShoot: Story = {
+  globals: desktop,
+  play: async () => {
+    const handle = await stageReady();
+    handle.grow('duo-app-store');
+    await expect(handle.state().active).toBe('duo-decide');
+    await expect(handle.state().shoots['duo-app-store']?.solid).toBeLessThan(1);
+    handle.advance(3);
+    await expect(handle.state().shoots['duo-app-store']).toMatchObject({
+      state: 'grown',
+      solid: 1,
+    });
   },
 };
 
