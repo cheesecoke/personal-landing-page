@@ -54,6 +54,23 @@ export function loader() {
 export const meta: Route.MetaFunction = ({ data }) =>
   pageMeta({ description: data?.content.hero.lead });
 
+type HeroImage = Route.ComponentProps['loaderData']['content']['hero']['stump']['wide'];
+
+/** A preload for the format the browser will pick: the first modern source, else the fallback. */
+function preloadImage(image: HeroImage, media: string) {
+  const best = image.sources?.[0];
+  return (
+    <link
+      rel="preload"
+      as="image"
+      href={best?.src ?? image.src}
+      type={best?.type}
+      media={media}
+      fetchPriority="high"
+    />
+  );
+}
+
 /** The plates' new marks, decided in the browser once the page has hydrated. */
 function HomePage({ content, live, candidates }: Route.ComponentProps['loaderData']) {
   const { markFor } = useFreshness();
@@ -62,7 +79,15 @@ function HomePage({ content, live, candidates }: Route.ComponentProps['loaderDat
     const mark = toFreshProp(markFor(id));
     if (mark) fresh[id] = mark;
   }
-  return <HomeTemplate content={content} live={live} fresh={fresh} />;
+  const { wide, phone } = content.hero.stump;
+  return (
+    <>
+      {/* The hero render is the largest paint: fetch the one this screen shows, early. */}
+      {preloadImage(wide, '(min-width: 900px)')}
+      {preloadImage(phone, '(max-width: 899.98px)')}
+      <HomeTemplate content={content} live={live} fresh={fresh} />
+    </>
+  );
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
