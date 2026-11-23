@@ -11,13 +11,13 @@
     "label": "Being expanded",
     "since": "2026-11"
   },
-  "whereItsAt": "On the back burner since late 2024, after hitting a wall on affiliate marketing. In November 2026 I read every line of it again, wrote a rebuild plan, and shipped the first fix: user data now checks who is signed in.",
+  "whereItsAt": "On the back burner since late 2024, after hitting a wall on affiliate marketing. In November 2026 I read every line of it again and wrote a rebuild plan.",
   "log": [
     {
       "id": "2026-11-20",
       "date": "2026-11-20",
       "kind": "update",
-      "lines": ["A full assessment and a rebuild plan.", "User data now checks who is signed in."]
+      "lines": ["A full assessment and a rebuild plan."]
     },
     {
       "id": "2024-12-10",

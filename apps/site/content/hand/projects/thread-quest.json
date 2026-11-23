@@ -18,7 +18,7 @@
       "id": "where-its-at",
       "title": "Where it's at",
       "paragraphs": [
-        "On the back burner since late 2024, after hitting a wall on affiliate marketing. In November 2026 I read every line of it again, wrote a rebuild plan, and shipped the first fix: user data now checks who is signed in."
+        "On the back burner since late 2024, after hitting a wall on affiliate marketing. In November 2026 I read every line of it again and wrote a rebuild plan."
       ],
       "facts": [
         {
@@ -84,19 +84,11 @@
         {
           "id": "didnt-work",
           "title": "What didn't work",
-          "countLabel": "2 artifacts",
+          "countLabel": "1 artifact",
           "paragraphs": [
-            "Affiliate marketing took several tries to wire up, then stalled waiting on approval. A catalog copied from stores goes stale. And reading it back two years later, the routes that saved your outfits trusted the browser to say who you were. That was the first thing I fixed."
+            "Affiliate marketing took several tries to wire up, then stalled waiting on approval. A catalog copied from stores goes stale."
           ],
-          "confirm": ["[CONFIRM: OK to name the sign-in fix publicly]"],
           "artifacts": [
-            {
-              "stamp": "2026.324",
-              "date": "20 Nov 2026",
-              "title": "Sign-in checks",
-              "text": "Saved items and outfits now read the user from the server session, never from what the browser sends.",
-              "source": "Commit · thread-quest, 20 Nov 2026"
-            },
             {
               "stamp": "2024.345",
               "date": "10 Dec 2024",
