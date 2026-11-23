@@ -3,7 +3,7 @@ import { useId, type ReactNode } from 'react';
 import { Expander, ExpanderGroup, Heading, Label, Panel, Readout, Text } from '../../primitives';
 import { Grid } from '../Grid/Grid';
 import { cx } from '../internal/cx';
-import { Section } from '../Section/Section';
+import { Section, type SectionMeasure } from '../Section/Section';
 import { ThreadSection } from '../Thread/Thread';
 
 export interface GoDeeperArtifact {
@@ -43,6 +43,13 @@ export interface GoDeeperProps {
   items: readonly GoDeeperItem[];
   /** Accessible name of each row's artifact list ("Dated artifacts"). */
   artifactsLabel: string;
+  /**
+   * Anything between the label and the first row: link cards to the pages inside this one, a
+   * short walk-through, dated artifacts that belong to the whole page.
+   */
+  intro?: ReactNode;
+  /** Max width. `deeper` (1056px): rows that open to artifact cards. `log` (760px): text rows. */
+  measure?: Exclude<SectionMeasure, 'full'>;
   /** Put a node on the thread beside the section. Default `true`. */
   node?: boolean;
   className?: string;
@@ -88,14 +95,23 @@ function ArtifactCard({ artifact }: { artifact: GoDeeperArtifact }) {
  * "Go deeper": the rows at the foot of a project page. Each opens to a paragraph and its dated
  * artifacts. Rows are closed by default; a link to a row's id opens it.
  */
-export function GoDeeper({ title, items, artifactsLabel, node = true, className }: GoDeeperProps) {
+export function GoDeeper({
+  title,
+  items,
+  artifactsLabel,
+  intro,
+  measure = 'deeper',
+  node = true,
+  className,
+}: GoDeeperProps) {
   const headingId = useId();
   const Wrapper = node ? ThreadSection : Section;
   return (
-    <Wrapper aria-labelledby={headingId} measure="deeper" className={className}>
+    <Wrapper aria-labelledby={headingId} measure={measure} className={className}>
       <Heading level={2} role="label" id={headingId} className="mb-4">
         {title}
       </Heading>
+      {intro}
       <ExpanderGroup>
         {items.map((item) => (
           <Expander

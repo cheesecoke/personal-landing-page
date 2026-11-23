@@ -116,6 +116,33 @@ export const AllOpen: Story = {
   },
 };
 
+/**
+ * The `intro` slot sits between the label and the first row (PAS: the cards for the pages inside
+ * it). `measure="log"` is the narrower column of a page whose rows open to text only.
+ */
+export const WithIntro: Story = {
+  args: {
+    measure: 'log',
+    items: items.map(({ artifacts: _artifacts, meta: _meta, ...item }) => item),
+    intro: (
+      <ul data-intro="" aria-label="The projects inside PAS" className="m-0 mb-10 list-none p-0">
+        <li className="type-body border-t border-hairline py-4 text-primary">Atti</li>
+        <li className="type-body border-t border-hairline py-4 text-primary">Lifebox</li>
+      </ul>
+    ),
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const heading = canvas.getByRole('heading', { level: 2, name: 'Go deeper' });
+    const intro = canvasElement.querySelector('[data-intro]')!;
+    const firstRow = canvas.getByRole('button', { name: /What I’m building/ });
+    // In order: the label, the slot, the rows.
+    await expect(heading.compareDocumentPosition(intro)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    await expect(intro.compareDocumentPosition(firstRow)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    await expect(heading.parentElement!.getBoundingClientRect().width).toBeLessThanOrEqual(760);
+  },
+};
+
 /** No thread beside it (a page without one). */
 export const NoNode: Story = {
   args: { node: false },
