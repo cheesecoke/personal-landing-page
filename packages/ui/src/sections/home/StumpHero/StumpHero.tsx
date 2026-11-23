@@ -7,8 +7,10 @@ import {
   cx,
   Heading,
   Label,
+  Picture,
   StatusDot,
   Text,
+  type PictureSource,
   type Status,
 } from '../../../primitives';
 import { ArCallout, type ArCalloutTone } from './ArCallout';
@@ -20,6 +22,8 @@ export interface StumpHeroImage {
   src: string;
   width: number;
   height: number;
+  /** Smaller modern formats of the same image (AVIF), best first. `src` is the fallback. */
+  sources?: readonly PictureSource[];
 }
 
 /** A project on the stump: a floating node on the wide render, a row in the list on a phone. */
@@ -140,21 +144,25 @@ export function StumpHero({
       <section ref={heroRef} aria-labelledby={titleId} className={styles.hero}>
         <div aria-hidden="true" className={styles.wide}>
           <div className={styles.stage} style={{ aspectRatio: `${wide.width} / ${wide.height}` }}>
-            <img
-              src={image.src}
-              width={image.width}
-              height={image.height}
-              alt=""
-              className={styles.fill}
-            />
-            {litImage ? (
+            <Picture sources={image.sources}>
               <img
-                src={litImage.src}
-                width={litImage.width}
-                height={litImage.height}
+                src={image.src}
+                width={image.width}
+                height={image.height}
                 alt=""
-                className={cx(styles.fill, styles.breathe)}
+                className={styles.fill}
               />
+            </Picture>
+            {litImage ? (
+              <Picture sources={litImage.sources}>
+                <img
+                  src={litImage.src}
+                  width={litImage.width}
+                  height={litImage.height}
+                  alt=""
+                  className={cx(styles.fill, styles.breathe)}
+                />
+              </Picture>
             ) : null}
             <svg
               viewBox={`0 0 ${wide.width} ${wide.height}`}
@@ -443,13 +451,15 @@ export function StumpHero({
           className={styles.phoneStump}
           style={{ aspectRatio: `${phone.width} / ${phone.crop.height}` }}
         >
-          <img
-            src={phoneImage.src}
-            width={phoneImage.width}
-            height={phoneImage.height}
-            alt={phoneImage.alt}
-            className={cx(styles.fill, styles.phoneImage)}
-          />
+          <Picture sources={phoneImage.sources}>
+            <img
+              src={phoneImage.src}
+              width={phoneImage.width}
+              height={phoneImage.height}
+              alt={phoneImage.alt}
+              className={cx(styles.fill, styles.phoneImage)}
+            />
+          </Picture>
           <svg
             viewBox={`0 ${phone.crop.y} ${phone.width} ${phone.crop.height}`}
             preserveAspectRatio="none"
