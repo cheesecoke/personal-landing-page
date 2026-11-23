@@ -107,6 +107,7 @@ export function CaptainsLog({
       as="section"
       litEdge="no-glow"
       aria-labelledby={headingId}
+      data-live="captains-log"
       data-rise={rise}
       data-quiet={quiet ? '' : undefined}
       className={cx(
