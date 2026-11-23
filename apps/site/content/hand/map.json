@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "headline": "My personal projects, grown from one stump.",
+  "headline": "My personal projects, and how they connect.",
   "hint": "Pick a project to see what has not grown yet. Drag to turn the tree.",
   "root": {
     "id": "chase",
