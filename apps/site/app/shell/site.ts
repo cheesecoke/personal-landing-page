@@ -11,6 +11,8 @@ export const site = {
   lastUpdateLabel: 'Last update',
   /** Read out with the nav's release ring, so colour is not the only signal. */
   releaseRingLabel: 'New release',
+  /** The phone menu: its open and close buttons, and the Home row at the top of its list. */
+  menu: { open: 'Menu', close: 'Close', home: 'Home' },
 } as const;
 
 /** Pages that are not open yet are set quieter in the nav and footer. */

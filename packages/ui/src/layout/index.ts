@@ -40,6 +40,7 @@ export {
   type SiteNavItem,
   type SiteNavProps,
 } from './SiteNav/SiteNav';
+export type { SiteNavMenuLabels } from './SiteNav/SiteNavMenu';
 export { timelineX, useNavTimeline, type NavTimelineState } from './SiteNav/useNavTimeline';
 export {
   SplitLayout,
