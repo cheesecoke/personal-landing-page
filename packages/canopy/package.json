@@ -11,7 +11,9 @@
     "./core": "./src/core/index.ts"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "build": "node scripts/build.mjs",
+    "perf": "node scripts/perf.mjs"
   },
   "dependencies": {
     "@cwc/tokens": "workspace:*",
