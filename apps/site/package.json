@@ -19,6 +19,7 @@
     "react-router": "^7.18.6"
   },
   "devDependencies": {
+    "@cwc/canopy": "workspace:*",
     "@cwc/content": "workspace:*",
     "@cwc/tokens": "workspace:*",
     "@cwc/ui": "workspace:*",
