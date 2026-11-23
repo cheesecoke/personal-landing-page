@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { pagePaths } from '../paths';
-import { currentNavHref, formatLastUpdate, shellLinks } from './site';
+import { currentNavHref, formatLastUpdate, navLinks, shellLinks } from './site';
 
 describe('currentNavHref', () => {
   it('maps every page to its nav item', () => {
@@ -47,5 +47,13 @@ describe('formatLastUpdate', () => {
       date: '3 Jun 2026',
       dateTime: '2026-06-03',
     });
+  });
+});
+
+describe('navLinks', () => {
+  it('adds the release ring after Projects only while a release is new', () => {
+    expect(navLinks(false)).toBe(shellLinks);
+    const ringed = navLinks(true).filter((link) => 'ring' in link);
+    expect(ringed.map((link) => link.href)).toEqual(['/projects']);
   });
 });

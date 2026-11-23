@@ -9,6 +9,7 @@ import {
   useRouteLoaderData,
 } from 'react-router';
 
+import { FreshnessProvider } from '@cwc/content/react';
 import monaSans from '@cwc/tokens/fonts/mona-sans-latin-wdth-normal.woff2?url';
 import tomorrow500 from '@cwc/tokens/fonts/tomorrow-latin-500-normal.woff2?url';
 import { faviconLinks } from '@cwc/ui';
@@ -16,7 +17,9 @@ import { faviconLinks } from '@cwc/ui';
 import type { Route } from './+types/root';
 import stylesheet from './app.css?url';
 import { handContent } from './content/hand.server';
+import { freshCandidates, liveContent } from './content/live.server';
 import { AppShell } from './shell/AppShell';
+import { motionMirrorScript } from './shell/motion';
 import { pageTitle, PlaceholderPage } from './shell/PlaceholderPage';
 
 const preloadFont = (href: string) =>
@@ -29,17 +32,40 @@ export const links: Route.LinksFunction = () => [
   ...faviconLinks,
 ];
 
-/** The words every page shows: the site name and the footer, from hand content. */
+/**
+ * What every page shows: the site name and the footer from hand content, and from live data the
+ * date of the last publish and every project's change date (the nav's release ring reads them).
+ */
 export function loader() {
-  return { footer: handContent().site.footer };
+  const live = liveContent();
+  return {
+    footer: handContent().site.footer,
+    lastUpdate: live.meta?.publishedAt ?? null,
+    fresh: freshCandidates(live.projects),
+  };
+}
+
+type ShellData = ReturnType<typeof loader>;
+
+/** The shell around a page, with the one root `FreshnessProvider` (it supplies today's date). */
+function Shell({ data, children }: { data: ShellData; children: ReactNode }) {
+  return (
+    <FreshnessProvider candidates={data.fresh}>
+      <AppShell footer={data.footer} lastUpdate={data.lastUpdate ?? undefined}>
+        {children}
+      </AppShell>
+    </FreshnessProvider>
+  );
 }
 
 export function Layout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    // The script below sets `data-motion` on this element before React hydrates it.
+    <html lang="en" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <script dangerouslySetInnerHTML={{ __html: motionMirrorScript }} />
         <Meta />
         <Links />
       </head>
@@ -54,9 +80,9 @@ export function Layout({ children }: { children: ReactNode }) {
 
 export default function App({ loaderData }: Route.ComponentProps) {
   return (
-    <AppShell footer={loaderData.footer}>
+    <Shell data={loaderData}>
       <Outlet />
-    </AppShell>
+    </Shell>
   );
 }
 
@@ -71,5 +97,5 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
     </>
   );
   // The shell needs the root loader's data; if that is what failed, show the page bare.
-  return shell ? <AppShell footer={shell.footer}>{page}</AppShell> : page;
+  return shell ? <Shell data={shell}>{page}</Shell> : page;
 }
