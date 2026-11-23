@@ -33,6 +33,7 @@ where it animates.
 | Breadcrumb        |                                                               | not started |
 | Caption           |                                                               | not started |
 | Figure            |                                                               | not started |
+| Picture           | `<picture>` around an image: modern formats with a fallback   | story       |
 | VisuallyHidden    |                                                               | not started |
 | SkipLink          |                                                               | not started |
 | FocusRing         |                                                               | not started |

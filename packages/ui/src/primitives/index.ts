@@ -39,6 +39,7 @@ export { Favicon, faviconLinks, type FaviconProps, type FaviconSize } from './Fa
 export { Panel, type PanelProps } from './Panel/Panel';
 export { Caption, type CaptionProps } from './Caption/Caption';
 export { Figure, type FigureProps } from './Figure/Figure';
+export { Picture, type PictureProps, type PictureSource } from './Picture/Picture';
 export { Breadcrumb, type BreadcrumbItem, type BreadcrumbProps } from './Breadcrumb/Breadcrumb';
 export { Expander, ExpanderGroup, type ExpanderProps } from './Expander/Expander';
 
