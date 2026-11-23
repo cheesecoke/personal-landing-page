@@ -83,3 +83,4 @@ export {
   type HeroFigureProps,
   type ProjectOpeningProps,
 } from './ProjectOpening/ProjectOpening';
+export { TitanLog, type TitanLogEntry, type TitanLogProps } from './TitanLog/TitanLog';
