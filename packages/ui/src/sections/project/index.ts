@@ -43,3 +43,11 @@ export {
 } from './ReleasePanel/ReleasePanel';
 export { FactList, type FactData, type FactListProps } from './WhereItsAt/FactList';
 export { WhereItsAt, type WhereItsAtProps } from './WhereItsAt/WhereItsAt';
+export {
+  HeroDrawn,
+  HeroFigure,
+  ProjectOpening,
+  type HeroDrawnProps,
+  type HeroFigureProps,
+  type ProjectOpeningProps,
+} from './ProjectOpening/ProjectOpening';
