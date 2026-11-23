@@ -56,6 +56,16 @@ describe('Canopy when the stage cannot start', () => {
     await waitFor(() => expect(container.querySelector('[data-canopy-card]')).toBeNull());
   });
 
+  it('goes back to the whole tree on Esc, wherever the focus is', async () => {
+    const { container } = render(<Canopy variant="full" flat />);
+    screen.getByRole('button', { name: /^PAS/ }).click();
+    await waitFor(() => expect(container.querySelector('[data-canopy-card]')).not.toBeNull());
+    // Nothing in the tree has focus: Safari does not focus a clicked button.
+    (document.activeElement as HTMLElement | null)?.blur();
+    document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    await waitFor(() => expect(container.querySelector('[data-canopy-card]')).toBeNull());
+  });
+
   it('hands the link to the app router through renderLink', async () => {
     render(
       <Canopy

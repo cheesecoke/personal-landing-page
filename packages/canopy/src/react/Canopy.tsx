@@ -1,6 +1,5 @@
 import {
   type CSSProperties,
-  type KeyboardEvent,
   type MouseEvent,
   type ReactNode,
   type Ref,
@@ -305,9 +304,19 @@ export function Canopy({
   );
 
   const node = active ? index.byId[active] : undefined;
-  const onKeyDown = (e: KeyboardEvent) => {
-    if (e.key === 'Escape' && active) reset();
-  };
+  /*
+   * Esc goes back to the whole tree. Heard on the document while a project is open, not on the
+   * tree itself: after a click on the stage, or on a list row in Safari (which does not focus a
+   * clicked button), the focus is not inside the tree and it would never hear the key.
+   */
+  useEffect(() => {
+    if (!full || !active) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') reset();
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [full, active, reset]);
 
   function row({ id, depth }: { id: string; depth: number }) {
     const n = index.byId[id]!;
@@ -493,7 +502,6 @@ export function Canopy({
       ref={rootRef}
       className={cx(s.root, full ? s.full : s.teaser, className)}
       style={style}
-      onKeyDown={full ? onKeyDown : undefined}
       data-canopy={variant}
       data-canopy-mode={showFlat ? 'flat' : (mode ?? 'loading')}
     >
