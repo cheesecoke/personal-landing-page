@@ -36,6 +36,8 @@ export {
 } from './DetailsStrip/DetailsStrip';
 export { DuoLensMark } from './DrawnMarks/DuoLensMark';
 export { RingsDecor } from './DrawnMarks/RingsDecor';
+export { IdeaCompare, type CompareCard, type IdeaCompareProps } from './IdeaCompare/IdeaCompare';
+export { Ladder, type LadderProps } from './Ladder/Ladder';
 export { LinkCards, type LinkCardData, type LinkCardsProps } from './LinkCards/LinkCards';
 export {
   LogEntry,
