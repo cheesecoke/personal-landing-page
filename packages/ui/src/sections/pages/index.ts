@@ -59,3 +59,5 @@ export {
   type BeyondSlotsProps,
 } from './BeyondSlots/BeyondSlots';
 export type { BeyondIconName } from './BeyondSlots/beyondIcons';
+
+export { ContactDoor, type ContactDoorProps, type ContactLink } from './ContactDoor/ContactDoor';
