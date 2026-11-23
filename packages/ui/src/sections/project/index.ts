@@ -8,6 +8,11 @@ export {
 } from './BranchRings/ringGeometry';
 export { CaptainsLog, type CaptainsLogProps } from './CaptainsLog/CaptainsLog';
 export {
+  DetailsStrip,
+  type DetailsFigure,
+  type DetailsStripProps,
+} from './DetailsStrip/DetailsStrip';
+export {
   LogEntry,
   type LogEntryData,
   type LogEntryFresh,
@@ -24,8 +29,17 @@ export {
 } from './ShootList/ShootItem';
 export { ShootList, type ShootListProps } from './ShootList/ShootList';
 export {
+  cropMargins,
+  ProjectFigure,
+  type FigureCrop,
+  type ProjectFigureProps,
+  type ProjectImage,
+} from './ProjectFigure/ProjectFigure';
+export {
   ReleasePanel,
   type ReleaseChannel,
   type ReleaseData,
   type ReleasePanelProps,
 } from './ReleasePanel/ReleasePanel';
+export { FactList, type FactData, type FactListProps } from './WhereItsAt/FactList';
+export { WhereItsAt, type WhereItsAtProps } from './WhereItsAt/WhereItsAt';
