@@ -767,7 +767,7 @@
 
   .list {
     flex-direction: row;
-    gap: 8px;
+    gap: 12px;
     min-width: 0;
     padding-right: var(--canopy-gutter-r);
     padding-bottom: 4px;
@@ -788,13 +788,13 @@
   .row.start {
     flex: none;
     order: 1;
-    column-gap: 8px;
+    gap: 4px 12px;
     width: auto;
-    min-height: 44px;
+    min-height: 48px;
     margin: 0;
-    padding: 0 12px;
+    padding: 6px 20px;
     border: 1px solid var(--line-hairline);
-    border-radius: 22px;
+    border-radius: 24px;
     font-size: 14px;
     scroll-snap-align: start;
   }
