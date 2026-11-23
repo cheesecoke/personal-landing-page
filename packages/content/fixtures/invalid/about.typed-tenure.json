@@ -1,0 +1,16 @@
+{
+  "expectPath": "currentRole.tenure",
+  "data": {
+    "schemaVersion": 1,
+    "now": {
+      "month": "2026-11",
+      "text": "studying what makes messaging assistants reliable, for Atti. Polishing Duo Decide on iOS. Rebuilding this site."
+    },
+    "currentRole": {
+      "title": "Senior Software Engineer, AI",
+      "org": "Titan Intake",
+      "since": "2026-01",
+      "tenure": "11 months"
+    }
+  }
+}

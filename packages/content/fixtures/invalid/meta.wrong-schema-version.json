@@ -1,0 +1,8 @@
+{
+  "expectPath": "schemaVersion",
+  "data": {
+    "schemaVersion": 2,
+    "publishedAt": "2026-11-22T00:00:00Z",
+    "publishId": "seed-2026-11-22"
+  }
+}

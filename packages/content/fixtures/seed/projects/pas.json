@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "visibility": "public",
+  "slug": "pas",
+  "name": "PAS",
+  "parent": null,
+  "kind": "system",
+  "state": "growing",
+  "status": {
+    "key": "daily-use",
+    "label": "Daily use",
+    "since": "2026-10"
+  },
+  "whereItsAt": "Atti has run my reminders, notes, calendar and morning brief on Telegram since 28 October 2026. Lifebox is an experiment in whether an app's interface can be shaped for each person who uses it. It is planned as Atti's phone app.",
+  "log": [
+    {
+      "id": "2026-11-20",
+      "date": "2026-11-20",
+      "kind": "update",
+      "lines": [
+        "Replies now match my Yes or No answers.",
+        "A loopback-only API for my own feed and events."
+      ]
+    },
+    {
+      "id": "2026-11-18",
+      "date": "2026-11-18",
+      "kind": "update",
+      "lines": ["One Yes now confirms a whole list of calendar events."]
+    }
+  ],
+  "release": null,
+  "shoots": [
+    {
+      "id": "context-engine",
+      "label": "Context engine",
+      "kind": "question",
+      "state": "open",
+      "note": "Open question: one memory layer that picks what each agent sees, from Atti to coding sessions.",
+      "resolved": null
+    },
+    {
+      "id": "listening-for-commitments",
+      "label": "Listening for commitments",
+      "kind": "idea",
+      "state": "open",
+      "note": "Catch spoken commitments and propose them as tasks. Spec written, waiting on a decision.",
+      "resolved": null
+    },
+    {
+      "id": "a-release-per-user",
+      "label": "A release per user",
+      "kind": "question",
+      "state": "open",
+      "note": "Open problem: an iOS build takes 30 to 60 minutes, and here every user gets their own.",
+      "resolved": null
+    }
+  ],
+  "rings": [],
+  "facts": [
+    {
+      "key": "commits-by-atti",
+      "value": "177",
+      "label": "commits by Atti",
+      "asOf": "2026-11-20"
+    },
+    {
+      "key": "test-cases",
+      "value": "1,478",
+      "label": "test cases",
+      "asOf": "2026-11-20"
+    }
+  ],
+  "fresh": {
+    "changedAt": "2026-11-20",
+    "changeKind": "update"
+  }
+}

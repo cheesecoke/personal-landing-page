@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "visibility": "public",
+  "slug": "personal-brain",
+  "name": "Personal brain",
+  "parent": null,
+  "kind": "system",
+  "state": "growing",
+  "status": {
+    "key": "daily-use",
+    "label": "Daily use",
+    "since": "2026-08"
+  },
+  "whereItsAt": "In daily use since August 2026. Atti, my assistant, writes here most days; see PAS. Two brains feed it, each built separately and tied together here.",
+  "log": [
+    {
+      "id": "2026-11-20",
+      "date": "2026-11-20",
+      "kind": "update",
+      "lines": [
+        "Research notes on what makes messaging assistants reliable.",
+        "A security amendment, approved before Atti's access widened."
+      ]
+    },
+    {
+      "id": "2026-11-18",
+      "date": "2026-11-18",
+      "kind": "update",
+      "lines": ["A reference page for my editor setup."]
+    }
+  ],
+  "release": null,
+  "shoots": [
+    {
+      "id": "learning-from-books",
+      "label": "Learning from books",
+      "kind": "idea",
+      "state": "open",
+      "note": "Proposed: an agent distills a book or podcast into study notes, filed by topic.",
+      "resolved": null
+    },
+    {
+      "id": "lessons-and-quizzes",
+      "label": "Lessons and quizzes",
+      "kind": "idea",
+      "state": "open",
+      "note": "Turn study notes into short lessons and quizzes, like a learning app. Parked.",
+      "resolved": null
+    },
+    {
+      "id": "new-approach-to-bank-data",
+      "label": "New approach to bank data",
+      "kind": "goal",
+      "state": "open",
+      "note": "The first approach was too much; trying another.",
+      "resolved": null
+    }
+  ],
+  "rings": [],
+  "facts": [
+    {
+      "key": "commits",
+      "value": "889",
+      "label": "commits since August 2026",
+      "asOf": "2026-11-20"
+    },
+    {
+      "key": "scoring-agreement",
+      "value": "κ 0.41 → 0.91",
+      "label": "Sample: 20 items",
+      "asOf": "2026-11-20"
+    }
+  ],
+  "fresh": {
+    "changedAt": "2026-11-20",
+    "changeKind": "update"
+  }
+}
