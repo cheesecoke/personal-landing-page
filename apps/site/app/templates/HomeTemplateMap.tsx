@@ -1,9 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { Canopy } from '@cwc/canopy';
+import { Canopy, type CanopyCopy, type CanopyData } from '@cwc/canopy';
 
 /** How far below the viewport the teaser is when the live tree starts loading. */
 const NEAR = '800px';
+
+export interface HomeTemplateMapProps {
+  /** The tree, as Projects draws it: hand content's map with live status and shoots. */
+  data: CanopyData;
+  /** The tree's words, from hand content. */
+  copy: CanopyCopy;
+}
 
 /**
  * Home's tree teaser: the canopy as a picture, 460px tall and 360px under `md`, as on the board.
@@ -12,7 +19,7 @@ const NEAR = '800px';
  * three.js with it) loads only once the reader scrolls near the section, so it is never part of
  * Home's first load.
  */
-export function HomeTemplateMap() {
+export function HomeTemplateMap({ data, copy }: HomeTemplateMapProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [near, setNear] = useState(false);
 
@@ -38,7 +45,13 @@ export function HomeTemplateMap() {
 
   return (
     <div ref={ref} className="[--home-map-height:360px] md:[--home-map-height:460px]">
-      <Canopy variant="teaser" height="var(--home-map-height)" flat={!near} />
+      <Canopy
+        variant="teaser"
+        data={data}
+        copy={copy}
+        height="var(--home-map-height)"
+        flat={!near}
+      />
     </div>
   );
 }
