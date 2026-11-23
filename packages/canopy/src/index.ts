@@ -24,3 +24,9 @@ export type {
   CanopySelection,
   CanopySnapshot,
 } from './core';
+export { defaultCanopyCopy } from './data/copy';
+export type { CanopyCopy } from './data/copy';
+export { Canopy } from './react/Canopy';
+export type { CanopyLinkProps, CanopyProps, CanopyRef } from './react/Canopy';
+export { CanopyFlat } from './react/CanopyFlat';
+export type { CanopyFlatProps } from './react/CanopyFlat';
