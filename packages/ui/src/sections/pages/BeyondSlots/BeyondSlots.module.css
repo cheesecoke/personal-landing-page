@@ -1,0 +1,218 @@
+/*
+ * The Beyond scene: the stump at the left, dashed arcs running out from it, and one slot on each
+ * arc for what will be here. Ported from the Beyond board.
+ *
+ * The board stacks the scene under an 1180px viewport. The scene is full width, so the container
+ * query here switches at the same point.
+ */
+
+.root {
+  container-type: inline-size;
+  max-width: 1440px;
+  margin-inline: auto;
+}
+
+.scene {
+  position: relative;
+  aspect-ratio: 1440 / 600;
+}
+
+/* The scene slides up under the page header that comes before it. */
+.overlap {
+  margin-top: -230px;
+}
+
+.art {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  mask-image: linear-gradient(180deg, black 72%, transparent 100%);
+}
+
+.stump {
+  position: absolute;
+  top: -2.5%;
+  left: -59.375%;
+  display: block;
+  width: 104.167%;
+  max-width: none;
+  height: auto;
+}
+
+.arcs {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  mask-image: linear-gradient(90deg, transparent 26%, black 42%);
+}
+
+.arc {
+  fill: none;
+  stroke: var(--thread-line);
+  stroke-width: 1;
+}
+
+.list {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.slot {
+  position: absolute;
+  top: var(--slot-top);
+  left: var(--slot-left);
+  width: var(--slot-width);
+  margin: 0;
+  list-style: none;
+  scroll-margin-top: 24px;
+}
+
+/* The point where the slot sits on its arc: a dim dot with a light that breathes over it. */
+.point {
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  width: 6px;
+  height: 6px;
+}
+
+.pointSmall {
+  top: -2px;
+  left: -2px;
+  width: 4px;
+  height: 4px;
+}
+
+.pointBase,
+.pointLight {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+}
+
+.pointBase {
+  background: var(--thread-line);
+}
+
+.pointLight {
+  background: var(--accent-signal);
+  box-shadow: 0 0 14px 4px color-mix(in srgb, var(--accent-signal) 45%, transparent);
+}
+
+.stem {
+  position: absolute;
+  top: 8px;
+  left: 0;
+  width: 1px;
+  height: 22px;
+  background: linear-gradient(180deg, var(--thread-line), transparent);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 38px;
+}
+
+.icon {
+  line-height: 0;
+}
+
+.iconSmall {
+  opacity: 0.9;
+}
+
+.titleSmall {
+  font-size: 17px;
+}
+
+/* 15px, the board's size for a slot's line: a step under body. */
+.text {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.textSmall {
+  font-size: 14px;
+}
+
+@container (width < 1180px) {
+  .scene {
+    aspect-ratio: auto;
+    padding: 0 var(--gutter);
+  }
+
+  .overlap {
+    margin-top: 8px;
+  }
+
+  .art {
+    position: relative;
+    inset: auto;
+    height: 230px;
+    margin: 0 calc(-1 * var(--gutter));
+  }
+
+  .stump {
+    top: -110px;
+    left: calc(50% - 480px);
+    width: 760px;
+  }
+
+  .arcs,
+  .stem {
+    display: none;
+  }
+
+  .list {
+    position: static;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    max-width: 520px;
+    padding: 8px 0 0 24px;
+  }
+
+  .slot {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: auto;
+  }
+
+  .point {
+    top: 46px;
+  }
+
+  .body {
+    padding-top: 0;
+    padding-left: 24px;
+  }
+}
+
+@keyframes beyond-breathe {
+  0%,
+  100% {
+    opacity: 0;
+  }
+
+  45%,
+  60% {
+    opacity: 1;
+  }
+}
+
+/* Motion is opt-in: with reduced motion each point is simply lit. */
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion='reduce']) .pointLight {
+    animation: beyond-breathe var(--duration-breathe) ease-in-out infinite;
+    animation-delay: calc(var(--duration-breathe) * var(--slot-phase, 0));
+  }
+}
