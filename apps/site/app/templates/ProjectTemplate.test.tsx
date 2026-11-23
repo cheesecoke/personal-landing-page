@@ -19,6 +19,7 @@ import {
   toDeeperItems,
   toFacts,
   whereItsAtParagraphs,
+  withoutConfirms,
   type SectionOf,
 } from './ProjectTemplate.map';
 
@@ -142,6 +143,21 @@ describe('go deeper', () => {
       toDeeperItems(section(page, 'goDeeper')).map((item) => item.id);
     expect(ids(projects.duoDecide)).toEqual(['building', 'tried', 'didnt-work', 'next']);
     expect(ids(projects.pas)).toEqual(['go-deeper-1', 'go-deeper-2', 'go-deeper-3', 'go-deeper-4']);
+  });
+});
+
+describe('withoutConfirms', () => {
+  it('drops every marker for Chase and nothing else', () => {
+    const { titanIntake } = handContent(join(import.meta.dirname, '../../content/hand'));
+    for (const page of [...pages, titanIntake]) {
+      const clean = withoutConfirms(page);
+      expect(JSON.stringify(clean)).not.toContain('[CONFIRM');
+      const rows = (content: typeof page) =>
+        section(content, 'goDeeper').expanders.map(({ confirm: _confirm, ...row }) => row);
+      expect(rows(clean)).toEqual(rows(page));
+      expect({ ...clean, sections: [] }).toEqual({ ...page, sections: [] });
+    }
+    expect(JSON.stringify(projects.threadQuest)).toContain('[CONFIRM');
   });
 });
 

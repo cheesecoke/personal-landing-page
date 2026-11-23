@@ -1,7 +1,13 @@
 import { Fragment, type ReactNode } from 'react';
 
 import type { Fact, LogEntry, Ring } from '@cwc/content';
-import type { Artifact, PageFact, PageSection, Paragraph } from '@cwc/content/hand';
+import type {
+  Artifact,
+  PageFact,
+  PageSection,
+  Paragraph,
+  ProjectPageContent,
+} from '@cwc/content/hand';
 import {
   ArtifactList,
   type ArtifactData,
@@ -16,6 +22,24 @@ import { cropFor } from './ProjectTemplate.looks';
 
 /** One kind of hand section. */
 export type SectionOf<Type extends PageSection['type']> = Extract<PageSection, { type: Type }>;
+
+/**
+ * A page's content without its `[CONFIRM: ...]` markers. The pages never print them; a loader
+ * runs its page through this so they are not in the page's data either.
+ */
+export function withoutConfirms(content: ProjectPageContent): ProjectPageContent {
+  return {
+    ...content,
+    sections: content.sections.map((section) =>
+      section.type === 'goDeeper'
+        ? {
+            ...section,
+            expanders: section.expanders.map(({ confirm: _confirm, ...row }) => row),
+          }
+        : section,
+    ),
+  };
+}
 
 /** A figure as the sections take it: the image, its caption and where its subject sits. */
 export const toFigure = <Figure extends { image: ProjectImage; caption?: string }>(
