@@ -130,7 +130,8 @@ export function IdeaCompare({
       <Text measure className="mt-4">
         {intro}
       </Text>
-      <div className="mt-9 grid max-w-[980px] grid-cols-[repeat(auto-fit,minmax(min(320px,100%),1fr))] gap-4">
+      {/* Above the figure: its studio image slides its empty top margin up under the cards. */}
+      <div className="relative z-1 mt-9 grid max-w-[980px] grid-cols-[repeat(auto-fit,minmax(min(320px,100%),1fr))] gap-4">
         {cards.map((card, index) => {
           const drawing = card.drawing ?? (index === 0 ? 'crowd' : 'blocks');
           return (
