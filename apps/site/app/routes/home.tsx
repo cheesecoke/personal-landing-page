@@ -62,7 +62,7 @@ export function loader() {
 
 // Home's title is the site name alone.
 export const meta: Route.MetaFunction = ({ data }) =>
-  pageMeta({ description: data?.content.hero.lead });
+  pageMeta({ path: '/', description: data?.content.hero.lead });
 
 type HeroImage = Route.ComponentProps['loaderData']['content']['hero']['stump']['wide'];
 

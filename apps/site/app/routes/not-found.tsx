@@ -1,6 +1,7 @@
-import { pageTitle, PlaceholderPage } from '../shell/PlaceholderPage';
+import { strayPageMeta } from '../content/meta';
+import { PlaceholderPage } from '../shell/PlaceholderPage';
 
-export const meta = () => [{ title: pageTitle('Page not found') }];
+export const meta = () => strayPageMeta('Page not found');
 
 export default function Route() {
   return <PlaceholderPage title="Page not found" />;

@@ -16,7 +16,11 @@ export function loader() {
 }
 
 export const meta: Route.MetaFunction = ({ data }) =>
-  pageMeta({ title: data?.content.title, description: data?.content.hero.lead });
+  pageMeta({
+    path: '/projects/personal-brain',
+    title: data?.content.title,
+    description: data?.content.hero.lead,
+  });
 
 export default function PersonalBrain({ loaderData }: Route.ComponentProps) {
   return <ProjectTemplate {...loaderData} />;

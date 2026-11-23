@@ -8,7 +8,7 @@ export function loader() {
 }
 
 export const meta: Route.MetaFunction = ({ data }) =>
-  pageMeta({ title: data?.content.title, description: data?.content.header.lead });
+  pageMeta({ path: '/beyond', title: data?.content.title, description: data?.content.header.lead });
 
 export default function Beyond({ loaderData }: Route.ComponentProps) {
   return <BeyondTemplate content={loaderData.content} />;
