@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { useLocation } from 'react-router';
 
 import { useFreshness } from '@cwc/content/react';
-import { Grain, SiteFooter, SiteNav, SkipLink } from '@cwc/ui';
+import { cx, Grain, SiteFooter, SiteNav, SkipLink } from '@cwc/ui';
 
 import { RouterLink } from './RouterLink';
 import { currentNavHref, formatLastUpdate, navLinks, shellLinks, site } from './site';
@@ -34,11 +34,21 @@ export interface AppShellProps {
 export function AppShell({ footer, lastUpdate, children }: AppShellProps) {
   const { pathname } = useLocation();
   const { navRing } = useFreshness();
+  /*
+   * Home's hero runs up behind the header: `--stump-hero-lift` is the header's height (the name
+   * and the links on two rows under `md`, one row from it), and the header stacks above the page.
+   */
+  const overHero = currentNavHref(pathname) === '/';
   return (
-    <div className="relative flex min-h-dvh flex-col overflow-x-clip bg-ground text-primary">
+    <div
+      className={cx(
+        'relative flex min-h-dvh flex-col overflow-x-clip bg-ground text-primary',
+        overHero && '[--stump-hero-lift:107px] md:[--stump-hero-lift:88px]',
+      )}
+    >
       <SkipLink>{site.skipLabel}</SkipLink>
       <Grain />
-      <header className="relative">
+      <header className={cx('relative', overHero && 'z-10')}>
         <SiteNav
           name={footer.name}
           label={site.navLabel}
