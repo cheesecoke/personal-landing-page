@@ -157,7 +157,7 @@ describe('withoutConfirms', () => {
       expect(rows(clean)).toEqual(rows(page));
       expect({ ...clean, sections: [] }).toEqual({ ...page, sections: [] });
     }
-    expect(JSON.stringify(projects.threadQuest)).toContain('[CONFIRM');
+    expect(JSON.stringify(projects.personalBrain)).toContain('[CONFIRM');
   });
 });
 

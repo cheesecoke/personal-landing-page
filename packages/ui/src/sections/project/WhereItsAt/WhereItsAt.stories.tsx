@@ -130,7 +130,7 @@ export const WithConfirm: Story = {
         caption: '62 in 2024, built with Next.js and Google sign-in. Two in November 2026.',
       },
       {
-        value: '[CONFIRM: OK to name the sign-in fix publicly]',
+        value: '[CONFIRM: a fact to check]',
         kind: 'confirm',
         caption: 'No public release yet.',
       },
