@@ -15,7 +15,7 @@ describe('currentNavHref', () => {
       '/projects/ai-system': '/projects',
       '/projects/duo-decide': '/projects',
       '/projects/thread-quest': '/projects',
-      '/work/titan-intake': '/projects',
+      '/work/titan-intake': '/about',
       '/about': '/about',
       '/beyond': '/beyond',
       '/contact': '/contact',
