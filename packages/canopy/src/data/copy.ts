@@ -30,14 +30,14 @@ export interface CanopyCopy {
 
 export const defaultCanopyCopy: CanopyCopy = {
   stageLabel:
-    'A tree of Chase Cole’s personal projects, grown from one stump. Systems grow on the left bough: PAS with Atti and Lifebox, the AI system with Distill, and the personal brain with the finance and business brains. Products grow on the right: Duo Decide, Thread Quest, One Rep and this site. PAS, Duo Decide and the AI system are marked as the place to start.',
+    'A tree of Chase Cole’s personal projects. Systems grow on the left bough: PAS with Atti and Lifebox, the AI system with Distill, and the personal brain with the finance and business brains. Products grow on the right: Duo Decide, Thread Quest, One Rep and this site. PAS, Duo Decide and the AI system are marked as the place to start.',
   listLabel: 'Projects',
   count: (projects) => `${projects} personal projects.`,
   lede: 'Start with one of these three.',
   startHeading: 'Start here',
   moreHeading: 'More projects',
   keys: 'Drag to turn. Pinch or ⌘/Ctrl + scroll to zoom. Esc to go back.',
-  headline: 'My personal projects, grown from one stump.',
+  headline: 'My personal projects, watch them grow.',
   hint: 'Pick a project to see what has not grown yet. Drag to turn the tree.',
   legend: { start: 'Start here', shoot: 'Not yet grown', flow: 'Feeds' },
   noTree: 'The tree could not load here. The list beside it works on its own.',
