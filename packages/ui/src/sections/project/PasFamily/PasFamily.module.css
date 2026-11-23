@@ -1,0 +1,129 @@
+/*
+ * The PAS family: nested rings, each a control. Ported from the PAS board (`pp-fam`, `fm-*`).
+ * Hover or focus on a ring ripples it and draws the connector to the ring inside it.
+ */
+
+.root {
+  container-type: inline-size;
+}
+
+.fam {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 40px;
+  align-items: center;
+}
+
+@container (width >= 864px) {
+  .fam {
+    grid-template-columns: 320px minmax(0, 1fr);
+    gap: 56px;
+  }
+}
+
+.ring {
+  position: absolute;
+  box-sizing: border-box;
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid var(--line-tick);
+  border-radius: 50%;
+}
+
+.ring::after {
+  position: absolute;
+  inset: -1px;
+  pointer-events: none;
+  content: '';
+  border: 1px solid var(--accent-signal);
+  border-radius: 50%;
+  opacity: 0;
+}
+
+.ring:hover,
+.ring:focus-visible {
+  border-color: var(--accent-signal);
+}
+
+/* Outer: the whole system. Its top edge is a touch brighter. */
+.outer {
+  inset: 0;
+  border-top-color: var(--line-outline);
+}
+
+/* Middle: the assistant. */
+.middle {
+  inset: 18.75%;
+  border-color: var(--palette-signal-dim);
+  border-left-color: var(--line-hairline);
+}
+
+/* Inner: the experiment, low in the middle ring. It carries a soft light. */
+.inner {
+  top: 53%;
+  left: 39%;
+  width: 22%;
+  height: 22%;
+  border-color: var(--accent-signal);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--accent-signal) 35%, transparent);
+}
+
+.line {
+  position: absolute;
+  height: 1px;
+  pointer-events: none;
+  background: var(--accent-signal);
+  opacity: 0.85;
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.lineOuter {
+  top: 85.4%;
+  left: 85.4%;
+  width: 18.5%;
+  rotate: 225deg;
+}
+
+.lineMiddle {
+  top: 81.25%;
+  left: 50%;
+  width: 6.25%;
+  rotate: -90deg;
+}
+
+.outer:hover ~ .lineOuter,
+.outer:focus-visible ~ .lineOuter,
+.middle:hover ~ .lineMiddle,
+.middle:focus-visible ~ .lineMiddle {
+  transform: scaleX(1);
+}
+
+@keyframes ripple {
+  from {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(1.14);
+  }
+}
+
+/* Reduced motion: the border and the connector change at once, and nothing ripples. */
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion='reduce']) .ring {
+    transition: border-color var(--duration-rise);
+  }
+
+  :root:not([data-motion='reduce']) .line {
+    transition: transform var(--duration-rise) var(--ease-out);
+  }
+
+  :root:not([data-motion='reduce']) .ring:hover::after,
+  :root:not([data-motion='reduce']) .ring:focus-visible::after {
+    animation: ripple var(--duration-mark-arc) var(--ease-out);
+  }
+}
