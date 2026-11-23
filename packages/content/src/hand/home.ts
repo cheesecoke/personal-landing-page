@@ -2,8 +2,16 @@ import { z } from 'zod';
 
 import { Href, Image, Link, SchemaVersion, StatusLabel, Text } from './primitives';
 
-/** A project name on the stump: the callout on wide screens, a list row on phones. */
-const StumpProject = z.object({ name: Text, status: StatusLabel, href: Href }).strict();
+/** The slug of a project's live file, e.g. `duo-decide`. */
+const ProjectSlug = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
+
+/**
+ * A project name on the stump: the callout on wide screens, a list row on phones. `project` names
+ * the live file whose status replaces `status` when there is one.
+ */
+const StumpProject = z
+  .object({ name: Text, status: StatusLabel, href: Href, project: ProjectSlug.optional() })
+  .strict();
 
 /** A ring label on the stump that is not a link (a job, a chapter). */
 const StumpRing = z.object({ label: Text, when: Text, tone: z.enum(['signal', 'ember']) }).strict();
@@ -45,8 +53,16 @@ const ProofItem = z
     unit: Text.optional(),
     caption: Text,
     href: Href,
+    /** The live fact this number is: its value and the day it was counted come from live data. */
+    fact: z.object({ project: ProjectSlug, key: ProjectSlug }).strict().optional(),
   })
   .strict();
+
+/** How an image sits in its plate: position and width as percentages of the plate's width. */
+const PlateCrop = z.object({ left: z.number(), top: z.number(), width: z.number().positive() });
+
+/** A plate's frame: its width over its height, and the crop of the image inside it. */
+const PlateFrame = z.object({ aspect: z.number().positive(), crop: PlateCrop.strict() }).strict();
 
 const Plate = z
   .object({
@@ -57,6 +73,15 @@ const Plate = z
     image: Image,
     /** What kind of picture it is, printed under the plate ("Concept drawing"). */
     imageKind: Text,
+    /** The live file whose status and new mark this plate shows when there is one. */
+    project: ProjectSlug.optional(),
+    /** The first plate: the larger name and the lit edge. */
+    featured: z.literal(true).optional(),
+    /** The column's share of the row against the other plates. Default 1. */
+    weight: z.number().positive().optional(),
+    /** The plate in the row, and stacked on a phone (default: the same frame). */
+    frame: PlateFrame,
+    phoneFrame: PlateFrame.optional(),
   })
   .strict();
 
@@ -65,7 +90,14 @@ export const HomeContent = z
     schemaVersion: SchemaVersion,
     title: Text,
     hero: Hero,
-    proof: z.object({ label: Text, items: z.array(ProofItem).min(1) }).strict(),
+    proof: z
+      .object({
+        label: Text,
+        /** The words before a fact's date ("As of"), read out after the fact. */
+        asOfLabel: Text.optional(),
+        items: z.array(ProofItem).min(1),
+      })
+      .strict(),
     atWork: z
       .object({
         eyebrow: Text,
