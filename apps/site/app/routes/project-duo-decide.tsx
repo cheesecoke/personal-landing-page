@@ -1,7 +1,22 @@
-import { pageTitle, PlaceholderPage } from '../shell/PlaceholderPage';
+import { handContent } from '../content/hand.server';
+import { liveContent, publicProjectBySlug } from '../content/live.server';
+import { pageMeta } from '../content/meta';
+import { ProjectTemplate } from '../templates/ProjectTemplate';
+import type { Route } from './+types/project-duo-decide';
 
-export const meta = () => [{ title: pageTitle('Duo Decide') }];
+/** Duo Decide: its hand content, its live file when one is published, and the day of the build. */
+export function loader() {
+  const content = handContent().projects.duoDecide;
+  return {
+    content,
+    project: publicProjectBySlug(liveContent(), content.slug) ?? null,
+    today: new Date().toISOString().slice(0, 10),
+  };
+}
 
-export default function Route() {
-  return <PlaceholderPage title="Duo Decide" />;
+export const meta: Route.MetaFunction = ({ data }) =>
+  pageMeta({ title: data?.content.title, description: data?.content.hero.lead });
+
+export default function DuoDecide({ loaderData }: Route.ComponentProps) {
+  return <ProjectTemplate {...loaderData} />;
 }

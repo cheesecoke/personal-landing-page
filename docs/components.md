@@ -101,8 +101,8 @@ Each takes fixture data in Storybook and has a `NoLiveData` story.
 | ---------------- | ----------- |
 | HomeTemplate     | in site     |
 | ProjectsTemplate | in site     |
-| ProjectTemplate  | story       |
-| JobTemplate      | not started |
+| ProjectTemplate  | in site     |
+| JobTemplate      | in site     |
 | AboutTemplate    | in site     |
 | BeyondTemplate   | in site     |
 | ContactTemplate  | in site     |
