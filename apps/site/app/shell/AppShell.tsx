@@ -1,10 +1,11 @@
 import type { ReactNode } from 'react';
 import { useLocation } from 'react-router';
 
+import { useFreshness } from '@cwc/content/react';
 import { Grain, SiteFooter, SiteNav, SkipLink } from '@cwc/ui';
 
 import { RouterLink } from './RouterLink';
-import { currentNavHref, formatLastUpdate, shellLinks, site } from './site';
+import { currentNavHref, formatLastUpdate, navLinks, shellLinks, site } from './site';
 
 /** The footer's words: the `footer` of hand content's `site.json`. */
 export interface ShellFooter {
@@ -26,9 +27,13 @@ export interface AppShellProps {
 /**
  * The persistent layout: skip link, nav, the page in `main`, footer. The nav and footer stay
  * mounted across navigations, so the nav timeline travels and only `main` cross-fades.
+ *
+ * The nav's release ring comes from the nearest `FreshnessProvider` above the shell (the root's,
+ * fed with every project): it shows after hydration while a release is a week old at most.
  */
 export function AppShell({ footer, lastUpdate, children }: AppShellProps) {
   const { pathname } = useLocation();
+  const { navRing } = useFreshness();
   return (
     <div className="relative flex min-h-dvh flex-col overflow-x-clip bg-ground text-primary">
       <SkipLink>{site.skipLabel}</SkipLink>
@@ -37,7 +42,7 @@ export function AppShell({ footer, lastUpdate, children }: AppShellProps) {
         <SiteNav
           name={footer.name}
           label={site.navLabel}
-          items={shellLinks}
+          items={navLinks(navRing)}
           current={currentNavHref(pathname)}
           linkAs={RouterLink}
         />
