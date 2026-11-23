@@ -41,17 +41,25 @@ export const NoLiveData: Story = {
   },
 };
 
-/** With live data: the rows that changed lately carry the new mark. */
+/**
+ * With live data: the rows that changed lately carry the new mark. The rows that could carry one
+ * keep room for it, so the mark appearing moves nothing.
+ */
 export const WithFresh: Story = {
   args: {
     fresh: {
       pas: { ageDays: 2, lifeDays: 14 },
       'thread-quest': { ageDays: 5, lifeDays: 14 },
     },
+    live: { reserve: ['pas', 'atti', 'thread-quest'] },
   },
   globals: { viewport: { value: 'desktop' } },
   play: async ({ canvasElement }) => {
     await waitFor(() => expect(canvasElement.querySelectorAll('[data-new-label]').length).toBe(2));
+    // Atti could carry a mark but does not: its empty slot is as wide as a mark's readout.
+    const slot = row(canvasElement, 'atti').querySelector('[data-new-slot]')!;
+    const label = row(canvasElement, 'pas').querySelector('[data-new-label]')!;
+    await expect(slot.getBoundingClientRect().width).toBe(label.getBoundingClientRect().width);
   },
 };
 

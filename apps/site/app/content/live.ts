@@ -1,10 +1,11 @@
-import type {
-  FreshCandidate,
-  FreshMark,
-  LiveContent,
-  Project,
-  PublicProject,
-  StatusKey,
+import {
+  freshMark,
+  type FreshCandidate,
+  type FreshMark,
+  type LiveContent,
+  type Project,
+  type PublicProject,
+  type StatusKey,
 } from '@cwc/content';
 import type { Status } from '@cwc/ui';
 
@@ -64,6 +65,14 @@ export function freshCandidates(
     )
     .sort((a, b) => rank(a.id) - rank(b.id));
 }
+
+/**
+ * The candidates that could still carry a mark on `day` (the day of the build): their ids. A page
+ * keeps room for these rows' readouts at pre-render, so nothing shifts when a mark appears after
+ * hydration. A change that has already run out on the day of the build never comes back.
+ */
+export const markerSlots = (candidates: readonly FreshCandidate[], day: string): string[] =>
+  candidates.filter(({ fresh }) => freshMark(fresh, day) !== null).map(({ id }) => id);
 
 /** The numbers the UI's new markers take (`NewMarker`, `fresh` props), from a provider's mark. */
 export const toFreshProp = (
