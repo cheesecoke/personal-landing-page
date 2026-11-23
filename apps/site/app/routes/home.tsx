@@ -1,7 +1,74 @@
-import { pageTitle, PlaceholderPage, siteName } from '../shell/PlaceholderPage';
+import { FreshnessProvider, useFreshness } from '@cwc/content/react';
 
-export const meta = () => [{ title: pageTitle() }];
+import { handContent } from '../content/hand.server';
+import { freshCandidates, statusKeyTone, toFreshProp } from '../content/live';
+import { liveContent } from '../content/live.server';
+import { pageMeta } from '../content/meta';
+import { factKey, HomeTemplate, type HomeFresh, type HomeLive } from '../templates/HomeTemplate';
+import type { Route } from './+types/home';
 
-export default function Route() {
-  return <PlaceholderPage title={siteName} />;
+const named = <T,>(values: readonly (T | undefined)[]) =>
+  values.filter((value): value is T => value !== undefined);
+
+/**
+ * Home's hand content, and from live data only what the page shows: the status of each project
+ * the stump and the plates name, the facts the proof row names, and the plates' change dates.
+ */
+export function loader() {
+  const { home } = handContent();
+  const { projects } = liveContent();
+  const plateSlugs = named(home.ownTime.plates.map((plate) => plate.project));
+  const slugs = new Set([
+    ...named(home.hero.stump.projects.map((project) => project.project)),
+    ...plateSlugs,
+  ]);
+
+  const live: Required<HomeLive> = { status: {}, facts: {} };
+  for (const project of projects) {
+    if (slugs.has(project.slug)) {
+      live.status[project.slug] = {
+        label: project.status.label,
+        tone: statusKeyTone(project.status.key),
+      };
+    }
+  }
+  for (const { fact } of home.proof.items) {
+    const project = fact && projects.find((entry) => entry.slug === fact.project);
+    const counted =
+      project?.visibility === 'public'
+        ? project.facts.find((entry) => entry.key === fact?.key)
+        : undefined;
+    if (fact && counted) live.facts[factKey(fact)] = { value: counted.value, asOf: counted.asOf };
+  }
+
+  return {
+    content: home,
+    live,
+    candidates: freshCandidates(projects, plateSlugs).filter((candidate) =>
+      plateSlugs.includes(candidate.id),
+    ),
+  };
+}
+
+// Home's title is the site name alone.
+export const meta: Route.MetaFunction = ({ data }) =>
+  pageMeta({ description: data?.content.hero.lead });
+
+/** The plates' new marks, decided in the browser once the page has hydrated. */
+function HomePage({ content, live, candidates }: Route.ComponentProps['loaderData']) {
+  const { markFor } = useFreshness();
+  const fresh: HomeFresh = {};
+  for (const { id } of candidates) {
+    const mark = toFreshProp(markFor(id));
+    if (mark) fresh[id] = mark;
+  }
+  return <HomeTemplate content={content} live={live} fresh={fresh} />;
+}
+
+export default function Home({ loaderData }: Route.ComponentProps) {
+  return (
+    <FreshnessProvider candidates={loaderData.candidates}>
+      <HomePage {...loaderData} />
+    </FreshnessProvider>
+  );
 }
