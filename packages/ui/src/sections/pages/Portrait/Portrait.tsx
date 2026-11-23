@@ -199,6 +199,8 @@ export function Portrait({
                   muted
                   playsInline
                   aria-hidden="true"
+                  // Firefox makes every video a tab stop; these are picture, not controls.
+                  tabIndex={-1}
                 />
               ))
             : null}

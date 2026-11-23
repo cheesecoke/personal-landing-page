@@ -3,6 +3,7 @@ import { paragraphText } from '@cwc/content/hand';
 import { handContent } from '../content/hand.server';
 import { liveContent } from '../content/live.server';
 import { pageMeta } from '../content/meta';
+import { PreloadImage } from '../content/preload';
 import { AboutTemplate } from '../templates/AboutTemplate';
 import type { Route } from './+types/about';
 
@@ -25,10 +26,14 @@ export const meta: Route.MetaFunction = ({ data }) =>
 
 export default function About({ loaderData }: Route.ComponentProps) {
   return (
-    <AboutTemplate
-      content={loaderData.content}
-      now={loaderData.now}
-      currentRole={loaderData.currentRole}
-    />
+    <>
+      {/* The stump is the largest paint on this page. */}
+      <PreloadImage image={loaderData.content.rings.image} />
+      <AboutTemplate
+        content={loaderData.content}
+        now={loaderData.now}
+        currentRole={loaderData.currentRole}
+      />
+    </>
   );
 }

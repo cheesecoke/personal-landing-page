@@ -72,6 +72,55 @@ async function expectAligned(root: HTMLElement, id: string) {
   });
 }
 
+const direction = (root: HTMLElement, id: string) =>
+  root.querySelector(`[data-ring-connector="${id}"]`)?.getAttribute('data-direction');
+
+/**
+ * Stacked, the chapters sit below the image: the leader leaves the ring heading down, the one
+ * circle sits on its lower end, and the dotted line runs on from the circle to the marker.
+ */
+async function expectAlignedDown(root: HTMLElement, id: string) {
+  await waitFor(() => expect(direction(root, id)).toBe('down'));
+  await waitFor(() => {
+    const group = root.querySelector(`[data-ring-connector="${id}"]`)!;
+    const circles = group.querySelectorAll('circle');
+    const dot = box(circles[0]!);
+    const dotX = dot.left + dot.width / 2;
+    const dotY = dot.top + dot.height / 2;
+    const leaderGroup = root.querySelector(`[data-ring-leader="${id}"]`)!;
+    const line = leaderGroup.querySelector('line')!;
+    const leader = box(line);
+    const ringDot = box(leaderGroup.querySelector('circle')!);
+    const marker = box(root.querySelector(`[data-ring-marker="${id}"]`)!);
+    const markerY = marker.top + marker.height / 2;
+    const path = box(group.querySelector('path[mask]')!);
+    const image = box(root.querySelector('img')!.closest('[style*="aspect-ratio"]')!);
+
+    expect(circles.length).toBe(1);
+    // The leader is vertical and ends below its start, which is on the ring.
+    expect(leader.width).toBeLessThanOrEqual(0.5);
+    expect(line.y2.baseVal.value).toBeGreaterThan(line.y1.baseVal.value);
+    expect(Math.abs(ringDot.top + ringDot.height / 2 - leader.top)).toBeLessThanOrEqual(1.5);
+    // The circle is centred on the leader's lower end, inside the image, above the marker.
+    expect(Math.abs(dotX - leader.left)).toBeLessThanOrEqual(1.5);
+    expect(Math.abs(dotY - leader.bottom)).toBeLessThanOrEqual(1.5);
+    expect(dotY).toBeLessThanOrEqual(image.bottom);
+    expect(dotY).toBeLessThan(marker.top);
+    // The dotted line starts at the circle's centre and comes down to the marker's row, level
+    // with the marker, stopping at its edge (up to its 4px ring) and never past it.
+    expect(Math.abs(path.top - dotY)).toBeLessThanOrEqual(1.5);
+    expect(Math.abs(path.right - dotX)).toBeLessThanOrEqual(1.5);
+    expect(Math.abs(path.bottom - markerY)).toBeLessThanOrEqual(1.5);
+    expect(path.left).toBeLessThan(marker.left);
+    const d = group.querySelector('path[mask]')!.getAttribute('d')!;
+    const endX =
+      Number(/H(-?[\d.]+)$/.exec(d)![1]) +
+      box(root.querySelector('svg[data-ring-connectors]')!).left;
+    expect(marker.left - endX).toBeGreaterThanOrEqual(-0.5);
+    expect(marker.left - endX).toBeLessThanOrEqual(5);
+  });
+}
+
 /** The newest chapter is selected and open, as on the board. */
 export const Default: Story = {
   globals: { viewport: { value: 'desktop' } },
@@ -82,6 +131,13 @@ export const Default: Story = {
       'true',
     );
     await expectAligned(canvasElement, 'titan-intake');
+    // Beside the image the leader points right: it is level, and it ends right of its start.
+    await expect(direction(canvasElement, 'titan-intake')).toBe('right');
+    const line = canvasElement.querySelector<SVGLineElement>(
+      '[data-ring-leader="titan-intake"] line',
+    )!;
+    await expect(line.y2.baseVal.value).toBe(line.y1.baseVal.value);
+    await expect(line.x2.baseVal.value).toBeGreaterThan(line.x1.baseVal.value);
     // Only the selected chapter's connector shows.
     await expect(canvasElement.querySelectorAll('[data-ring-connector][data-on]').length).toBe(1);
   },
@@ -178,14 +234,56 @@ export const Reduced: Story = {
   },
 };
 
-/** Under 900px the image sits above the list and there is no connector. */
+/**
+ * Stacked (a narrow slot): the image sits above the list, so the leader points down and the
+ * connector runs down to the selected chapter's marker.
+ */
 export const Phone: Story = {
   globals: { viewport: { value: 'phone' } },
   play: async ({ canvasElement }) => {
-    const connectors = canvasElement.querySelector('[data-ring-connectors]')!;
-    await expect(getComputedStyle(connectors).display).toBe('none');
+    await expectAlignedDown(canvasElement, 'titan-intake');
+    await expect(canvasElement.querySelectorAll('[data-ring-connector][data-on]').length).toBe(1);
     await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth);
   },
 };
 
-export const Tablet: Story = { globals: { viewport: { value: 'tablet' } } };
+/** Stacked, the fire chapter: the downward leader and its connector are Ember too. */
+export const StackedWildlandFire: Story = {
+  args: { defaultSelected: 'wildland-fire' },
+  globals: { viewport: { value: 'phone' } },
+  play: async ({ canvasElement }) => {
+    await expectAlignedDown(canvasElement, 'wildland-fire');
+    const stroke = (selector: string) =>
+      getComputedStyle(canvasElement.querySelector(selector)!).stroke;
+    const ember = stroke('[data-ring-connector="wildland-fire"] path[mask]');
+    await expect(ember).not.toBe(stroke('[data-ring-connector="titan-intake"] path[mask]'));
+    await expect(stroke('[data-ring-leader="wildland-fire"] line')).toBe(ember);
+  },
+};
+
+/** Stacked: the connector follows the selection, and a chapter opening or closing above it. */
+export const StackedSelect: Story = {
+  globals: { viewport: { value: 'phone' }, motion: 'reduce' },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const truecar = canvas.getByRole('button', { name: /TrueCar/ });
+    await userEvent.click(truecar);
+    await expectAlignedDown(canvasElement, 'truecar');
+    await userEvent.click(truecar);
+    await expectAlignedDown(canvasElement, 'truecar');
+    await userEvent.click(canvas.getByRole('button', { name: /Roots/ }));
+    await expectAlignedDown(canvasElement, 'roots');
+    await expect(
+      getComputedStyle(canvasElement.querySelector('[data-ring-connector="roots"]')!)
+        .transitionDuration,
+    ).toBe('0s');
+  },
+};
+
+/** At tablet width the slot is still narrow, so this is the stacked layout too. */
+export const Tablet: Story = {
+  globals: { viewport: { value: 'tablet' } },
+  play: async ({ canvasElement }) => {
+    await expectAlignedDown(canvasElement, 'titan-intake');
+  },
+};
