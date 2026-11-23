@@ -7,6 +7,7 @@ import { handContent } from '../content/hand.server';
 import { freshCandidates, statusKeyTone, toFreshProp } from '../content/live';
 import { liveContent } from '../content/live.server';
 import { pageMeta } from '../content/meta';
+import { PreloadImage } from '../content/preload';
 import { factKey, HomeTemplate, type HomeFresh, type HomeLive } from '../templates/HomeTemplate';
 import { HomeTemplateMap } from '../templates/HomeTemplateMap';
 import type { Route } from './+types/home';
@@ -64,23 +65,6 @@ export function loader() {
 export const meta: Route.MetaFunction = ({ data }) =>
   pageMeta({ path: '/', description: data?.content.hero.lead });
 
-type HeroImage = Route.ComponentProps['loaderData']['content']['hero']['stump']['wide'];
-
-/** A preload for the format the browser will pick: the first modern source, else the fallback. */
-function preloadImage(image: HeroImage, media: string) {
-  const best = image.sources?.[0];
-  return (
-    <link
-      rel="preload"
-      as="image"
-      href={best?.src ?? image.src}
-      type={best?.type}
-      media={media}
-      fetchPriority="high"
-    />
-  );
-}
-
 /** The plates' new marks, decided in the browser once the page has hydrated. */
 function HomePage({ content, live, candidates, map }: Route.ComponentProps['loaderData']) {
   const { markFor, marks } = useFreshness();
@@ -96,8 +80,8 @@ function HomePage({ content, live, candidates, map }: Route.ComponentProps['load
   return (
     <>
       {/* The hero render is the largest paint: fetch the one this screen shows, early. */}
-      {preloadImage(wide, '(min-width: 900px)')}
-      {preloadImage(phone, '(max-width: 899.98px)')}
+      <PreloadImage image={wide} media="(min-width: 900px)" />
+      <PreloadImage image={phone} media="(max-width: 899.98px)" />
       <HomeTemplate
         content={content}
         live={live}
