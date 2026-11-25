@@ -15,6 +15,7 @@ const contact = {
 const entry = {
   label: 'Open it',
   dialog: { title: 'Go?', body: 'One line.', enter: 'Go', cancel: 'Stay' },
+  game: { label: 'A game', loading: 'Loading.', failed: 'It failed.', back: 'Back' },
 };
 
 describe('ContactContent', () => {

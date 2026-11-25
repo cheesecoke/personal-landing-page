@@ -18,6 +18,12 @@
         "body": "There is a short game on the other side. It takes about a minute.",
         "enter": "Enter",
         "cancel": "Not now"
+      },
+      "game": {
+        "label": "Portal dive",
+        "loading": "Loading the game.",
+        "failed": "The game did not load. Check your connection and try again.",
+        "back": "Back to Contact"
       }
     }
   },

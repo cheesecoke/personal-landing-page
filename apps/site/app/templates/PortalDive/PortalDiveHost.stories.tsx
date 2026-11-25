@@ -1,0 +1,170 @@
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { useState } from 'react';
+import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
+
+import { bestStore } from '@cwc/dive/react';
+
+import contact from '../../../content/hand/contact.json';
+import { PortalDiveHost, type PortalDiveHostProps } from './PortalDiveHost';
+
+const words = contact.portal.entry.game;
+
+/** A stand-in for the portal button, and the overlay it opens. */
+function Demo({ open: _open, onClose: _onClose, ...props }: PortalDiveHostProps) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="p-6">
+      <button
+        type="button"
+        data-demo-portal=""
+        className="min-h-touch cursor-pointer border border-hairline bg-transparent px-4 type-button text-primary"
+        onClick={() => setOpen(true)}
+      >
+        Open the portal
+      </button>
+      <PortalDiveHost open={open} onClose={() => setOpen(false)} {...props} />
+    </div>
+  );
+}
+
+/**
+ * The full-screen layer the Portal dive plays in, opened from the Contact page's portal. It loads
+ * the game's own chunk the first time it opens.
+ */
+const meta = {
+  title: 'Templates/PortalDiveHost',
+  component: PortalDiveHost,
+  parameters: { layout: 'fullscreen' },
+  args: {
+    open: false,
+    onClose: fn(),
+    mailto: 'mailto:hello@example.com',
+    words,
+    gameProps: { seed: 7, store: bestStore(null) },
+  },
+  render: (args) => <Demo {...args} />,
+} satisfies Meta<typeof PortalDiveHost>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+const portal = (root: HTMLElement) => root.querySelector<HTMLButtonElement>('[data-demo-portal]')!;
+const overlay = (root: HTMLElement) =>
+  root.ownerDocument.querySelector<HTMLDialogElement>('[data-portal-dive]')!;
+
+async function openOverlay(root: HTMLElement) {
+  await userEvent.click(portal(root));
+  const dialog = overlay(root);
+  await expect(dialog.open).toBe(true);
+  await expect(dialog.matches(':modal')).toBe(true);
+  await expect(dialog).toHaveAccessibleName(words.label);
+  await expect(document.documentElement.style.overflow).toBe('hidden');
+  const box = dialog.getBoundingClientRect();
+  await expect(box.width).toBe(window.innerWidth);
+  await expect(box.height).toBe(window.innerHeight);
+  return dialog;
+}
+
+async function closedToPortal(root: HTMLElement) {
+  await waitFor(() => expect(overlay(root).open).toBe(false));
+  await expect(portal(root)).toHaveFocus();
+  await expect(document.documentElement.style.overflow).toBe('');
+}
+
+// Never settles: the loading state stays on screen.
+const pending = () => new Promise<never>(() => {});
+const failing = () => Promise.reject(new Error('offline'));
+
+/** The real chunk: opens on the start screen with Start focused; Exit returns to the portal. */
+export const Open: Story = {
+  globals: { viewport: { value: 'desktop' } },
+  play: async ({ canvasElement }) => {
+    const dialog = await openOverlay(canvasElement);
+    const start = await within(dialog).findByRole('button', { name: 'Start' });
+    await waitFor(() => expect(start).toHaveFocus());
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Exit' }));
+    await closedToPortal(canvasElement);
+  },
+};
+
+/** Escape leaves at any time, mid-run included, and focus goes back to the portal. */
+export const Escape: Story = {
+  globals: { viewport: { value: 'desktop' } },
+  play: async ({ canvasElement }) => {
+    const dialog = await openOverlay(canvasElement);
+    await userEvent.click(await within(dialog).findByRole('button', { name: 'Start' }));
+    await userEvent.keyboard('{Escape}');
+    await closedToPortal(canvasElement);
+  },
+};
+
+/** "Back to Contact" on an end screen closes it too. */
+export const BackToContact: Story = {
+  args: {
+    gameProps: {
+      seed: 7,
+      store: bestStore(null),
+      preview: {
+        status: 'crashed',
+        ringsPassed: 9,
+        ringsTotal: 32,
+        ringsHit: 3,
+        livesLeft: 0,
+        elapsedMs: 15_000,
+        clean: false,
+      },
+    },
+  },
+  globals: { viewport: { value: 'desktop' } },
+  play: async ({ canvasElement }) => {
+    const dialog = await openOverlay(canvasElement);
+    // The loading view has a way back too: wait for the game's end screen.
+    await within(dialog).findByRole('button', { name: 'Dive again' });
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Back to Contact' }));
+    await closedToPortal(canvasElement);
+  },
+};
+
+/** While the chunk loads: one quiet line and a way back. */
+export const Loading: Story = {
+  args: { load: pending },
+  globals: { viewport: { value: 'desktop' } },
+  play: async ({ canvasElement }) => {
+    const dialog = await openOverlay(canvasElement);
+    await expect(within(dialog).getByRole('status')).toHaveTextContent(words.loading);
+    await userEvent.keyboard('{Escape}');
+    await closedToPortal(canvasElement);
+  },
+};
+
+/** The chunk did not load: say so, and go back. */
+export const Failed: Story = {
+  args: { load: failing },
+  globals: { viewport: { value: 'desktop' } },
+  play: async ({ canvasElement }) => {
+    const dialog = await openOverlay(canvasElement);
+    await waitFor(() => expect(within(dialog).getByRole('status')).toHaveTextContent(words.failed));
+    await userEvent.click(within(dialog).getByRole('button', { name: words.back }));
+    await closedToPortal(canvasElement);
+  },
+};
+
+/** On a phone the layer fills the screen exactly, and nothing scrolls sideways. */
+export const Phone: Story = {
+  globals: { viewport: { value: 'phone' } },
+  play: async ({ canvasElement }) => {
+    const dialog = await openOverlay(canvasElement);
+    await within(dialog).findByRole('button', { name: 'Start' });
+    await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth);
+  },
+};
+
+/** Reduced motion: no fade on the layer. */
+export const Reduced: Story = {
+  globals: { viewport: { value: 'desktop' }, motion: 'reduce' },
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(document.documentElement).toHaveAttribute('data-motion', 'reduce'));
+    const dialog = await openOverlay(canvasElement);
+    await expect(getComputedStyle(dialog).transitionDuration).toBe('0s');
+  },
+};
