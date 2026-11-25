@@ -1,0 +1,75 @@
+/*
+ * A small Raised panel in the middle of the view, with the page dimmed behind it. The dialog box
+ * is the panel itself (no padding), so a click whose target is the dialog landed on the backdrop.
+ */
+.dialog {
+  box-sizing: border-box;
+  width: min(100% - 2 * var(--gutter), 440px);
+  max-width: none;
+  max-height: calc(100dvh - 2 * var(--gutter));
+  margin: auto;
+  padding: 0;
+  overflow-y: auto;
+  border: 1px solid var(--line-hairline);
+  border-radius: var(--radius-panel);
+  background: var(--bg-raised);
+  box-shadow: var(--edge-panel);
+  color: var(--text-primary);
+  overscroll-behavior: contain;
+}
+
+.dialog::backdrop {
+  background: color-mix(in srgb, var(--bg-ground) 80%, transparent);
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 28px 28px 26px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+/* A calm arrival: the panel fades in and rises 8px while the page dims. */
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion='reduce']) .dialog {
+    transition:
+      opacity var(--duration-hover) var(--ease-out),
+      translate var(--duration-hover) var(--ease-out),
+      display var(--duration-hover) allow-discrete,
+      overlay var(--duration-hover) allow-discrete;
+  }
+
+  :root:not([data-motion='reduce']) .dialog:not([open]) {
+    opacity: 0;
+    translate: 0 8px;
+  }
+
+  :root:not([data-motion='reduce']) .dialog::backdrop {
+    transition:
+      opacity var(--duration-hover) var(--ease-out),
+      display var(--duration-hover) allow-discrete,
+      overlay var(--duration-hover) allow-discrete;
+  }
+
+  :root:not([data-motion='reduce']) .dialog:not([open])::backdrop {
+    opacity: 0;
+  }
+
+  @starting-style {
+    :root:not([data-motion='reduce']) .dialog[open] {
+      opacity: 0;
+      translate: 0 8px;
+    }
+
+    :root:not([data-motion='reduce']) .dialog[open]::backdrop {
+      opacity: 0;
+    }
+  }
+}

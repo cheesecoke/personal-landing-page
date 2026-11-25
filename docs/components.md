@@ -31,6 +31,7 @@ where it animates.
 | PortalSpiral      | Contact door portal; fills and stretches to its parent, `speed` | story   |
 | Panel             |                                                                 | in site |
 | Expander          |                                                                 | in site |
+| ConfirmDialog     | modal question with two answers (native `<dialog>`)             | story   |
 | Breadcrumb        |                                                                 | in site |
 | Caption           |                                                                 | in site |
 | Figure            |                                                                 | in site |

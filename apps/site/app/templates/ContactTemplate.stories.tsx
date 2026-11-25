@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect, within } from 'storybook/test';
+import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 
 import { ContactContent } from '@cwc/content/hand';
 
@@ -32,6 +32,43 @@ export const NoLiveData: Story = {
     // The thread is one piece: a rail, and the floor line it runs into.
     await expect(canvasElement.querySelectorAll('[data-thread]').length).toBe(1);
     await expect(canvasElement.querySelector('[data-contact-thread]')).not.toBeNull();
+    // The live page does not turn the portal on yet: it is decoration, with nothing to press.
+    await expect(canvasElement.querySelector('[data-contact-portal]')).toBeNull();
+    await expect(canvasElement.querySelector('[data-contact-door]')).toHaveAttribute(
+      'aria-hidden',
+      'true',
+    );
+  },
+};
+
+/**
+ * The portal turned on, as the page will have it once the game is wired: the words come from
+ * `contact.json`, and "Enter" calls `onEnterPortal`.
+ */
+export const PortalOn: Story = {
+  args: { onEnterPortal: fn() },
+  globals: { viewport: { value: 'desktop' } },
+  play: async ({ args, canvasElement }) => {
+    const button = within(canvasElement).getByRole('button', { name: 'Open the portal' });
+    await userEvent.click(button);
+    const dialog =
+      canvasElement.ownerDocument.querySelector<HTMLDialogElement>('[data-confirm-dialog]')!;
+    await expect(dialog.open).toBe(true);
+    await expect(dialog).toHaveAccessibleName('Step through?');
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Enter' }));
+    await waitFor(() => expect(dialog.open).toBe(false));
+    await expect(args.onEnterPortal).toHaveBeenCalledTimes(1);
+  },
+};
+
+export const PortalOnPhone: Story = {
+  args: { onEnterPortal: fn() },
+  globals: { viewport: { value: 'phone' } },
+  play: async ({ canvasElement }) => {
+    await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth);
+    await expect(
+      within(canvasElement).getByRole('button', { name: 'Open the portal' }),
+    ).toBeVisible();
   },
 };
 
