@@ -57,6 +57,22 @@ export const PortalEntry = z
         cancel: Text,
       })
       .strict(),
+    /**
+     * The overlay's words before the game itself has loaded. The game's own words live with its
+     * lazy chunk, not here: this file ends up in the page's HTML.
+     */
+    game: z
+      .object({
+        /** The overlay's accessible name. */
+        label: Text,
+        /** While the game loads. */
+        loading: Text,
+        /** When it did not load. */
+        failed: Text,
+        /** Leaves without playing. */
+        back: Text,
+      })
+      .strict(),
   })
   .strict();
 

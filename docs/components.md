@@ -94,7 +94,7 @@ where it animates.
 | FieldNotes        |                                                                     | in site |
 | TitanFlow         |                                                                     | in site |
 | BeyondSlots       |                                                                     | in site |
-| ContactDoor       | Contact copy and links beside the portal render, spiral in the ring | in site |
+| ContactDoor       | Contact links and portal; `portal` prop makes the opening a button  | in site |
 | HomeHandoff       | the "Next: Projects" hand-off closing Home                          | in site |
 | ProjectMapTeaser  | the frame around Home's tree teaser                                 | in site |
 | ProjectsMapSlot   | the full-width slot for the tree on Projects; lives in ProjectIndex | in site |
@@ -123,4 +123,5 @@ Each takes fixture data in Storybook and has a `NoLiveData` story.
 | AboutTemplate                | in site           |
 | BeyondTemplate               | in site           |
 | ContactTemplate              | in site           |
+| PortalDiveHost               | in site           |
 | NotFound (`PlaceholderPage`) | in site, no story |

@@ -153,6 +153,9 @@ importers:
       '@cwc/content':
         specifier: workspace:*
         version: link:../../packages/content
+      '@cwc/dive':
+        specifier: workspace:*
+        version: link:../../packages/dive
       '@cwc/tokens':
         specifier: workspace:*
         version: link:../../packages/tokens
