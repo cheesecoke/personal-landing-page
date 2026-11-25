@@ -1,7 +1,8 @@
-import { useState, type CSSProperties, type ReactNode } from 'react';
+import { useRef, useState, type CSSProperties, type ReactNode } from 'react';
 
 import { Thread, ThreadColumn, ThreadNode } from '../../../layout';
 import {
+  ConfirmDialog,
   cx,
   Heading,
   Label,
@@ -34,6 +35,30 @@ export interface ContactDoorImage {
   sources?: readonly PictureSource[];
 }
 
+/** The words of the "Enter?" question the portal asks before it lets the reader through. */
+export interface ContactDoorPortalDialog {
+  /** A short question ("Step through?"). */
+  title: string;
+  /** One line under it. */
+  body: string;
+  /** The primary answer ("Enter"). */
+  enter: string;
+  /** The quiet answer ("Not now"). */
+  cancel: string;
+}
+
+/**
+ * Makes the ring's opening a button. Pressing it asks `dialog`; "Enter" closes the question and
+ * calls `onEnter`. Without it the portal is decoration only.
+ */
+export interface ContactDoorPortal {
+  /** The button's accessible name ("Open the portal"). */
+  label: string;
+  dialog: ContactDoorPortalDialog;
+  /** The reader chose to go through. */
+  onEnter: () => void;
+}
+
 export interface ContactDoorProps {
   /** The page title ("The door is open."). */
   title: ReactNode;
@@ -50,6 +75,11 @@ export interface ContactDoorProps {
    * it off only to show the section without its page column. Default `true`.
    */
   thread?: boolean;
+  /**
+   * Turns the ring's opening into a button that asks before it lets the reader through. Without
+   * it the portal is decoration, hidden from assistive technology.
+   */
+  portal?: ContactDoorPortal;
   className?: string;
 }
 
@@ -57,7 +87,9 @@ const percent = (value: number, total: number) => `${((value / total) * 100).toF
 
 /**
  * The Contact page: the title, a line and the links, with the portal beside them: a rendered ring
- * with the spiral turning in its opening, faster while the pointer is over it. The thread does not
+ * with the spiral turning in its opening, faster while the pointer is over it. With `portal`, the
+ * opening is a button (the spiral speeds up on its hover and focus) that opens a small "Enter?"
+ * dialog; the render itself stays decoration. The thread does not
  * stop at the foot of the page: it turns along the floor and plugs into the portal's power unit.
  * Place it straight inside the page `Container`; it brings its own thread column.
  */
@@ -69,9 +101,14 @@ export function ContactDoor({
   image,
   scene = portalScene,
   thread = true,
+  portal,
   className,
 }: ContactDoorProps) {
   const [hover, setHover] = useState(false);
+  const [focus, setFocus] = useState(false);
+  const [asking, setAsking] = useState(false);
+  const portalButton = useRef<HTMLButtonElement>(null);
+  const active = hover || focus || asking;
   const { width, height, opening, plug } = scene;
   // The scene's numbers, as fractions of the render, for the layout to size and place from.
   const sceneVars = {
@@ -84,6 +121,13 @@ export function ContactDoor({
     top: percent(opening.cy - opening.ry, height),
     width: percent(opening.rx * 2, width),
     height: percent(opening.ry * 2, height),
+  };
+  // The button: the opening grown by `--reach` (set in the CSS) on every side.
+  const portalBox: CSSProperties = {
+    left: `calc(${openingBox.left} - var(--reach))`,
+    top: `calc(${openingBox.top} - var(--reach))`,
+    width: `calc(${openingBox.width} + 2 * var(--reach))`,
+    height: `calc(${openingBox.height} + 2 * var(--reach))`,
   };
   return (
     <ThreadColumn placement="column" className={cx(styles.column, className)} style={sceneVars}>
@@ -137,11 +181,17 @@ export function ContactDoor({
           </ul>
         </div>
 
-        <div aria-hidden="true" data-contact-door="" className={styles.scene}>
+        {/* Decoration, unless it holds the portal button: the render and spiral are then hidden on
+            their own (an empty alt, an aria-hidden svg), and only the button is exposed. */}
+        <div aria-hidden={portal ? undefined : true} data-contact-door="" className={styles.scene}>
           <div
-            className={styles.stage}
-            onPointerEnter={() => setHover(true)}
-            onPointerLeave={() => setHover(false)}
+            className={cx(styles.stage, portal && styles.enterable)}
+            {...(portal
+              ? null
+              : {
+                  onPointerEnter: () => setHover(true),
+                  onPointerLeave: () => setHover(false),
+                })}
           >
             <Picture sources={image.sources}>
               <img
@@ -154,8 +204,24 @@ export function ContactDoor({
               />
             </Picture>
             <div className={styles.opening} style={openingBox}>
-              <PortalSpiral speed={hover ? 'active' : 'rest'} className={styles.spiral} />
+              <PortalSpiral speed={active ? 'active' : 'rest'} className={styles.spiral} />
             </div>
+            {portal ? (
+              <button
+                ref={portalButton}
+                type="button"
+                aria-label={portal.label}
+                aria-haspopup="dialog"
+                data-contact-portal=""
+                className={styles.portal}
+                style={portalBox}
+                onPointerEnter={() => setHover(true)}
+                onPointerLeave={() => setHover(false)}
+                onFocus={() => setFocus(true)}
+                onBlur={() => setFocus(false)}
+                onClick={() => setAsking(true)}
+              />
+            ) : null}
           </div>
           {thread ? (
             <div data-contact-thread="" className={styles.floor}>
@@ -164,6 +230,21 @@ export function ContactDoor({
           ) : null}
         </div>
       </section>
+      {portal ? (
+        <ConfirmDialog
+          open={asking}
+          title={portal.dialog.title}
+          body={portal.dialog.body}
+          confirmLabel={portal.dialog.enter}
+          cancelLabel={portal.dialog.cancel}
+          returnFocusRef={portalButton}
+          onCancel={() => setAsking(false)}
+          onConfirm={() => {
+            setAsking(false);
+            portal.onEnter();
+          }}
+        />
+      ) : null}
     </ThreadColumn>
   );
 }

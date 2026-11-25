@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect, userEvent, waitFor, within } from 'storybook/test';
+import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 
 import { Container, ThreadScope } from '../../../layout';
-import { ContactDoor } from './ContactDoor';
+import { ContactDoor, type ContactDoorPortal } from './ContactDoor';
 import { portalScene } from './scene';
 import { portalArt } from './storyArt';
 
@@ -119,6 +119,9 @@ export const Default: Story = {
       'aria-hidden',
       'true',
     );
+    // Without a portal there is nothing to press.
+    await expect(canvasElement.querySelector('[data-contact-portal]')).toBeNull();
+    await expect(canvasElement.ownerDocument.querySelector('[data-confirm-dialog]')).toBeNull();
   },
 };
 
@@ -183,5 +186,201 @@ export const NoThread: Story = {
   play: async ({ canvasElement }) => {
     await expect(canvasElement.querySelector('[data-thread]')).toBeNull();
     await expect(canvasElement.querySelector('[data-contact-thread]')).toBeNull();
+  },
+};
+
+const portal: ContactDoorPortal = {
+  label: 'Open the portal',
+  dialog: {
+    title: 'Step through?',
+    body: 'There is a short game on the other side. It takes about a minute.',
+    enter: 'Enter',
+    cancel: 'Not now',
+  },
+  onEnter: fn(),
+};
+
+const portalButton = (root: HTMLElement) =>
+  within(root).getByRole('button', { name: 'Open the portal' });
+const spiralOf = (root: HTMLElement) => root.querySelector('[data-contact-door] svg')!;
+const dialogOf = (root: HTMLElement) =>
+  root.ownerDocument.querySelector<HTMLDialogElement>('[data-confirm-dialog]')!;
+
+/** Tabs from the top of the page until the portal button has focus. */
+async function tabToPortal(root: HTMLElement) {
+  const button = portalButton(root);
+  for (let i = 0; i < 8 && document.activeElement !== button; i += 1) await userEvent.tab();
+  await expect(button).toHaveFocus();
+  return button;
+}
+
+async function openPortal(root: HTMLElement) {
+  const button = portalButton(root);
+  await userEvent.click(button);
+  const dialog = dialogOf(root);
+  await expect(dialog.open).toBe(true);
+  await expect(dialog).toHaveAccessibleName('Step through?');
+  await expect(within(dialog).getByRole('button', { name: 'Enter' })).toHaveFocus();
+  await expect(document.documentElement.style.overflow).toBe('hidden');
+  return dialog;
+}
+
+async function closedToPortal(root: HTMLElement) {
+  await waitFor(() => expect(dialogOf(root).open).toBe(false));
+  await expect(portalButton(root)).toHaveFocus();
+  await expect(document.documentElement.style.overflow).toBe('');
+}
+
+/**
+ * With a portal: the opening is a button, a touch more than the ellipse all round. The render is
+ * still decoration; only the button is exposed.
+ */
+export const Portal: Story = {
+  args: { portal },
+  globals: { viewport: { value: 'desktop' } },
+  play: async ({ canvasElement }) => {
+    const scene = canvasElement.querySelector('[data-contact-door]')!;
+    await expect(scene).not.toHaveAttribute('aria-hidden');
+    const button = portalButton(canvasElement);
+    await expect(button).toHaveAttribute('aria-haspopup', 'dialog');
+    await expect(scene.querySelector('img')).toHaveAttribute('alt', '');
+    await expect(spiralOf(canvasElement)).toHaveAttribute('aria-hidden', 'true');
+    await expect(scene.querySelectorAll('a, button, [tabindex]')).toHaveLength(1);
+    await expect(getComputedStyle(button).cursor).toBe('pointer');
+    // The button covers the opening with room to spare, and the spiral still sits in the opening.
+    const box = button.getBoundingClientRect();
+    const opening = spiralOf(canvasElement).getBoundingClientRect();
+    await expect(box.left).toBeLessThan(opening.left);
+    await expect(box.right).toBeGreaterThan(opening.right);
+    await expect(box.top).toBeLessThan(opening.top);
+    await expect(box.bottom).toBeGreaterThan(opening.bottom);
+    await expect(openingGap(canvasElement)).toBeLessThanOrEqual(1);
+    await expect(dialogOf(canvasElement).open).toBe(false);
+  },
+};
+
+/** The pointer on the opening speeds the spiral up; elsewhere on the render it does not. */
+export const PortalHover: Story = {
+  args: { portal },
+  globals: { viewport: { value: 'desktop' } },
+  play: async ({ canvasElement }) => {
+    const spiral = spiralOf(canvasElement);
+    const stage = spiral.closest('[data-contact-door] > div')!;
+    // The render does not take the pointer at all; only the opening does.
+    await expect(getComputedStyle(stage).pointerEvents).toBe('none');
+    await userEvent.hover(canvasElement.querySelector('h1')!);
+    await expect(spiral).toHaveAttribute('data-speed', 'rest');
+    await userEvent.hover(portalButton(canvasElement));
+    await waitFor(() => expect(spiral).toHaveAttribute('data-speed', 'active'));
+    await userEvent.unhover(portalButton(canvasElement));
+    await waitFor(() => expect(spiral).toHaveAttribute('data-speed', 'rest'));
+  },
+};
+
+/** Keyboard focus on the opening speeds the spiral up and draws the ring round the ellipse. */
+export const PortalFocus: Story = {
+  args: { portal },
+  globals: { viewport: { value: 'desktop' } },
+  play: async ({ canvasElement }) => {
+    const spiral = spiralOf(canvasElement);
+    const button = await tabToPortal(canvasElement);
+    await waitFor(() => expect(spiral).toHaveAttribute('data-speed', 'active'));
+    const style = getComputedStyle(button);
+    await expect(style.outlineStyle).toBe('solid');
+    await expect(style.borderTopLeftRadius).toBe('50%');
+    await userEvent.tab();
+    await waitFor(() => expect(spiral).toHaveAttribute('data-speed', 'rest'));
+  },
+};
+
+/** Pressing it asks first: the dialog opens with focus on "Enter". */
+export const PortalOpen: Story = {
+  args: { portal },
+  globals: { viewport: { value: 'desktop' } },
+  play: async ({ canvasElement }) => {
+    await openPortal(canvasElement);
+    await expect(portal.onEnter).not.toHaveBeenCalled();
+  },
+};
+
+/** "Enter" closes the question and calls the handler once. */
+export const PortalEnter: Story = {
+  args: { portal: { ...portal, onEnter: fn() } },
+  globals: { viewport: { value: 'desktop' } },
+  play: async ({ args, canvasElement }) => {
+    const dialog = await openPortal(canvasElement);
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Enter' }));
+    await waitFor(() => expect(dialog.open).toBe(false));
+    await expect(args.portal!.onEnter).toHaveBeenCalledTimes(1);
+  },
+};
+
+/** "Not now" closes it and focus goes back to the portal. */
+export const PortalCancel: Story = {
+  args: { portal: { ...portal, onEnter: fn() } },
+  globals: { viewport: { value: 'desktop' } },
+  play: async ({ args, canvasElement }) => {
+    const dialog = await openPortal(canvasElement);
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Not now' }));
+    await closedToPortal(canvasElement);
+    await expect(args.portal!.onEnter).not.toHaveBeenCalled();
+  },
+};
+
+/** Escape closes it and focus goes back to the portal. */
+export const PortalEscape: Story = {
+  args: { portal: { ...portal, onEnter: fn() } },
+  globals: { viewport: { value: 'desktop' } },
+  play: async ({ args, canvasElement }) => {
+    await tabToPortal(canvasElement);
+    await userEvent.keyboard('{Enter}');
+    await expect(dialogOf(canvasElement).open).toBe(true);
+    await userEvent.keyboard('{Escape}');
+    await closedToPortal(canvasElement);
+    await expect(args.portal!.onEnter).not.toHaveBeenCalled();
+  },
+};
+
+/** A click on the dimmed page behind closes it. */
+export const PortalBackdrop: Story = {
+  args: { portal: { ...portal, onEnter: fn() } },
+  globals: { viewport: { value: 'desktop' } },
+  play: async ({ args, canvasElement }) => {
+    const dialog = await openPortal(canvasElement);
+    await userEvent.pointer({
+      keys: '[MouseLeft]',
+      target: dialog,
+      coords: { clientX: 4, clientY: 4 },
+    });
+    await closedToPortal(canvasElement);
+    await expect(args.portal!.onEnter).not.toHaveBeenCalled();
+  },
+};
+
+/** On a phone the opening is still a large target and the question fits the screen. */
+export const PortalPhone: Story = {
+  args: { portal },
+  globals: { viewport: { value: 'phone' } },
+  play: async ({ canvasElement }) => {
+    const box = portalButton(canvasElement).getBoundingClientRect();
+    await expect(box.width).toBeGreaterThanOrEqual(44);
+    await expect(box.height).toBeGreaterThanOrEqual(44);
+    await expect(openingGap(canvasElement)).toBeLessThanOrEqual(1);
+    const dialog = await openPortal(canvasElement);
+    const panel = dialog.getBoundingClientRect();
+    await expect(panel.left).toBeGreaterThanOrEqual(16);
+    await expect(panel.right).toBeLessThanOrEqual(window.innerWidth - 16);
+    await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth);
+  },
+};
+
+/** Reduced motion: the spiral is a still frame, and the dialog appears without a fade. */
+export const PortalReduced: Story = {
+  args: { portal },
+  globals: { motion: 'reduce', viewport: { value: 'desktop' } },
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(document.documentElement).toHaveAttribute('data-motion', 'reduce'));
+    const dialog = await openPortal(canvasElement);
+    await expect(getComputedStyle(dialog).transitionDuration).toBe('0s');
   },
 };

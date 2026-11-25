@@ -165,6 +165,46 @@
 }
 
 /*
+ * With a portal: only the opening takes the pointer, so the render does not cover the copy. The
+ * button is the opening's ellipse grown by a margin all round (and never under the touch target),
+ * so it is easy to hit; its focus ring follows the ellipse.
+ */
+.enterable {
+  pointer-events: none;
+}
+
+.portal {
+  --reach: 14px;
+
+  position: absolute;
+  box-sizing: border-box;
+  min-width: var(--touch-target);
+  min-height: var(--touch-target);
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+/*
+ * The ring is drawn just inside the opening, on its dark: outside it would land on the rim's own
+ * teal lines and vanish.
+ */
+.portal:focus-visible {
+  outline-offset: calc(-1 * var(--reach) - 10px);
+}
+
+/*
+ * The affordance: while the button has the pointer or focus, the shadow inside the rim lifts a
+ * little, so the spiral reads brighter and nearer, as if the opening were drawing you in.
+ */
+.enterable:has(.portal:hover, .portal:focus-visible) .opening::after {
+  opacity: 0.45;
+}
+
+/*
  * The thread along the floor: from the rail to the toe of the power unit, where it plugs in. It
  * brightens as it nears the plug.
  */
@@ -217,5 +257,9 @@
 
   :root:not([data-motion='reduce']) .plain {
     transition: color var(--duration-hover);
+  }
+
+  :root:not([data-motion='reduce']) .opening::after {
+    transition: opacity var(--duration-hover) var(--ease-out);
   }
 }
