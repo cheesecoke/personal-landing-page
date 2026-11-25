@@ -1,0 +1,149 @@
+/*
+ * The spiral portal. Teal lines with one warm arm and one warm ring, a bright core, edges that
+ * fade so it melts into whatever opening it sits in. Transparent: it is drawn over an image.
+ *
+ * Motion is transform and opacity only, inside the reduced-motion guard. The component eases the
+ * animations' playback rate when its `speed` changes, so the times here are the rest speed.
+ */
+
+.portal {
+  /* One full turn of the arms, at rest. */
+  --portal-turn: calc(var(--duration-thread-pulse) * 8);
+
+  /* One ring's trip from the rim to the centre, at rest. */
+  --portal-flow: calc(var(--duration-thread-pulse) * 1.2);
+
+  /* How long a change of speed takes to settle. Read by the component. */
+  --portal-ramp: var(--duration-nav);
+
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  mask-image: radial-gradient(closest-side, black 74%, transparent 100%);
+}
+
+.stopCool {
+  stop-color: var(--accent-signal);
+}
+
+.stopWarm {
+  stop-color: var(--accent-warm);
+}
+
+/* The fixed rings: faint, dashed, like the rings on the floor round the stump. */
+.depth {
+  stroke: var(--thread-line);
+  stroke-width: 1;
+  stroke-dasharray: 2 7;
+  opacity: 0.45;
+}
+
+/* With `view-box`, 0 0 is the drawing's own origin: the centre of the portal. */
+.spin,
+.ring {
+  transform-box: view-box;
+  transform-origin: 0 0;
+}
+
+.ring {
+  stroke-width: 1.25;
+  opacity: calc(0.35 + (1 - var(--rest)) * 0.6);
+  transform: scale(var(--rest));
+}
+
+.cool {
+  stroke: var(--accent-signal);
+}
+
+.warm {
+  stroke: var(--accent-warm);
+}
+
+.arm {
+  stroke-width: 1;
+  stroke-linecap: round;
+}
+
+/* A wider, faint copy under each ring: its glow. */
+.ringGlow {
+  stroke-width: 5;
+  opacity: 0.18;
+}
+
+/* A wider, faint copy under each arm: the glow, without an animated filter. */
+.armGlow {
+  stroke-width: 4;
+  stroke-linecap: round;
+  opacity: 0.1;
+}
+
+.dot {
+  fill: var(--text-primary);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion='reduce']) .spin {
+    animation: portal-turn var(--portal-turn) linear infinite;
+  }
+
+  :root:not([data-motion='reduce']) .ring {
+    animation: portal-flow var(--portal-flow) linear infinite;
+    animation-delay: calc(var(--portal-flow) * var(--delay));
+  }
+}
+
+@keyframes portal-turn {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+/*
+ * A ring receding down the tunnel: its size falls as (1 - p) / (1 + 3p), so it shrinks fast at the
+ * rim and slowly near the centre, and the rings crowd toward the core the way depth does. The
+ * curve is in the stops; the timing is linear.
+ */
+@keyframes portal-flow {
+  0% {
+    opacity: 0;
+    transform: scale(1);
+  }
+
+  12.5% {
+    opacity: 0.75;
+    transform: scale(0.636);
+  }
+
+  25% {
+    transform: scale(0.429);
+  }
+
+  37.5% {
+    transform: scale(0.294);
+  }
+
+  50% {
+    transform: scale(0.2);
+  }
+
+  62.5% {
+    opacity: 1;
+    transform: scale(0.13);
+  }
+
+  75% {
+    transform: scale(0.077);
+  }
+
+  87.5% {
+    opacity: 0.6;
+    transform: scale(0.035);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+}
