@@ -4,3 +4,14 @@ export { angleDelta, inGap, TAU, wrapAngle } from './angle';
 export { DIVE_CONFIG, type DiveConfig, type DiveProfile } from './config';
 export { buildCourse, ringPairIsPassable, speedAt, type Ring } from './course';
 export { createRng, type Rng } from './rng';
+export {
+  createRun,
+  startRun,
+  step,
+  type DiveEvent,
+  type DiveInput,
+  type DiveOptions,
+  type DiveState,
+  type DiveStatus,
+  type UpcomingRing,
+} from './run';
