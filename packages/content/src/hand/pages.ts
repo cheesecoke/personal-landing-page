@@ -38,12 +38,14 @@ export const BeyondContent = z
   })
   .strict();
 
-/** Contact: one line, and the ways to reach Chase. */
+/** Contact: one line, the ways to reach Chase, and the portal render beside them. */
 export const ContactContent = z
   .object({
     schemaVersion: SchemaVersion,
     title: Text,
     header: z.object({ title: Text, lead: Text }).strict(),
+    /** The portal: decoration, so its `alt` is empty. */
+    portal: Image,
     channels: z
       .array(
         z

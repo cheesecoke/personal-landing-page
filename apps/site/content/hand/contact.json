@@ -5,6 +5,13 @@
     "title": "The door is open.",
     "lead": "Building with agents, or want to compare notes? Write to me."
   },
+  "portal": {
+    "src": "/media/portal/portal-ring.webp",
+    "width": 1600,
+    "height": 1024,
+    "alt": "",
+    "sources": [{ "src": "/media/portal/portal-ring.avif", "type": "image/avif" }]
+  },
   "channels": [
     {
       "name": "Email",
