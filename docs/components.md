@@ -70,6 +70,7 @@ where it animates.
 | ProjectPlates     |                                                                     | in site |
 | ProjectTile       | with ProjectStateBadge                                              | in site |
 | Canopy            | `teaser` (Home), `full` (Projects); lives in `packages/canopy`      | in site |
+| DiveGame          | Portal dive renderer and controls; lives in `packages/dive/react`   | story   |
 | ProjectIndex      | rows with ProjectStateBadge + NewMarker                             | in site |
 | WhereItsAt        |                                                                     | in site |
 | CaptainsLog       | log entries on the thread, newest first                             | in site |
