@@ -41,6 +41,20 @@ if (leaked.length > 0) {
   throw new Error(`postbuild: an author's marker is in ${leaked.join(', ')}`);
 }
 
+// The Portal dive's hidden note is only for people who win: it lives in the game's lazy chunk and
+// must never be in a page's HTML or data.
+const diveNote = readFileSync(
+  join(import.meta.dirname, '..', 'app', 'templates', 'PortalDive', 'copy.ts'),
+  'utf8',
+).match(/\bnote:\s*'([^']+)'/)?.[1];
+if (!diveNote) throw new Error('postbuild: could not read the Portal dive note from its copy file');
+const noteIn = readdirSync(out, { recursive: true, encoding: 'utf8' })
+  .filter((file) => /\.(html|data)$/.test(file))
+  .filter((file) => readFileSync(join(out, file), 'utf8').includes(diveNote));
+if (noteIn.length > 0) {
+  throw new Error(`postbuild: the Portal dive note is in ${noteIn.join(', ')}`);
+}
+
 // The sitemap lists each page's canonical address, read back from its HTML, so the two cannot
 // disagree. robots.txt points at it.
 const canonical = (path) => {
