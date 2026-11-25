@@ -21,6 +21,7 @@
   "devDependencies": {
     "@cwc/canopy": "workspace:*",
     "@cwc/content": "workspace:*",
+    "@cwc/dive": "workspace:*",
     "@cwc/tokens": "workspace:*",
     "@cwc/ui": "workspace:*",
     "@react-router/dev": "^7.18.6",
