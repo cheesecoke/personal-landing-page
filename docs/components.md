@@ -92,7 +92,7 @@ where it animates.
 | FieldNotes        |                                                                     | in site |
 | TitanFlow         |                                                                     | in site |
 | BeyondSlots       |                                                                     | in site |
-| ContactDoor       |                                                                     | in site |
+| ContactDoor       | Contact copy and links beside the portal render, spiral in the ring | in site |
 | HomeHandoff       | the "Next: Projects" hand-off closing Home                          | in site |
 | ProjectMapTeaser  | the frame around Home's tree teaser                                 | in site |
 | ProjectsMapSlot   | the full-width slot for the tree on Projects; lives in ProjectIndex | in site |

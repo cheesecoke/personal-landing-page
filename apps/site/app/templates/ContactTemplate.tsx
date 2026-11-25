@@ -7,7 +7,7 @@ export interface ContactTemplateProps {
 }
 
 /**
- * Contact: the title, one line and the ways to reach Chase, beside the open door. The door brings
+ * Contact: the title, one line and the ways to reach Chase, beside the portal. The section brings
  * the page's thread with it, and the page ends there: no hand-off.
  */
 export function ContactTemplate({ content }: ContactTemplateProps) {
@@ -17,6 +17,7 @@ export function ContactTemplate({ content }: ContactTemplateProps) {
         <ContactDoor
           title={content.header.title}
           lead={content.header.lead}
+          image={content.portal}
           links={content.channels.map((channel) => ({
             label: channel.name,
             text: channel.label,
