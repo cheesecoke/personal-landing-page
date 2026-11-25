@@ -34,6 +34,12 @@ export {
 } from './RingArcs/RingArcs';
 
 export { RingMark, type RingMarkDetail, type RingMarkProps } from './RingMark/RingMark';
+export {
+  PortalSpiral,
+  PORTAL_ACTIVE_RATE,
+  type PortalSpiralProps,
+  type PortalSpiralSpeed,
+} from './PortalSpiral/PortalSpiral';
 export { Favicon, faviconLinks, type FaviconProps, type FaviconSize } from './Favicon/Favicon';
 
 export { Panel, type PanelProps } from './Panel/Panel';
