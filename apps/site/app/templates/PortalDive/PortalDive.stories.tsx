@@ -4,7 +4,9 @@ import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { bestStore, type BestResult, type DiveResult } from '@cwc/dive/react';
 
 import { diveCopy } from './copy';
+import { FakeAudio } from './fakeAudio';
 import PortalDive from './PortalDive';
+import { SOUND_KEY, soundStore } from './sound';
 
 /** A Storage stand-in. `blocked` throws on every call, as private modes and settings can. */
 function storage(initial?: BestResult, blocked = false): Storage {
@@ -27,6 +29,26 @@ function storage(initial?: BestResult, blocked = false): Storage {
 }
 const store = (initial?: BestResult, blocked = false) =>
   bestStore(storage(initial, blocked), 'best');
+
+/** The sound choice over its own stand-in storage, so a story can read what was kept. */
+function sound(initial?: 'on' | 'off') {
+  const s = storage();
+  if (initial) s.setItem(SOUND_KEY, initial);
+  return { storage: s, store: soundStore(s, SOUND_KEY) };
+}
+
+/** A silent audio element for each mount, and the last one made (stories never play sound). */
+function silentAudio(canPlay?: (type: string) => string) {
+  let last: FakeAudio | null = null;
+  return {
+    factory: () => {
+      last = new FakeAudio();
+      if (canPlay) last.canPlay = canPlay;
+      return last;
+    },
+    last: () => last,
+  };
+}
 
 const crashed: DiveResult = {
   status: 'crashed',
@@ -61,6 +83,7 @@ const meta = {
     linkedin: 'https://example.com/in/someone',
     onExit: fn(),
     seed: 7,
+    audio: () => new FakeAudio(),
   },
   decorators: [
     (Story) => (
@@ -245,5 +268,117 @@ export const Reduced: Story = {
         'true',
       ),
     );
+  },
+};
+
+const soundButton = (root: HTMLElement) =>
+  root.querySelector<HTMLButtonElement>('[data-dive-sound]')!;
+
+const soundOn = sound();
+const audioOn = silentAudio();
+/**
+ * The sound button, beside Exit: on by default, a 44px square, first in the tab order (before
+ * the game), with a line on the start screen saying there is music. A press turns it off, says
+ * so in `aria-pressed` and its name, and keeps the choice.
+ */
+export const Sound: Story = {
+  args: { store: store(), sound: soundOn.store, audio: audioOn.factory },
+  globals: desktop,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const button = canvas.getByRole('button', { name: diveCopy.sound.turnOff });
+    await expect(button).toHaveAttribute('aria-pressed', 'true');
+    await expect(button.getBoundingClientRect().height).toBeGreaterThanOrEqual(44);
+    await expect(button.getBoundingClientRect().width).toBeGreaterThanOrEqual(44);
+    await expect(canvas.getByText(diveCopy.soundNote)).toBeVisible();
+    // Before the game in the tab order: the first thing that takes focus in the overlay.
+    const game = canvasElement.querySelector('section[aria-label]')!;
+    await expect(
+      button.compareDocumentPosition(game) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    // The track is fetched at mount, but nothing plays on the start screen.
+    await waitFor(() => expect(audioOn.last()?.preload).toBe('auto'));
+    await expect(audioOn.last()?.paused).toBe(true);
+
+    await userEvent.click(button);
+    await expect(button).toHaveAttribute('aria-pressed', 'false');
+    await expect(button).toHaveAccessibleName(diveCopy.sound.turnOn);
+    await expect(soundOn.storage.getItem(SOUND_KEY)).toBe('off');
+    await userEvent.click(button);
+    await expect(button).toHaveAttribute('aria-pressed', 'true');
+    await expect(soundOn.storage.getItem(SOUND_KEY)).toBe('on');
+  },
+};
+
+const audioStart = silentAudio();
+/** Start is the gesture: the music begins with it, quiet and fading in. */
+export const SoundStartsOnStart: Story = {
+  args: { store: store(), sound: sound().store, audio: audioStart.factory },
+  globals: desktop,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(await canvas.findByRole('button', { name: 'Start' }));
+    const audio = audioStart.last()!;
+    await expect(audio.paused).toBe(false);
+    await expect(audio.loop).toBe(true);
+    await waitFor(() => expect(audio.volume).toBeCloseTo(0.25, 5), { timeout: 3000 });
+  },
+};
+
+const offStore = sound('off');
+const audioOff = silentAudio();
+/** A kept "off" is respected: the button starts unpressed and Start stays silent. */
+export const SoundStoredOff: Story = {
+  args: { store: store(), sound: offStore.store, audio: audioOff.factory },
+  globals: desktop,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const button = canvas.getByRole('button', { name: diveCopy.sound.turnOn });
+    await expect(button).toHaveAttribute('aria-pressed', 'false');
+    await userEvent.click(await canvas.findByRole('button', { name: 'Start' }));
+    await expect(audioOff.last()?.paused).toBe(true);
+    await expect(audioOff.last()?.src).toBe('');
+  },
+};
+
+const keyStore = sound();
+/** M toggles the sound while the overlay is open, but not while typing in a field. */
+export const SoundKey: Story = {
+  args: { store: store(), sound: keyStore.store },
+  globals: desktop,
+  play: async ({ canvasElement }) => {
+    const button = soundButton(canvasElement);
+    await expect(button).toHaveAttribute('aria-pressed', 'true');
+    await userEvent.keyboard('m');
+    await expect(button).toHaveAttribute('aria-pressed', 'false');
+    await expect(keyStore.storage.getItem(SOUND_KEY)).toBe('off');
+    await userEvent.keyboard('M');
+    await expect(button).toHaveAttribute('aria-pressed', 'true');
+
+    const field = document.createElement('input');
+    field.setAttribute('aria-label', 'A field');
+    canvasElement.append(field);
+    await userEvent.type(field, 'm');
+    await expect(button).toHaveAttribute('aria-pressed', 'true');
+    field.remove();
+  },
+};
+
+/** The track cannot play here: the button shows unavailable, and the game is unaffected. */
+export const SoundUnavailable: Story = {
+  args: { store: store(), sound: sound().store, audio: silentAudio(() => '').factory },
+  globals: desktop,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const button = soundButton(canvasElement);
+    await waitFor(() => expect(button).toHaveAttribute('data-dive-sound', 'unavailable'));
+    await expect(button).toHaveAttribute('aria-pressed', 'false');
+    await expect(button).toHaveAttribute('aria-disabled', 'true');
+    await expect(button).toHaveAccessibleName(diveCopy.sound.unavailable);
+    await userEvent.click(await canvas.findByRole('button', { name: 'Start' }));
+    const bar = await canvas.findByRole('progressbar');
+    await waitFor(() => expect(Number(bar.getAttribute('aria-valuenow'))).toBeGreaterThan(0), {
+      timeout: 5000,
+    });
   },
 };
