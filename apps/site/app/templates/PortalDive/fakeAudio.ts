@@ -1,4 +1,4 @@
-import type { AudioLike } from './music';
+import type { AudioContextLike, AudioLike, GainLike } from './music';
 
 /**
  * For tests and stories only: a silent stand-in for the music's `<audio>` element that records
@@ -46,5 +46,46 @@ export class FakeAudio implements AudioLike {
   }
   get listening() {
     return this.listeners.size;
+  }
+}
+
+/** For tests and stories only: a Web Audio context that records the graph and makes no sound. */
+export class FakeAudioContext implements AudioContextLike {
+  state: 'suspended' | 'running' | 'closed' = 'suspended';
+  readonly destination = { kind: 'destination' };
+  gains: { gain: { value: number }; connect: (to: unknown) => unknown; to: unknown }[] = [];
+  sources: unknown[] = [];
+  resumes = 0;
+  failOn: 'none' | 'source' = 'none';
+
+  createMediaElementSource(element: never) {
+    if (this.failOn === 'source') throw new Error('InvalidStateError');
+    this.sources.push(element);
+    return { connect: (node: GainLike) => node };
+  }
+  createGain() {
+    const node = {
+      gain: { value: 1 },
+      to: null as unknown,
+      connect(to: unknown) {
+        node.to = to;
+        return to;
+      },
+    };
+    this.gains.push(node);
+    return node;
+  }
+  resume() {
+    this.resumes += 1;
+    this.state = 'running';
+    return Promise.resolve();
+  }
+  close() {
+    this.state = 'closed';
+    return Promise.resolve();
+  }
+  /** The level the music is playing at, or null before it is routed. */
+  get level() {
+    return this.gains[0]?.gain.value ?? null;
   }
 }

@@ -51,6 +51,34 @@ export type AudioFactory = () => AudioLike | null;
 export const browserAudio: AudioFactory = () =>
   typeof Audio === 'function' ? (new Audio() as AudioLike) : null;
 
+/** The parts of Web Audio the music uses: element -> gain -> speakers. Tests pass a fake. */
+export interface GainLike {
+  gain: { value: number };
+  connect: (destination: unknown) => unknown;
+}
+export interface AudioContextLike {
+  readonly state: string;
+  readonly destination: unknown;
+  createMediaElementSource: (element: never) => { connect: (node: GainLike) => unknown };
+  createGain: () => GainLike;
+  resume: () => Promise<void> | void;
+  close: () => Promise<void> | void;
+}
+
+/** Makes the audio context. Default: `AudioContext` (or Safari's prefixed one); null without. */
+export type AudioContextFactory = () => AudioContextLike | null;
+
+type ContextConstructor = new () => AudioContextLike;
+export const browserAudioContext: AudioContextFactory = () => {
+  if (typeof window === 'undefined') return null;
+  const w = window as unknown as {
+    AudioContext?: ContextConstructor;
+    webkitAudioContext?: ContextConstructor;
+  };
+  const Context = w.AudioContext ?? w.webkitAudioContext;
+  return Context ? new Context() : null;
+};
+
 /**
  * Where the game is. `wait`: nothing has started yet (the start screen), so nothing plays.
  * `play`: a run. `duck`: the crash and win screens, a little quieter.
@@ -108,6 +136,8 @@ export function pickSource(audio: AudioLike, sources: readonly MusicSource[]): s
 export interface MusicOptions {
   enabled: boolean;
   create?: AudioFactory;
+  /** Makes the Web Audio context, on the first `unlock()`. Default: the browser's. */
+  createContext?: AudioContextFactory;
   sources?: readonly MusicSource[];
   /** Milliseconds, for fades. Default: `performance.now`. */
   now?: () => number;
@@ -116,6 +146,13 @@ export interface MusicOptions {
 }
 
 export interface Music {
+  /**
+   * Call inside a press (Start, Dive again, the sound button): routes the element through a
+   * Web Audio gain, made and resumed while the browser still counts the press as a gesture. The
+   * gain is what sets the level, because iOS Safari ignores an element's `volume`. Where Web
+   * Audio is missing or fails, the element's own volume is used as before.
+   */
+  unlock: () => void;
   setEnabled: (on: boolean) => void;
   setMood: (mood: MusicMood) => void;
   setHidden: (hidden: boolean) => void;
@@ -140,6 +177,7 @@ const TICK_MS = 16;
 export function createMusic({
   enabled: enabledIn,
   create = browserAudio,
+  createContext = browserAudioContext,
   sources = MUSIC_SOURCES,
   now = () => performance.now(),
   onAvailable,
@@ -151,6 +189,9 @@ export function createMusic({
   let fade: Fade | null = null;
   let timer: ReturnType<typeof setInterval> | null = null;
   let disposed = false;
+  let context: AudioContextLike | null = null;
+  let gain: GainLike | null = null;
+  let triedContext = false;
 
   const markUnavailable = () => {
     if (input.unavailable || disposed) return;
@@ -195,9 +236,52 @@ export function createMusic({
     timer = null;
   }
 
+  /** The level goes to the gain when there is one (the element then stays at full), else the element. */
   const setVolume = (v: number) => {
     volume = v;
-    if (audio) audio.volume = v;
+    if (gain) gain.gain.value = v;
+    else if (audio) audio.volume = v;
+  };
+
+  const closeContext = () => {
+    const c = context;
+    context = null;
+    gain = null;
+    if (!c) return;
+    try {
+      void Promise.resolve(c.close()).catch(() => {});
+    } catch {
+      // Already closed.
+    }
+  };
+
+  const unlock = () => {
+    if (disposed || !audio || input.unavailable) return;
+    if (context) {
+      // Already routed: a press is a chance to wake a suspended context.
+      if (context.state === 'suspended') void Promise.resolve(context.resume()).catch(() => {});
+      return;
+    }
+    if (triedContext) return;
+    triedContext = true;
+    let c: AudioContextLike | null = null;
+    try {
+      c = createContext();
+      if (!c) return;
+      const g = c.createGain();
+      g.gain.value = volume;
+      c.createMediaElementSource(audio as never).connect(g);
+      g.connect(c.destination);
+      void Promise.resolve(c.resume()).catch(() => {});
+      context = c;
+      gain = g;
+      // The gain sets the level from here; the element plays at full into it.
+      audio.volume = 1;
+    } catch {
+      // No Web Audio, or it failed: the element's own volume stays in charge.
+      context = c;
+      closeContext();
+    }
   };
 
   const tick = () => {
@@ -246,6 +330,7 @@ export function createMusic({
   if (input.enabled) ensureLoaded();
 
   return {
+    unlock,
     setEnabled: (on) => {
       input.enabled = on;
       if (on) ensureLoaded();
@@ -266,7 +351,7 @@ export function createMusic({
       const el = audio;
       const release = () => {
         stopTimer();
-        if (!el) return;
+        if (!el) return closeContext();
         try {
           el.pause();
           el.removeEventListener('error', onError);
@@ -276,6 +361,7 @@ export function createMusic({
         } catch {
           // Already gone.
         }
+        closeContext();
       };
       input.enabled = false;
       if (soft && el && !el.paused && volume > 0) {

@@ -11,7 +11,14 @@ import {
 import { Button, Heading, Panel, Readout, Text, TextLink } from '@cwc/ui';
 
 import { diveCopy, type PortalDiveCopy } from './copy';
-import { type AudioFactory, browserAudio, createMusic, type Music } from './music';
+import {
+  type AudioContextFactory,
+  type AudioFactory,
+  browserAudio,
+  browserAudioContext,
+  createMusic,
+  type Music,
+} from './music';
 import { type SoundStore, soundStore } from './sound';
 import { SoundToggle } from './SoundToggle';
 
@@ -30,6 +37,8 @@ export interface PortalDiveProps {
   sound?: SoundStore;
   /** Makes the music's audio element. Default: `new Audio()`. Stories pass a silent fake. */
   audio?: AudioFactory;
+  /** Makes the Web Audio context the music plays through. Default: the browser's. */
+  audioContext?: AudioContextFactory;
   /** Seeds the course. Default: a fresh course every run. */
   seed?: number;
   /** Open on an end screen with this result, for stories and visual checks. */
@@ -57,14 +66,15 @@ function isEditable(target: EventTarget | null) {
  * tab is hidden, faded out and let go when the overlay closes. Returns the controller (for the
  * Start press, which has to call it inside the click) and whether the track is available.
  */
-function useMusic(enabled: boolean, audio: AudioFactory) {
+function useMusic(enabled: boolean, audio: AudioFactory, audioContext: AudioContextFactory) {
   const music = useRef<Music | null>(null);
   const [available, setAvailable] = useState(true);
-  const first = useRef({ enabled, audio });
+  const first = useRef({ enabled, audio, audioContext });
   useEffect(() => {
     const m = createMusic({
       enabled: first.current.enabled,
       create: first.current.audio,
+      createContext: first.current.audioContext,
       onAvailable: setAvailable,
     });
     music.current = m;
@@ -93,6 +103,7 @@ export default function PortalDive({
   store: storeIn,
   sound: soundIn,
   audio = browserAudio,
+  audioContext = browserAudioContext,
   seed,
   preview,
   copy = diveCopy,
@@ -103,7 +114,7 @@ export default function PortalDive({
   const [best, setBest] = useState<BestResult | null>(() => store.read());
   const [sound] = useState(() => soundIn ?? soundStore());
   const [soundOn, setSoundOn] = useState(() => sound.read());
-  const { music, available } = useMusic(soundOn, audio);
+  const { music, available } = useMusic(soundOn, audio, audioContext);
   const touch = useSyncExternalStore(subscribePointer, touchFirst, () => false);
   const game = useRef<DiveGameHandle>(null);
   const stage = useRef<HTMLDivElement>(null);
@@ -130,10 +141,12 @@ export default function PortalDive({
   // The music starts inside these presses: they are the gesture browsers ask for before sound.
   const start = () => {
     game.current?.start();
+    music.current?.unlock();
     music.current?.setMood('play');
     setScreen('running');
   };
   const again = () => {
+    music.current?.unlock();
     music.current?.setMood('play');
     startNext.current = true;
     game.current?.restart(seed);
@@ -155,6 +168,7 @@ export default function PortalDive({
     const next = !soundOnRef.current;
     soundOnRef.current = next;
     sound.write(next);
+    m.unlock();
     m.setEnabled(next);
     setSoundOn(next);
   };
@@ -209,7 +223,7 @@ export default function PortalDive({
                       {touch ? copy.touchHint : copy.keysHint}
                     </Text>
                     <Text tone="secondary" data-dive-sound-note="">
-                      {copy.soundNote}
+                      {touch ? copy.soundNoteTouch : copy.soundNote}
                     </Text>
                     {bestLine}
                     <div className="mt-3 flex flex-wrap gap-3">

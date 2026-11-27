@@ -5,13 +5,14 @@ import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { bestStore } from '@cwc/dive/react';
 
 import contact from '../../../content/hand/contact.json';
-import { FakeAudio } from './fakeAudio';
+import { FakeAudio, FakeAudioContext } from './fakeAudio';
 import { PortalDiveHost, type PortalDiveHostProps } from './PortalDiveHost';
 import { soundStore } from './sound';
 
 const words = contact.portal.entry.game;
 
 const silent = () => new FakeAudio();
+const silentContext = () => new FakeAudioContext();
 
 /** A stand-in for the portal button, and the overlay it opens. */
 function Demo({ open: _open, onClose: _onClose, ...props }: PortalDiveHostProps) {
@@ -45,7 +46,13 @@ const meta = {
     mailto: 'mailto:hello@example.com',
     words,
     // A silent audio element: stories never play sound.
-    gameProps: { seed: 7, store: bestStore(null), sound: soundStore(null), audio: silent },
+    gameProps: {
+      seed: 7,
+      store: bestStore(null),
+      sound: soundStore(null),
+      audio: silent,
+      audioContext: silentContext,
+    },
   },
   render: (args) => <Demo {...args} />,
 } satisfies Meta<typeof PortalDiveHost>;
@@ -111,6 +118,7 @@ export const BackToContact: Story = {
       store: bestStore(null),
       sound: soundStore(null),
       audio: silent,
+      audioContext: silentContext,
       preview: {
         status: 'crashed',
         ringsPassed: 9,
@@ -177,7 +185,8 @@ export const Reduced: Story = {
 };
 
 let closing: FakeAudio | null = null;
-/** Closing stops the music: a short fade, then the element is paused and let go. */
+let closingContext: FakeAudioContext | null = null;
+/** Closing stops the music: a short fade, then the element is paused, let go, and the context closed. */
 export const SoundStopsOnClose: Story = {
   args: {
     gameProps: {
@@ -185,6 +194,7 @@ export const SoundStopsOnClose: Story = {
       store: bestStore(null),
       sound: soundStore(null),
       audio: () => (closing = new FakeAudio()),
+      audioContext: () => (closingContext = new FakeAudioContext()),
     },
   },
   globals: { viewport: { value: 'desktop' } },
@@ -197,5 +207,6 @@ export const SoundStopsOnClose: Story = {
     await closedToPortal(canvasElement);
     await waitFor(() => expect(audio.paused).toBe(true));
     await expect(audio.src).toBe('');
+    await expect(closingContext?.state).toBe('closed');
   },
 };

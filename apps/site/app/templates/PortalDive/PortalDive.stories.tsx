@@ -4,7 +4,7 @@ import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { bestStore, type BestResult, type DiveResult } from '@cwc/dive/react';
 
 import { diveCopy } from './copy';
-import { FakeAudio } from './fakeAudio';
+import { FakeAudio, FakeAudioContext } from './fakeAudio';
 import PortalDive from './PortalDive';
 import { SOUND_KEY, soundStore } from './sound';
 
@@ -84,6 +84,7 @@ const meta = {
     onExit: fn(),
     seed: 7,
     audio: () => new FakeAudio(),
+    audioContext: () => new FakeAudioContext(),
   },
   decorators: [
     (Story) => (
@@ -286,7 +287,7 @@ export const Sound: Story = {
   globals: desktop,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const button = canvas.getByRole('button', { name: diveCopy.sound.turnOff });
+    const button = canvas.getByRole('button', { name: diveCopy.sound.label });
     await expect(button).toHaveAttribute('aria-pressed', 'true');
     await expect(button.getBoundingClientRect().height).toBeGreaterThanOrEqual(44);
     await expect(button.getBoundingClientRect().width).toBeGreaterThanOrEqual(44);
@@ -302,7 +303,9 @@ export const Sound: Story = {
 
     await userEvent.click(button);
     await expect(button).toHaveAttribute('aria-pressed', 'false');
-    await expect(button).toHaveAccessibleName(diveCopy.sound.turnOn);
+    // The name stays "Sound"; the state is in aria-pressed and the tooltip.
+    await expect(button).toHaveAccessibleName(diveCopy.sound.label);
+    await expect(button).toHaveAttribute('title', diveCopy.sound.off);
     await expect(soundOn.storage.getItem(SOUND_KEY)).toBe('off');
     await userEvent.click(button);
     await expect(button).toHaveAttribute('aria-pressed', 'true');
@@ -311,9 +314,18 @@ export const Sound: Story = {
 };
 
 const audioStart = silentAudio();
-/** Start is the gesture: the music begins with it, quiet and fading in. */
+let startContext: FakeAudioContext | null = null;
+/**
+ * Start is the gesture: the Web Audio context is made and resumed inside it, the element plays
+ * at full into a gain, and the gain fades in to a quarter.
+ */
 export const SoundStartsOnStart: Story = {
-  args: { store: store(), sound: sound().store, audio: audioStart.factory },
+  args: {
+    store: store(),
+    sound: sound().store,
+    audio: audioStart.factory,
+    audioContext: () => (startContext = new FakeAudioContext()),
+  },
   globals: desktop,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -321,7 +333,9 @@ export const SoundStartsOnStart: Story = {
     const audio = audioStart.last()!;
     await expect(audio.paused).toBe(false);
     await expect(audio.loop).toBe(true);
-    await waitFor(() => expect(audio.volume).toBeCloseTo(0.25, 5), { timeout: 3000 });
+    await expect(startContext?.state).toBe('running');
+    await expect(audio.volume).toBe(1);
+    await waitFor(() => expect(startContext?.level).toBeCloseTo(0.25, 5), { timeout: 3000 });
   },
 };
 
@@ -333,7 +347,7 @@ export const SoundStoredOff: Story = {
   globals: desktop,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const button = canvas.getByRole('button', { name: diveCopy.sound.turnOn });
+    const button = canvas.getByRole('button', { name: diveCopy.sound.label });
     await expect(button).toHaveAttribute('aria-pressed', 'false');
     await userEvent.click(await canvas.findByRole('button', { name: 'Start' }));
     await expect(audioOff.last()?.paused).toBe(true);
@@ -374,7 +388,8 @@ export const SoundUnavailable: Story = {
     await waitFor(() => expect(button).toHaveAttribute('data-dive-sound', 'unavailable'));
     await expect(button).toHaveAttribute('aria-pressed', 'false');
     await expect(button).toHaveAttribute('aria-disabled', 'true');
-    await expect(button).toHaveAccessibleName(diveCopy.sound.unavailable);
+    await expect(button).toHaveAccessibleName(diveCopy.sound.label);
+    await expect(button).toHaveAttribute('title', diveCopy.sound.unavailable);
     await userEvent.click(await canvas.findByRole('button', { name: 'Start' }));
     const bar = await canvas.findByRole('progressbar');
     await waitFor(() => expect(Number(bar.getAttribute('aria-valuenow'))).toBeGreaterThan(0), {
