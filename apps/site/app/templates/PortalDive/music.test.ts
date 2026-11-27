@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { FakeAudio } from './fakeAudio';
+import { FakeAudio, FakeAudioContext } from './fakeAudio';
 import {
   createMusic,
   DUCK,
@@ -66,6 +66,8 @@ describe('createMusic', () => {
     const music = createMusic({
       enabled,
       create: () => audio,
+      // No Web Audio here: the element's own volume (the fallback path). Web Audio is below.
+      createContext: () => null,
       now: () => Date.now(),
       onAvailable,
     });
@@ -211,5 +213,122 @@ describe('createMusic', () => {
     expect(audio.paused).toBe(true);
     expect(audio.src).toBe('');
     expect(vi.getTimerCount()).toBe(0);
+  });
+});
+
+describe('createMusic through Web Audio', () => {
+  beforeEach(() => vi.useFakeTimers());
+  afterEach(() => vi.useRealTimers());
+
+  const setup = (context = new FakeAudioContext()) => {
+    const audio = new FakeAudio();
+    const createContext = vi.fn(() => context);
+    const music = createMusic({
+      enabled: true,
+      create: () => audio,
+      createContext,
+      now: () => Date.now(),
+    });
+    return { music, audio, context, createContext };
+  };
+
+  it('makes nothing until a press unlocks it, then routes element -> gain -> speakers', () => {
+    const { music, audio, context, createContext } = setup();
+    expect(createContext).not.toHaveBeenCalled();
+    music.unlock();
+    expect(createContext).toHaveBeenCalledTimes(1);
+    expect(context.sources).toEqual([audio]);
+    expect(context.gains).toHaveLength(1);
+    expect(context.gains[0]!.to).toBe(context.destination);
+    expect(context.resumes).toBe(1);
+    // The element plays at full into the gain; the gain sets the level.
+    expect(audio.volume).toBe(1);
+    expect(context.level).toBe(0);
+    music.unlock();
+    expect(createContext).toHaveBeenCalledTimes(1);
+  });
+
+  it('fades the gain in to 0.25, ducks it to 0.15, and back, leaving the element at full', () => {
+    const { music, audio, context } = setup();
+    music.unlock();
+    music.setMood('play');
+    vi.advanceTimersByTime(400);
+    expect(context.level).toBeGreaterThan(0.08);
+    expect(context.level).toBeLessThan(0.17);
+    vi.advanceTimersByTime(FADE_IN_MS);
+    expect(context.level).toBe(MUSIC_VOLUME);
+    music.setMood('duck');
+    vi.advanceTimersByTime(DUCK_MS + 50);
+    near(context.level!, 0.15);
+    music.setMood('play');
+    vi.advanceTimersByTime(DUCK_MS + 50);
+    expect(context.level).toBe(MUSIC_VOLUME);
+    expect(audio.volume).toBe(1);
+  });
+
+  it('fades the gain out on close, then pauses the element and closes the context', () => {
+    const { music, audio, context } = setup();
+    music.unlock();
+    music.setMood('play');
+    vi.advanceTimersByTime(1000);
+    music.dispose({ fade: true });
+    vi.advanceTimersByTime(FADE_OUT_MS / 2);
+    expect(context.level).toBeLessThan(MUSIC_VOLUME);
+    expect(context.state).not.toBe('closed');
+    vi.advanceTimersByTime(FADE_OUT_MS);
+    expect(audio.paused).toBe(true);
+    expect(context.state).toBe('closed');
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it('closes the context on an instant close too', () => {
+    const { music, context } = setup();
+    music.unlock();
+    music.dispose();
+    expect(context.state).toBe('closed');
+  });
+
+  it('falls back to the element volume when Web Audio fails', () => {
+    const context = new FakeAudioContext();
+    context.failOn = 'source';
+    const { music, audio } = setup(context);
+    expect(() => music.unlock()).not.toThrow();
+    expect(context.state).toBe('closed');
+    music.setMood('play');
+    vi.advanceTimersByTime(FADE_IN_MS + 50);
+    expect(audio.volume).toBe(MUSIC_VOLUME);
+  });
+
+  it('falls back to the element volume when there is no Web Audio, or making it throws', () => {
+    for (const createContext of [
+      () => null,
+      () => {
+        throw new Error('NotSupportedError');
+      },
+    ]) {
+      const audio = new FakeAudio();
+      const music = createMusic({
+        enabled: true,
+        create: () => audio,
+        createContext,
+        now: () => Date.now(),
+      });
+      expect(() => music.unlock()).not.toThrow();
+      music.setMood('play');
+      vi.advanceTimersByTime(FADE_IN_MS + 50);
+      expect(audio.volume).toBe(MUSIC_VOLUME);
+      music.dispose();
+    }
+  });
+
+  it('takes over the level mid-fade without a jump', () => {
+    const { music, context } = setup();
+    music.setMood('play');
+    vi.advanceTimersByTime(400);
+    music.unlock();
+    const at = context.level!;
+    expect(at).toBeGreaterThan(0.05);
+    vi.advanceTimersByTime(FADE_IN_MS);
+    expect(context.level).toBe(MUSIC_VOLUME);
   });
 });
