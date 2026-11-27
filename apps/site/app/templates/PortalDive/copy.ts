@@ -16,6 +16,16 @@ export const diveCopy = {
   linkedin: 'Find me on LinkedIn',
   email: 'Or send an email',
   clean: 'Clean dive',
+  /** On the start screen, so the music is no surprise. */
+  soundNote: 'There is music. Press M or use the sound button to turn it off.',
+  /** The sound button: its name says what pressing it does; the tooltip says how it is now. */
+  sound: {
+    turnOff: 'Turn sound off',
+    turnOn: 'Turn sound on',
+    on: 'Sound on',
+    off: 'Sound off',
+    unavailable: 'Sound unavailable',
+  },
   buttons: {
     start: 'Start',
     again: 'Dive again',
