@@ -15,7 +15,7 @@
       "label": "Open the portal",
       "dialog": {
         "title": "Step through?",
-        "body": "There is a short game on the other side. It takes about a minute.",
+        "body": "It has been running all day. Nobody has said where it goes.",
         "enter": "Enter",
         "cancel": "Not now"
       },

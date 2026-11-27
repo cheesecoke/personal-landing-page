@@ -42,7 +42,7 @@ const meta = {
   args: {
     open: false,
     title: 'Step through?',
-    body: 'There is a short game on the other side. It takes about a minute.',
+    body: 'It has been running all day. Nobody has said where it goes.',
     confirmLabel: 'Enter',
     cancelLabel: 'Not now',
     onConfirm: fn(),
@@ -68,7 +68,7 @@ async function openDialog(root: HTMLElement) {
   const panel = within(dialog);
   await expect(dialog).toHaveAccessibleName('Step through?');
   await expect(dialog).toHaveAccessibleDescription(
-    'There is a short game on the other side. It takes about a minute.',
+    'It has been running all day. Nobody has said where it goes.',
   );
   await expect(panel.getByRole('button', { name: 'Enter' })).toHaveFocus();
   await expect(root.ownerDocument.documentElement.style.overflow).toBe('hidden');

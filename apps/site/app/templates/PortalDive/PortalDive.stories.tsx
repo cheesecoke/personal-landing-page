@@ -56,7 +56,12 @@ const meta = {
   title: 'Templates/PortalDive',
   component: PortalDive,
   parameters: { layout: 'fullscreen' },
-  args: { mailto: 'mailto:hello@example.com', onExit: fn(), seed: 7 },
+  args: {
+    mailto: 'mailto:hello@example.com',
+    linkedin: 'https://example.com/in/someone',
+    onExit: fn(),
+    seed: 7,
+  },
   decorators: [
     (Story) => (
       <div className="h-dvh bg-ground">
@@ -148,6 +153,10 @@ export const Won: Story = {
     await expect(canvas.getByRole('heading', { name: diveCopy.won })).toBeVisible();
     await expect(canvas.getByText('Lives left: 2')).toBeVisible();
     await expect(canvas.getByText(diveCopy.note)).toBeVisible();
+    await expect(canvas.getByRole('link', { name: diveCopy.linkedin })).toHaveAttribute(
+      'href',
+      'https://example.com/in/someone',
+    );
     await expect(canvas.getByRole('link', { name: diveCopy.email })).toHaveAttribute(
       'href',
       'mailto:hello@example.com',

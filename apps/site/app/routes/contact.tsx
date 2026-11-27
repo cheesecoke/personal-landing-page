@@ -22,8 +22,9 @@ export default function Contact({ loaderData }: Route.ComponentProps) {
   const { content } = loaderData;
   const [diving, setDiving] = useState(false);
   const entry = content.portal.entry;
-  // The win screen offers the page's own main way to write.
+  // The win screen offers the page's own ways to get in touch: LinkedIn first, then mail.
   const mailto = (content.channels.find((channel) => channel.primary) ?? content.channels[0])!.href;
+  const linkedin = content.channels.find((channel) => channel.name === 'LinkedIn')?.href;
   return (
     <>
       {/* The portal render is the largest paint on this page: fetch it early. */}
@@ -38,6 +39,7 @@ export default function Contact({ loaderData }: Route.ComponentProps) {
           open={diving}
           onClose={() => setDiving(false)}
           mailto={mailto}
+          linkedin={linkedin}
           words={entry.game}
         />
       ) : null}
