@@ -18,10 +18,11 @@ export const diveCopy = {
   clean: 'Clean dive',
   /** On the start screen, so the music is no surprise. */
   soundNote: 'There is music. Press M or use the sound button to turn it off.',
-  /** The sound button: its name says what pressing it does; the tooltip says how it is now. */
+  /** The same, where touch comes first (no keyboard to press M on). */
+  soundNoteTouch: 'There is music. Use the sound button to turn it off.',
+  /** The sound button: a fixed name with `aria-pressed`; the tooltip says how it is now. */
   sound: {
-    turnOff: 'Turn sound off',
-    turnOn: 'Turn sound on',
+    label: 'Sound',
     on: 'Sound on',
     off: 'Sound off',
     unavailable: 'Sound unavailable',

@@ -37,18 +37,17 @@ function SpeakerIcon({ on }: { on: boolean }) {
 }
 
 /**
- * The sound button in the overlay's top bar, beside Exit: a 44px square, pressed while sound is
- * on. Its name says what a press does ("Turn sound off"); the tooltip says how it is now.
+ * The sound button in the overlay's top bar, beside Exit: a 44px square named "Sound", pressed
+ * while sound is on. The tooltip says how it is now (on, off, or unavailable).
  */
 export function SoundToggle({ on, available, onToggle, copy }: SoundToggleProps) {
   const pressed = on && available;
-  const label = !available ? copy.unavailable : pressed ? copy.turnOff : copy.turnOn;
   return (
     <button
       type="button"
       data-dive-sound={!available ? 'unavailable' : pressed ? 'on' : 'off'}
       aria-pressed={pressed}
-      aria-label={label}
+      aria-label={copy.label}
       aria-disabled={available ? undefined : true}
       title={!available ? copy.unavailable : pressed ? copy.on : copy.off}
       onClick={available ? onToggle : undefined}
