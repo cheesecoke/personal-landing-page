@@ -5,9 +5,13 @@ import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { bestStore } from '@cwc/dive/react';
 
 import contact from '../../../content/hand/contact.json';
+import { FakeAudio } from './fakeAudio';
 import { PortalDiveHost, type PortalDiveHostProps } from './PortalDiveHost';
+import { soundStore } from './sound';
 
 const words = contact.portal.entry.game;
+
+const silent = () => new FakeAudio();
 
 /** A stand-in for the portal button, and the overlay it opens. */
 function Demo({ open: _open, onClose: _onClose, ...props }: PortalDiveHostProps) {
@@ -40,7 +44,8 @@ const meta = {
     onClose: fn(),
     mailto: 'mailto:hello@example.com',
     words,
-    gameProps: { seed: 7, store: bestStore(null) },
+    // A silent audio element: stories never play sound.
+    gameProps: { seed: 7, store: bestStore(null), sound: soundStore(null), audio: silent },
   },
   render: (args) => <Demo {...args} />,
 } satisfies Meta<typeof PortalDiveHost>;
@@ -104,6 +109,8 @@ export const BackToContact: Story = {
     gameProps: {
       seed: 7,
       store: bestStore(null),
+      sound: soundStore(null),
+      audio: silent,
       preview: {
         status: 'crashed',
         ringsPassed: 9,
@@ -166,5 +173,29 @@ export const Reduced: Story = {
     await waitFor(() => expect(document.documentElement).toHaveAttribute('data-motion', 'reduce'));
     const dialog = await openOverlay(canvasElement);
     await expect(getComputedStyle(dialog).transitionDuration).toBe('0s');
+  },
+};
+
+let closing: FakeAudio | null = null;
+/** Closing stops the music: a short fade, then the element is paused and let go. */
+export const SoundStopsOnClose: Story = {
+  args: {
+    gameProps: {
+      seed: 7,
+      store: bestStore(null),
+      sound: soundStore(null),
+      audio: () => (closing = new FakeAudio()),
+    },
+  },
+  globals: { viewport: { value: 'desktop' } },
+  play: async ({ canvasElement }) => {
+    const dialog = await openOverlay(canvasElement);
+    await userEvent.click(await within(dialog).findByRole('button', { name: 'Start' }));
+    const audio = closing!;
+    await expect(audio.paused).toBe(false);
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Exit' }));
+    await closedToPortal(canvasElement);
+    await waitFor(() => expect(audio.paused).toBe(true));
+    await expect(audio.src).toBe('');
   },
 };

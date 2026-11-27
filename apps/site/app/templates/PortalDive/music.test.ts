@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { FakeAudio } from './fakeAudio';
 import {
-  type AudioLike,
   createMusic,
   DUCK,
   DUCK_MS,
@@ -14,52 +14,6 @@ import {
   targetVolume,
   volumeAt,
 } from './music';
-
-/** A silent `<audio>` stand-in that records what was asked of it. */
-class FakeAudio implements AudioLike {
-  src = '';
-  loop = false;
-  preload = 'none';
-  volume = 1;
-  paused = true;
-  plays = 0;
-  loads = 0;
-  playResult: 'resolve' | 'reject' | 'throw' = 'resolve';
-  canPlay: (type: string) => string = (type) => (type.includes('opus') ? 'probably' : '');
-  private listeners = new Set<() => void>();
-
-  play() {
-    this.plays += 1;
-    if (this.playResult === 'throw') throw new Error('NotAllowedError');
-    if (this.playResult === 'reject') return Promise.reject(new Error('NotAllowedError'));
-    this.paused = false;
-    return Promise.resolve();
-  }
-  pause() {
-    this.paused = true;
-  }
-  load() {
-    this.loads += 1;
-  }
-  canPlayType(type: string) {
-    return this.canPlay(type);
-  }
-  removeAttribute(name: string) {
-    if (name === 'src') this.src = '';
-  }
-  addEventListener(_type: 'error', listener: () => void) {
-    this.listeners.add(listener);
-  }
-  removeEventListener(_type: 'error', listener: () => void) {
-    this.listeners.delete(listener);
-  }
-  fail() {
-    for (const listener of this.listeners) listener();
-  }
-  get listening() {
-    return this.listeners.size;
-  }
-}
 
 const near = (value: number, expected: number) => expect(value).toBeCloseTo(expected, 5);
 
