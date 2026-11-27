@@ -15,8 +15,10 @@ import { diveCopy, type PortalDiveCopy } from './copy';
 type Screen = 'start' | 'running' | 'crashed' | 'won';
 
 export interface PortalDiveProps {
-  /** The page's main way to write (its primary channel), for the link on the win screen. */
+  /** The page's mail link, for the win screen. */
   mailto: string;
+  /** The page's LinkedIn link. When given, the win screen leads with it and mail comes second. */
+  linkedin?: string;
   /** Leave the game: the Exit and "Back to Contact" buttons. */
   onExit: () => void;
   /** Where the best result is kept. Default: localStorage, falling back to memory. */
@@ -44,6 +46,7 @@ const touchFirst = () =>
  */
 export default function PortalDive({
   mailto,
+  linkedin,
   onExit,
   store: storeIn,
   seed,
@@ -158,6 +161,16 @@ export default function PortalDive({
                     {screen === 'won' ? (
                       <div className="mt-2 flex flex-col gap-2 border-t border-hairline pt-4">
                         <Text data-dive-note="">{copy.note}</Text>
+                        {linkedin ? (
+                          <TextLink
+                            href={linkedin}
+                            target="_blank"
+                            rel="noopener"
+                            className="self-start"
+                          >
+                            {copy.linkedin}
+                          </TextLink>
+                        ) : null}
                         <TextLink href={mailto} className="self-start">
                           {copy.email}
                         </TextLink>

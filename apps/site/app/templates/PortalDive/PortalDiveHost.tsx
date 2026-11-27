@@ -24,13 +24,15 @@ export interface PortalDiveHostProps {
   open: boolean;
   /** Exit, Escape, or "Back to Contact". The caller sets `open` false. */
   onClose: () => void;
-  /** The page's main mail link, for the win screen. */
+  /** The page's mail link, for the win screen. */
   mailto: string;
+  /** The page's LinkedIn link: the win screen's first way to get in touch. */
+  linkedin?: string;
   words: PortalDiveWords;
   /** Loads the game. Default: its own chunk. Stories pass a stand-in. */
   load?: () => Promise<GameModule>;
   /** Props for the game itself (stories: a seed, a store, a preview). */
-  gameProps?: Partial<Omit<PortalDiveProps, 'mailto' | 'onExit'>>;
+  gameProps?: Partial<Omit<PortalDiveProps, 'mailto' | 'linkedin' | 'onExit'>>;
 }
 
 const loadGame = () => import('./PortalDive');
@@ -45,6 +47,7 @@ export function PortalDiveHost({
   open,
   onClose,
   mailto,
+  linkedin,
   words,
   load = loadGame,
   gameProps,
@@ -126,7 +129,7 @@ export function PortalDiveHost({
       )}
     >
       {!open ? null : Game ? (
-        <Game mailto={mailto} onExit={onClose} {...gameProps} />
+        <Game mailto={mailto} linkedin={linkedin} onExit={onClose} {...gameProps} />
       ) : (
         <div className="flex h-full flex-col items-center justify-center gap-6 px-gutter text-center">
           <div role="status" data-portal-dive-state={failed ? 'failed' : 'loading'}>
