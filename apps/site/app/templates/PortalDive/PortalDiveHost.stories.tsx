@@ -217,7 +217,7 @@ export const Reduced: Story = {
   },
 };
 
-let closing: FakeAudio | null = null;
+const made: FakeAudio[] = [];
 let closingContext: FakeAudioContext | null = null;
 /** Closing stops the music: a short fade, then the element is paused, let go, and the context closed. */
 export const SoundStopsOnClose: Story = {
@@ -226,7 +226,12 @@ export const SoundStopsOnClose: Story = {
       seed: 7,
       store: bestStore(null),
       sound: soundStore(null),
-      audio: () => (closing = new FakeAudio()),
+      // Each mount makes the music, then the garden's ambience: keep the music.
+      audio: () => {
+        const audio = new FakeAudio();
+        made.push(audio);
+        return audio;
+      },
       audioContext: () => (closingContext = new FakeAudioContext()),
     },
   },
@@ -234,7 +239,7 @@ export const SoundStopsOnClose: Story = {
   play: async ({ canvasElement }) => {
     const dialog = await openOverlay(canvasElement);
     await userEvent.click(await within(dialog).findByRole('button', { name: 'Start' }));
-    const audio = closing!;
+    const audio = made.at(-2)!;
     await expect(audio.paused).toBe(false);
     await userEvent.click(within(dialog).getByRole('button', { name: 'Exit' }));
     await closedToPortal(canvasElement);

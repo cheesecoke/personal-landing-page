@@ -71,6 +71,8 @@ describe('createMusic', () => {
     const music = createMusic({
       enabled,
       create: () => audio,
+      // The music alone: the garden's ambience has its own tests below.
+      ambience: [],
       // No Web Audio here: the element's own volume (the fallback path). Web Audio is below.
       createContext: () => null,
       now: () => Date.now(),
@@ -186,7 +188,7 @@ describe('createMusic', () => {
     const audio = new FakeAudio();
     audio.canPlay = () => '';
     expect(setup(true, audio).music.available()).toBe(false);
-    const none = createMusic({ enabled: true, create: () => null });
+    const none = createMusic({ enabled: true, create: () => null, ambience: [] });
     expect(none.available()).toBe(false);
     expect(() => none.setMood('play')).not.toThrow();
     expect(() => none.dispose({ fade: true })).not.toThrow();
@@ -231,6 +233,8 @@ describe('createMusic through Web Audio', () => {
     const music = createMusic({
       enabled: true,
       create: () => audio,
+      // The music alone: the garden's ambience has its own tests below.
+      ambience: [],
       createContext,
       now: () => Date.now(),
     });
@@ -315,6 +319,9 @@ describe('createMusic through Web Audio', () => {
       const music = createMusic({
         enabled: true,
         create: () => audio,
+        ambience: [],
+        // The music alone: the garden's ambience has its own tests below.
+        ambience: [],
         createContext,
         now: () => Date.now(),
       });
@@ -367,8 +374,22 @@ describe('the garden hand-off', () => {
     return { controller, music, garden, context, level, onAvailable };
   };
 
-  it('ships no ambience yet: the list is empty, so the garden is quiet', () => {
-    expect(AMBIENCE_SOURCES).toEqual([]);
+  it('ships the wind chimes as the ambience: Opus first, AAC for Safari without Opus', () => {
+    expect(AMBIENCE_SOURCES.map((s) => s.type)).toEqual([
+      'audio/webm; codecs="opus"',
+      'audio/mp4; codecs="mp4a.40.2"',
+    ]);
+    expect(AMBIENCE_SOURCES[0]!.src).toMatch(/portal-dive-ambience\.webm$/);
+    expect(AMBIENCE_SOURCES[1]!.src).toMatch(/portal-dive-ambience\.m4a$/);
+    const audio = new FakeAudio();
+    expect(pickSource(audio, AMBIENCE_SOURCES)).toMatch(/\.webm$/);
+    audio.canPlay = (type) => (type.includes('mp4') ? 'maybe' : '');
+    expect(pickSource(audio, AMBIENCE_SOURCES)).toMatch(/\.m4a$/);
+  });
+
+  it('plays the synthwave as the music, the same way', () => {
+    expect(MUSIC_SOURCES[0]!.src).toMatch(/portal-dive-music\.webm$/);
+    expect(MUSIC_SOURCES[1]!.src).toMatch(/portal-dive-music\.m4a$/);
   });
 
   it('arriving fades the music out over 2.5 s; with no ambience, the garden is quiet', () => {
