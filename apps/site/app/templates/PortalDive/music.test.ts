@@ -2,6 +2,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { FakeAudio, FakeAudioContext } from './fakeAudio';
 import {
+  AMBIENCE_FADE_IN_MS,
+  AMBIENCE_FADE_OUT_MS,
+  AMBIENCE_SOURCES,
+  AMBIENCE_VOLUME,
+  ARRIVAL_FADE_MS,
   createMusic,
   DUCK,
   DUCK_MS,
@@ -330,5 +335,196 @@ describe('createMusic through Web Audio', () => {
     expect(at).toBeGreaterThan(0.05);
     vi.advanceTimersByTime(FADE_IN_MS);
     expect(context.level).toBe(MUSIC_VOLUME);
+  });
+});
+
+describe('the garden hand-off', () => {
+  beforeEach(() => vi.useFakeTimers());
+  afterEach(() => vi.useRealTimers());
+
+  const AMBIENCE = [{ src: '/garden.webm', type: 'audio/webm; codecs="opus"' }] as const;
+
+  /** Music and (optionally) an ambience, both through one fake Web Audio context. */
+  const setup = ({ ambience = true, enabled = true } = {}) => {
+    const music = new FakeAudio();
+    const garden = new FakeAudio();
+    const context = new FakeAudioContext();
+    const onAvailable = vi.fn();
+    const controller = createMusic({
+      enabled,
+      create: () => music,
+      createAmbience: () => garden,
+      ambience: ambience ? AMBIENCE : [],
+      createContext: () => context,
+      now: () => Date.now(),
+      onAvailable,
+    });
+    /** The level of each element's gain (music first), or null before it is routed. */
+    const level = (el: FakeAudio) => {
+      const i = context.sources.indexOf(el);
+      return i < 0 ? null : context.gains[i]!.gain.value;
+    };
+    return { controller, music, garden, context, level, onAvailable };
+  };
+
+  it('ships no ambience yet: the list is empty, so the garden is quiet', () => {
+    expect(AMBIENCE_SOURCES).toEqual([]);
+  });
+
+  it('arriving fades the music out over 2.5 s; with no ambience, the garden is quiet', () => {
+    const { controller, music, context } = setup({ ambience: false });
+    controller.unlock();
+    expect(context.sources).toEqual([music]);
+    controller.setMood('play');
+    vi.advanceTimersByTime(FADE_IN_MS + 50);
+    controller.setMood('arrive');
+    vi.advanceTimersByTime(ARRIVAL_FADE_MS / 2);
+    expect(context.level).toBeGreaterThan(0.05);
+    expect(context.level).toBeLessThan(MUSIC_VOLUME);
+    vi.advanceTimersByTime(ARRIVAL_FADE_MS / 2 + 50);
+    expect(context.level).toBe(0);
+    expect(music.paused).toBe(true);
+    expect(vi.getTimerCount()).toBe(0);
+    // "Dive again": the music comes back.
+    controller.setMood('play');
+    expect(music.paused).toBe(false);
+    vi.advanceTimersByTime(FADE_IN_MS + 50);
+    expect(context.level).toBe(MUSIC_VOLUME);
+  });
+
+  it('fetches the ambience on the first press (not at mount) and starts it silently', async () => {
+    const { controller, garden, level } = setup();
+    expect(garden.src).toBe('');
+    controller.unlock();
+    expect(garden.src).toBe('/garden.webm');
+    expect(garden.loop).toBe(true);
+    expect(garden.plays).toBe(1);
+    expect(level(garden)).toBe(0);
+    expect(garden.volume).toBe(1);
+    await vi.advanceTimersByTimeAsync(0);
+    // Primed: played once inside the press, then paused again until the garden.
+    expect(garden.paused).toBe(true);
+  });
+
+  it('cross-fades: music out over 2.5 s while the ambience comes in over 3 s, and back', () => {
+    const { controller, music, garden, level } = setup();
+    controller.unlock();
+    controller.setMood('play');
+    vi.advanceTimersByTime(FADE_IN_MS + 50);
+    controller.setMood('duck');
+    vi.advanceTimersByTime(DUCK_MS + 50);
+
+    controller.setMood('arrive');
+    expect(garden.paused).toBe(false);
+    vi.advanceTimersByTime(1500);
+    expect(level(music)).toBeGreaterThan(0);
+    expect(level(music)).toBeLessThan(MUSIC_VOLUME * DUCK);
+    expect(level(garden)).toBeGreaterThan(0.1);
+    expect(level(garden)).toBeLessThan(AMBIENCE_VOLUME);
+    vi.advanceTimersByTime(ARRIVAL_FADE_MS);
+    expect(level(music)).toBe(0);
+    expect(music.paused).toBe(true);
+    vi.advanceTimersByTime(AMBIENCE_FADE_IN_MS);
+    expect(level(garden)).toBe(AMBIENCE_VOLUME);
+    expect(AMBIENCE_VOLUME).toBe(0.3);
+    expect(AMBIENCE_FADE_IN_MS).toBe(3000);
+    expect(ARRIVAL_FADE_MS).toBe(2500);
+
+    // "Dive again": the synthwave returns and the ambience goes.
+    controller.setMood('play');
+    vi.advanceTimersByTime(AMBIENCE_FADE_OUT_MS + 50);
+    expect(level(garden)).toBe(0);
+    expect(garden.paused).toBe(true);
+    expect(level(music)).toBe(MUSIC_VOLUME);
+  });
+
+  it('the sound button acts on whichever is playing', () => {
+    const { controller, music, garden, level } = setup();
+    controller.unlock();
+    controller.setMood('play');
+    controller.setMood('arrive');
+    vi.advanceTimersByTime(AMBIENCE_FADE_IN_MS + 50);
+    controller.setEnabled(false);
+    vi.advanceTimersByTime(AMBIENCE_FADE_OUT_MS + 50);
+    expect(level(garden)).toBe(0);
+    expect(garden.paused).toBe(true);
+    expect(music.paused).toBe(true);
+    controller.setEnabled(true);
+    expect(garden.paused).toBe(false);
+    expect(music.paused).toBe(true);
+    vi.advanceTimersByTime(AMBIENCE_FADE_IN_MS + 50);
+    expect(level(garden)).toBe(AMBIENCE_VOLUME);
+  });
+
+  it('stops the ambience at once while the tab is hidden', () => {
+    const { controller, garden, level } = setup();
+    controller.unlock();
+    controller.setMood('arrive');
+    vi.advanceTimersByTime(AMBIENCE_FADE_IN_MS + 50);
+    controller.setHidden(true);
+    expect(garden.paused).toBe(true);
+    expect(level(garden)).toBe(0);
+  });
+
+  it('does not fetch the ambience while sound is off', () => {
+    const { controller, garden } = setup({ enabled: false });
+    controller.unlock();
+    controller.setMood('arrive');
+    vi.advanceTimersByTime(AMBIENCE_FADE_IN_MS);
+    expect(garden.src).toBe('');
+    expect(garden.plays).toBe(0);
+  });
+
+  it('on leaving, fades both out and lets both go', () => {
+    const { controller, music, garden, context } = setup();
+    controller.unlock();
+    controller.setMood('arrive');
+    vi.advanceTimersByTime(AMBIENCE_FADE_IN_MS + 50);
+    controller.dispose({ fade: true });
+    vi.advanceTimersByTime(FADE_OUT_MS + 50);
+    for (const el of [music, garden]) {
+      expect(el.paused).toBe(true);
+      expect(el.src).toBe('');
+      expect(el.listening).toBe(0);
+    }
+    expect(context.state).toBe('closed');
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it('a failed ambience leaves the music and the game as they are', () => {
+    const { controller, garden, music, onAvailable } = setup();
+    controller.unlock();
+    garden.fail();
+    expect(controller.available()).toBe(true);
+    expect(onAvailable).not.toHaveBeenCalled();
+    controller.setMood('arrive');
+    vi.advanceTimersByTime(AMBIENCE_FADE_IN_MS);
+    expect(garden.paused).toBe(true);
+    controller.setMood('play');
+    expect(music.paused).toBe(false);
+  });
+
+  it('with the music failed, the ambience still counts as sound', () => {
+    const { controller, music, onAvailable } = setup();
+    music.fail();
+    expect(controller.available()).toBe(true);
+    expect(onAvailable).not.toHaveBeenCalled();
+  });
+
+  it('keeps the ambience out when Web Audio will not take it', () => {
+    const { controller, garden, context } = setup();
+    let calls = 0;
+    const original = context.createMediaElementSource.bind(context);
+    context.createMediaElementSource = (el: never) => {
+      calls += 1;
+      if (calls === 2) throw new Error('InvalidStateError');
+      return original(el);
+    };
+    controller.unlock();
+    controller.setMood('arrive');
+    vi.advanceTimersByTime(AMBIENCE_FADE_IN_MS);
+    expect(garden.paused).toBe(true);
+    expect(garden.src).toBe('');
+    expect(controller.available()).toBe(true);
   });
 });
