@@ -83,6 +83,39 @@ async function closedToPortal(root: HTMLElement) {
   await expect(document.documentElement.style.overflow).toBe('');
 }
 
+const wonGame = {
+  seed: 7,
+  store: bestStore(null),
+  sound: soundStore(null),
+  audio: silent,
+  audioContext: silentContext,
+  preview: {
+    status: 'won',
+    ringsPassed: 32,
+    ringsTotal: 32,
+    ringsHit: 0,
+    livesLeft: 3,
+    elapsedMs: 45_000,
+    clean: true,
+  },
+} as const;
+
+/** Opens on the win, waits for the garden, and sits down: only the scene is left. */
+async function sitInGarden(root: HTMLElement) {
+  const dialog = await openOverlay(root);
+  await waitFor(() => expect(dialog.querySelector('[data-dive-garden]')).not.toBeNull(), {
+    timeout: 8000,
+  });
+  await userEvent.click(within(dialog).getByRole('button', { name: 'Sit for a while' }));
+  await waitFor(() =>
+    expect(dialog.querySelector('[data-dive-garden]')).toHaveAttribute(
+      'data-dive-garden',
+      'resting',
+    ),
+  );
+  return dialog;
+}
+
 // Never settles: the loading state stays on screen.
 const pending = () => new Promise<never>(() => {});
 const failing = () => Promise.reject(new Error('offline'));
@@ -208,5 +241,29 @@ export const SoundStopsOnClose: Story = {
     await waitFor(() => expect(audio.paused).toBe(true));
     await expect(audio.src).toBe('');
     await expect(closingContext?.state).toBe('closed');
+  },
+};
+
+/** Resting in the garden, Escape leaves, and focus goes back to the portal on the page. */
+export const EscapeFromGarden: Story = {
+  args: { gameProps: wonGame },
+  globals: { viewport: { value: 'desktop' } },
+  play: async ({ canvasElement }) => {
+    await sitInGarden(canvasElement);
+    await userEvent.keyboard('{Escape}');
+    await closedToPortal(canvasElement);
+  },
+};
+
+/** Resting in the garden, the portal in the scene leaves too, the same as Exit. */
+export const PortalFromGarden: Story = {
+  args: { gameProps: wonGame },
+  globals: { viewport: { value: 'desktop' } },
+  play: async ({ canvasElement }) => {
+    const dialog = await sitInGarden(canvasElement);
+    await userEvent.click(
+      within(dialog).getByRole('button', { name: 'Go back through the portal' }),
+    );
+    await closedToPortal(canvasElement);
   },
 };
