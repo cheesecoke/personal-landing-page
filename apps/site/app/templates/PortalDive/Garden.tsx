@@ -10,6 +10,8 @@ import {
 import type { PortalSpiralProps } from '@cwc/ui';
 
 import s from './arrival.module.css';
+import { FarFlock } from './FarFlock';
+import type { FarFlockOptions } from './flockSky';
 import { GardenVideo } from './GardenVideo';
 import type { GardenScene } from './scene';
 
@@ -37,6 +39,8 @@ export interface GardenProps {
   onFail: () => void;
   /** The scene's region, which takes focus when the reader sits down. */
   ref?: Ref<HTMLDivElement>;
+  /** The far flock's timing (stories: a pass at once). The page never passes it. */
+  flock?: FarFlockOptions;
 }
 
 /**
@@ -57,6 +61,7 @@ export function Garden({
   onReady,
   onFail,
   ref,
+  flock,
 }: GardenProps) {
   const [hover, setHover] = useState(false);
   const [focus, setFocus] = useState(false);
@@ -122,6 +127,7 @@ export function Garden({
               />
             </picture>
             <GardenVideo scene={scene} shown={shown} />
+            <FarFlock shown={shown} {...flock} />
             <button
               type="button"
               className={s.portal}

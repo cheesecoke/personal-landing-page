@@ -100,6 +100,17 @@
   opacity: 1;
 }
 
+/*
+ * The far flock: a small canvas over the open sky (placed by the component, in the render's
+ * proportions), under the portal and everything else. The birds are drawn in this colour, faintly.
+ */
+.flock {
+  position: absolute;
+  display: block;
+  color: var(--palette-tick);
+  pointer-events: none;
+}
+
 /* Tall screens get the left half of the render (see `scene.ts`); the frame keeps the full size. */
 @media (aspect-ratio <= 2/3) {
   .image,
