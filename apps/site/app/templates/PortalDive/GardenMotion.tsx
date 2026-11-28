@@ -2,7 +2,7 @@ import { useEffect, useRef, useSyncExternalStore, type RefObject } from 'react';
 
 import s from './arrival.module.css';
 import { type ContextFactory, type Live, type MotionState, startGardenMotion } from './gardenLive';
-import masksUrl from './scene/garden-masks.png';
+import masksUrl from './scene/garden-masks.webp';
 
 export interface GardenMotionOptions {
   /** Makes the WebGL2 context. Default: the browser's. Stories pass one that fails. */
