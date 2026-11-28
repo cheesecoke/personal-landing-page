@@ -700,3 +700,41 @@ export const SceneAfterStart: Story = {
     await expect(canvasElement.querySelector('[data-garden]')).not.toHaveAttribute('data-shown');
   },
 };
+
+/**
+ * Sitting down, the scene holds still: no pan, no drift. Nothing in the scene animates except the
+ * portal's own spiral, and the image stays exactly where it is.
+ */
+export const SittingStill: Story = {
+  args: { store: store(), preview: wonClean },
+  globals: desktop,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await arrived(canvasElement);
+    await userEvent.click(canvas.getByRole('button', { name: diveCopy.buttons.sit }));
+    const scene = canvasElement.querySelector<HTMLElement>('[data-garden]')!;
+    const portal = portalOf(canvasElement);
+    const moving = () =>
+      scene
+        .getAnimations({ subtree: true })
+        .filter((a) => a.playState === 'running')
+        .filter((a) => {
+          const target = (a.effect as KeyframeEffect | null)?.target;
+          return !(target instanceof Element && portal.contains(target));
+        });
+    await expect(moving()).toHaveLength(0);
+    const image = canvas.getByRole('img', { name: diveCopy.garden.alt });
+    const before = image.getBoundingClientRect();
+    await new Promise((r) => setTimeout(r, 1500));
+    const after = image.getBoundingClientRect();
+    await expect(after.left).toBe(before.left);
+    await expect(after.top).toBe(before.top);
+    // The portal button is still topmost at the ring's centre.
+    const box = portal.getBoundingClientRect();
+    await expect(
+      document
+        .elementFromPoint(box.left + box.width / 2, box.top + box.height / 2)
+        ?.closest('[data-garden-portal]'),
+    ).toBe(portal);
+  },
+};
