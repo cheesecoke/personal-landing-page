@@ -345,6 +345,7 @@
   bottom: max(var(--gutter), 24px);
   left: 50%;
   box-sizing: border-box;
+  width: max-content;
   max-width: calc(100cqw - 2 * var(--gutter));
   margin: 0;
   padding: 10px 18px;
