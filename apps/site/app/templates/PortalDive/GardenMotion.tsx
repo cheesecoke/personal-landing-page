@@ -1,4 +1,4 @@
-import { useEffect, useRef, useSyncExternalStore, type RefObject } from 'react';
+import { useEffect, useRef, useState, useSyncExternalStore, type RefObject } from 'react';
 
 import s from './arrival.module.css';
 import { type ContextFactory, type Live, type MotionState, startGardenMotion } from './gardenLive';
@@ -59,7 +59,11 @@ export function GardenMotion({
     options.current = { getContext, masks, onState };
   });
 
-  const on = ready && !reduced;
+  // Nothing starts (no context, no masks fetched) until the garden is first on screen: during a
+  // run the image is only loading in the background. After that, it pauses while off screen.
+  const [shownOnce, setShownOnce] = useState(false);
+  if (active && ready && !shownOnce) setShownOnce(true);
+  const on = ready && !reduced && shownOnce;
   useEffect(() => {
     const el = canvas.current;
     const image = img.current;
