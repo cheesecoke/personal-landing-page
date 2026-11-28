@@ -2,6 +2,7 @@ import type { ElementType } from 'react';
 
 import { ArrowIcon } from '../ArrowIcon/ArrowIcon';
 import { cx } from '../cx';
+import styles from '../NextStep/NextStep.module.css';
 import type { PolymorphicProps } from '../polymorphic';
 
 export type TextLinkSize = 'link' | 'body' | 'lead';
@@ -29,6 +30,11 @@ interface TextLinkOwnProps {
    * touch-target box.
    */
   inline?: boolean;
+  /**
+   * This is the page's next step: when the visitor rests, its arrow eases forward and back, once
+   * (`NextStepHint` decides when). One per page. Not for inline links.
+   */
+  nextStep?: boolean;
 }
 
 export type TextLinkProps<E extends ElementType = 'a'> = PolymorphicProps<E, TextLinkOwnProps>;
@@ -40,6 +46,7 @@ export function TextLink<E extends ElementType = 'a'>({
   tone = 'primary',
   arrow = 'sm',
   inline = false,
+  nextStep = false,
   className,
   children,
   ...rest
@@ -68,8 +75,10 @@ export function TextLink<E extends ElementType = 'a'>({
         'motion-ok:transition-colors motion-ok:duration-hover motion-ok:ease-[ease]',
         sizes[size],
         tones[tone],
+        nextStep && styles.target,
         className as string | undefined,
       )}
+      data-next-step={nextStep ? '' : undefined}
       {...rest}
     >
       {children}
@@ -81,6 +90,7 @@ export function TextLink<E extends ElementType = 'a'>({
             arrow === 'sm'
               ? 'group-hover/link:translate-x-1.5 group-focus-visible/link:translate-x-1.5'
               : 'group-hover/link:translate-x-1 group-focus-visible/link:translate-x-1',
+            nextStep && styles.arrow,
           )}
         />
       ) : null}

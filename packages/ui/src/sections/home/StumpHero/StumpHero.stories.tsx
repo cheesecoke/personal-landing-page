@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor, within } from 'storybook/test';
 
-import { SiteNav } from '../../../layout';
+import { NextStepHint, SiteNav } from '../../../layout';
 import { heroCopy, heroProjects, heroRings } from '../internal/homeCopy';
 import { stumpPhoneArt, stumpWideArt, stumpWideLitArt } from '../internal/storyArt';
 import { StumpHero } from './StumpHero';
@@ -136,4 +136,28 @@ export const WithSources: Story = {
 
 export const PhoneReduced: Story = {
   globals: { viewport: { value: 'phone' }, motion: 'reduce' },
+};
+
+/**
+ * The Bone button as the page's next step: after a rest its arrow eases forward and a light runs
+ * under it (here after half a second; on the site after six).
+ */
+export const NextStep: Story = {
+  args: { nextStep: true },
+  render: (args) => (
+    <>
+      <StumpHero {...args} />
+      <NextStepHint debugIdleMs={500} />
+    </>
+  ),
+  play: async ({ canvasElement }) => {
+    const action = within(canvasElement).getByRole('link', {
+      name: heroCopy.primaryAction.label,
+    });
+    await expect(canvasElement.querySelectorAll('[data-next-step]')).toHaveLength(1);
+    await expect(action).toHaveAttribute('data-next-step');
+    await waitFor(() => expect(action).toHaveAttribute('data-next-step-hint', 'play'), {
+      timeout: 3000,
+    });
+  },
 };

@@ -1,0 +1,62 @@
+/*
+ * The scroll cue: the thread run on downward. A thin Signal line fading in from nothing, ending in
+ * a small chevron, at the bottom centre of the screen. It fades in, drifts down a few pixels and
+ * fades out, once per play. Invisible at rest, never takes a click, hidden from assistive tech.
+ */
+
+.cue {
+  position: fixed;
+  bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  z-index: 5;
+  display: block;
+  width: 12px;
+  height: 34px;
+  margin-left: -6px;
+  color: var(--accent-signal);
+  pointer-events: none;
+  opacity: 0;
+}
+
+.cueArt {
+  display: block;
+  overflow: visible;
+  filter: drop-shadow(var(--glow-thread));
+
+  /* A mask: only its alpha counts, so the line fades in from its top. */
+  mask-image: linear-gradient(180deg, transparent, black 70%);
+}
+
+.cueLine,
+.cueHead {
+  stroke: currentcolor;
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-motion='reduce']) .cue[data-cue='play'] {
+    animation: next-step-cue var(--duration-hint-cue) var(--ease-standard) 1;
+  }
+}
+
+@keyframes next-step-cue {
+  0% {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  35% {
+    opacity: 0.75;
+  }
+
+  65% {
+    opacity: 0.75;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}

@@ -16,6 +16,7 @@ export {
 } from './HandoffFooter/HandoffFooter';
 export type { Align, Gap, Justify } from './internal/gap';
 export type { LinkComponent, SiteLink } from './internal/link';
+export { NextStepHint, type NextStepHintProps } from './NextStepHint/NextStepHint';
 export {
   PageHeader,
   type PageHeaderLayout,

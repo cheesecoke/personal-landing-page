@@ -102,6 +102,25 @@ export const NoLiveData: Story = {
   },
 };
 
+/**
+ * One next step on the page: the hero's main action, toward Projects. When the visitor rests for
+ * six seconds its arrow eases forward under a light (stories for the timing are in
+ * Layout/NextStepHint).
+ */
+export const NextStep: Story = {
+  play: async ({ canvasElement }) => {
+    const targets = document.querySelectorAll('[data-next-step]');
+    await expect(targets).toHaveLength(1);
+    const primary = parsed.hero.actions.find((action) => action.variant === 'primary')!;
+    await expect(targets[0]).toBe(within(canvasElement).getByRole('link', { name: primary.label }));
+    await expect(targets[0]).toHaveAttribute('href', primary.href);
+    await expect(canvasElement.querySelector('[data-next-step-cue]')).toHaveAttribute(
+      'aria-hidden',
+      'true',
+    );
+  },
+};
+
 /** With live data: statuses and counted facts from it, the facts dated, one plate newly changed. */
 export const WithLiveData: Story = {
   args: {

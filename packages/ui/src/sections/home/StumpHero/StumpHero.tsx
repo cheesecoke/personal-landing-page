@@ -65,6 +65,11 @@ export interface StumpHeroProps {
   primaryAction?: StumpHeroAction;
   /** The quiet button beside it. */
   secondaryAction?: StumpHeroAction;
+  /**
+   * The Bone button is the page's next step: hinted when the visitor rests (with a `NextStepHint`
+   * on the page).
+   */
+  nextStep?: boolean;
   /** The wide render (2400 by 1500 on the board). Decorative there: the callouts carry meaning. */
   image: StumpHeroImage;
   /** The same frame with the rings lit, cross-faded over the wide render: the breath. */
@@ -119,6 +124,7 @@ export function StumpHero({
   lead,
   primaryAction,
   secondaryAction,
+  nextStep = false,
   image,
   litImage,
   phoneImage,
@@ -390,7 +396,7 @@ export function StumpHero({
               {primaryAction || secondaryAction ? (
                 <div className={styles.actions}>
                   {primaryAction ? (
-                    <Button as={linkAs} href={primaryAction.href} arrow>
+                    <Button as={linkAs} href={primaryAction.href} arrow nextStep={nextStep}>
                       {primaryAction.label}
                     </Button>
                   ) : null}

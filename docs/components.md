@@ -60,6 +60,7 @@ where it animates.
 | PageHeader        |                                                                             | in site |
 | HandoffFooter     |                                                                             | in site |
 | GoDeeper          |                                                                             | in site |
+| NextStepHint      | hints the page's `nextStep` action when the visitor rests; scroll cue       | in site |
 | FreshnessProvider | lives in `packages/content/src/react`: holds "now", ranks, enforces the cap | in site |
 
 ## Tier 3. Feature sections (`packages/ui/src/sections`)
