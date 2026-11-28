@@ -10,6 +10,7 @@ import {
 import type { PortalSpiralProps } from '@cwc/ui';
 
 import s from './arrival.module.css';
+import { GardenVideo } from './GardenVideo';
 import type { GardenScene } from './scene';
 
 /** `bloom`: the full arrival out of the tunnel's light. `fade`: a plain cross-fade. */
@@ -120,6 +121,7 @@ export function Garden({
                 onError={fail}
               />
             </picture>
+            <GardenVideo scene={scene} shown={shown} />
             <button
               type="button"
               className={s.portal}
