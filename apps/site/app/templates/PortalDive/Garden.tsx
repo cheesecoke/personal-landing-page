@@ -10,7 +10,6 @@ import {
 import type { PortalSpiralProps } from '@cwc/ui';
 
 import s from './arrival.module.css';
-import { GardenMotion, type GardenMotionOptions } from './GardenMotion';
 import type { GardenScene } from './scene';
 
 /** `bloom`: the full arrival out of the tunnel's light. `fade`: a plain cross-fade. */
@@ -37,8 +36,6 @@ export interface GardenProps {
   onFail: () => void;
   /** The scene's region, which takes focus when the reader sits down. */
   ref?: Ref<HTMLDivElement>;
-  /** The motion layer's options (stories: a failing context). */
-  motion?: GardenMotionOptions;
 }
 
 /**
@@ -59,14 +56,11 @@ export function Garden({
   onReady,
   onFail,
   ref,
-  motion,
 }: GardenProps) {
   const [hover, setHover] = useState(false);
   const [focus, setFocus] = useState(false);
   const active = hover || focus;
   const done = useRef(false);
-  // Decoded and on hand for the motion layer, which draws it.
-  const [decoded, setDecoded] = useState(false);
   const handlers = useRef({ onReady, onFail });
   useEffect(() => {
     handlers.current = { onReady, onFail };
@@ -77,12 +71,7 @@ export function Garden({
     done.current = true;
     // Decoded before it counts as ready, so the arrival never shows a half-painted image.
     const decoded = typeof img.decode === 'function' ? img.decode() : Promise.resolve();
-    decoded
-      .catch(() => {})
-      .then(() => {
-        setDecoded(true);
-        handlers.current.onReady();
-      });
+    decoded.catch(() => {}).then(() => handlers.current.onReady());
   };
   const fail = () => {
     if (done.current) return;
@@ -131,7 +120,6 @@ export function Garden({
                 onError={fail}
               />
             </picture>
-            <GardenMotion img={imgRef} ready={decoded} active={shown} {...motion} />
             <button
               type="button"
               className={s.portal}

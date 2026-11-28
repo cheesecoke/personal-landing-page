@@ -479,7 +479,7 @@ export const WonGardenPhone: Story = {
   },
 };
 
-/** Reduced motion: the garden comes in with a plain cross-fade; no bloom, no pan. */
+/** Reduced motion: the garden comes in with a plain cross-fade; no bloom. */
 export const WonGardenReduced: Story = {
   args: { store: store(), preview: wonClean, previewArrival: true },
   globals: { ...desktop, motion: 'reduce' },
@@ -701,101 +701,40 @@ export const SceneAfterStart: Story = {
   },
 };
 
-/* ---- The garden, alive ---------------------------------------------------------------------- */
-
-const motionOf = (root: HTMLElement) =>
-  root.querySelector<HTMLCanvasElement>('canvas[data-garden-motion]');
-
 /**
- * The garden alive, sitting down: the water moves under the reflection, a breeze crosses the
- * trees, the pads bob, the sun breathes, and now and then a far flock crosses the sky. Open this to
- * judge the motion (it runs until you leave).
+ * Sitting down, the scene holds still: no pan, no drift. Nothing in the scene animates except the
+ * portal's own spiral, and the image stays exactly where it is.
  */
-export const GardenAlive: Story = {
+export const SittingStill: Story = {
   args: { store: store(), preview: wonClean },
   globals: desktop,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await arrived(canvasElement);
     await userEvent.click(canvas.getByRole('button', { name: diveCopy.buttons.sit }));
-    await waitFor(
-      () => expect(motionOf(canvasElement)).toHaveAttribute('data-garden-motion', 'running'),
-      {
-        timeout: 8000,
-      },
-    );
-    // The portal button is still exactly over the ring, above the moving layer.
+    const scene = canvasElement.querySelector<HTMLElement>('[data-garden]')!;
     const portal = portalOf(canvasElement);
+    const moving = () =>
+      scene
+        .getAnimations({ subtree: true })
+        .filter((a) => a.playState === 'running')
+        .filter((a) => {
+          const target = (a.effect as KeyframeEffect | null)?.target;
+          return !(target instanceof Element && portal.contains(target));
+        });
+    await expect(moving()).toHaveLength(0);
+    const image = canvas.getByRole('img', { name: diveCopy.garden.alt });
+    const before = image.getBoundingClientRect();
+    await new Promise((r) => setTimeout(r, 1500));
+    const after = image.getBoundingClientRect();
+    await expect(after.left).toBe(before.left);
+    await expect(after.top).toBe(before.top);
+    // The portal button is still topmost at the ring's centre.
+    const box = portal.getBoundingClientRect();
     await expect(
       document
-        .elementFromPoint(
-          portal.getBoundingClientRect().left + portal.getBoundingClientRect().width / 2,
-          portal.getBoundingClientRect().top + portal.getBoundingClientRect().height / 2,
-        )
+        .elementFromPoint(box.left + box.width / 2, box.top + box.height / 2)
         ?.closest('[data-garden-portal]'),
     ).toBe(portal);
-  },
-};
-
-/** No WebGL2: the motion layer stands down and the still garden shows, everything else as before. */
-export const GardenNoWebGL: Story = {
-  args: { store: store(), preview: wonClean, motion: { getContext: () => null } },
-  globals: desktop,
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    await arrived(canvasElement);
-    await waitFor(() =>
-      expect(motionOf(canvasElement)).toHaveAttribute('data-garden-motion', 'unsupported'),
-    );
-    await expect(getComputedStyle(motionOf(canvasElement)!).opacity).toBe('0');
-    await expect(canvas.getByRole('img', { name: diveCopy.garden.alt })).toBeVisible();
-    await userEvent.click(canvas.getByRole('button', { name: diveCopy.buttons.sit }));
-    await expect(canvas.getByRole('button', { name: diveCopy.garden.portal })).toBeVisible();
-  },
-};
-
-/** Reduced motion: no motion layer at all, only the still image. */
-export const GardenMotionReduced: Story = {
-  args: { store: store(), preview: wonClean },
-  globals: { ...desktop, motion: 'reduce' },
-  play: async ({ canvasElement }) => {
-    await arrived(canvasElement);
-    await expect(motionOf(canvasElement)).toBeNull();
-  },
-};
-
-/** The GPU takes the context away: the canvas hides and the still image is there underneath. */
-export const GardenContextLost: Story = {
-  args: { store: store(), preview: wonClean },
-  globals: desktop,
-  play: async ({ canvasElement }) => {
-    await arrived(canvasElement);
-    const el = motionOf(canvasElement)!;
-    await waitFor(() => expect(el).toHaveAttribute('data-garden-motion', 'running'), {
-      timeout: 8000,
-    });
-    // The same canvas hands back its context: lose it, as a GPU reset would.
-    const gl = el.getContext('webgl2');
-    gl?.getExtension('WEBGL_lose_context')?.loseContext();
-    await waitFor(() => expect(el).toHaveAttribute('data-garden-motion', 'lost'));
-    await waitFor(() => expect(getComputedStyle(el).opacity).toBe('0'));
-    await expect(
-      within(canvasElement).getByRole('img', { name: diveCopy.garden.alt }),
-    ).toBeVisible();
-  },
-};
-
-/** "Dive again" pauses the garden's loop (it is off screen); nothing draws in the tunnel. */
-export const GardenPausesOffScreen: Story = {
-  args: { store: store(), preview: wonClean },
-  globals: desktop,
-  play: async ({ canvasElement }) => {
-    await arrived(canvasElement);
-    const el = motionOf(canvasElement)!;
-    await waitFor(() => expect(el).toHaveAttribute('data-garden-motion', 'running'), {
-      timeout: 8000,
-    });
-    await userEvent.click(within(canvasElement).getByRole('button', { name: 'Dive again' }));
-    await waitFor(() => expect(el).toHaveAttribute('data-garden-motion', 'paused'));
   },
 };

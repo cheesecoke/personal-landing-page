@@ -275,8 +275,6 @@ export const duration = {
   'canopy-shrink': 1000,
   /** The Portal dive's win: the tunnel's light blooms and the garden resolves out of it. */
   arrival: 2400,
-  /** The garden scene's slow pan, one way (it then drifts back). */
-  'scene-drift': 56000,
 } as const;
 
 export type DurationName = keyof typeof duration;

@@ -352,15 +352,6 @@
   animation-duration: var(--duration-arrival);
 }
 
-@utility duration-scene-drift {
-  --tw-duration: var(--duration-scene-drift);
-  transition-duration: var(--duration-scene-drift);
-}
-
-@utility animate-duration-scene-drift {
-  animation-duration: var(--duration-scene-drift);
-}
-
 @custom-variant motion-ok {
   @media (prefers-reduced-motion: no-preference) {
     :root:not([data-motion='reduce']) & {
