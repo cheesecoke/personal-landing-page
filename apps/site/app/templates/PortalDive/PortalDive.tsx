@@ -1,4 +1,11 @@
-import { useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from 'react';
+import {
+  type ComponentType,
+  type CSSProperties,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from 'react';
 
 import {
   bestStore,
@@ -8,7 +15,17 @@ import {
   type DiveGameHandle,
   type DiveResult,
 } from '@cwc/dive/react';
-import { Button, cx, Heading, Panel, Readout, Text, TextLink, VisuallyHidden } from '@cwc/ui';
+import {
+  Button,
+  cx,
+  Heading,
+  Panel,
+  type PortalSpiralProps,
+  Readout,
+  Text,
+  TextLink,
+  VisuallyHidden,
+} from '@cwc/ui';
 
 import s from './arrival.module.css';
 import { diveCopy, type PortalDiveCopy } from './copy';
@@ -64,6 +81,12 @@ export interface PortalDiveProps {
   scene?: GardenScene;
   /** For stories: the garden counts as ready only once this settles too (a slow image). */
   sceneHold?: Promise<unknown>;
+  /**
+   * The spiral in the garden's portal: the page's own `PortalSpiral`, passed in by the host. The
+   * Contact page already has it; importing it here as well would make the build split it out of
+   * the page into a chunk of its own, changing the page's first JavaScript.
+   */
+  spiral?: ComponentType<PortalSpiralProps>;
   copy?: PortalDiveCopy;
 }
 
@@ -155,6 +178,7 @@ export default function PortalDive({
   previewArrival = false,
   scene = gardenScene,
   sceneHold,
+  spiral,
   copy = diveCopy,
 }: PortalDiveProps) {
   const [store] = useState(() => storeIn ?? bestStore());
@@ -373,6 +397,7 @@ export default function PortalDive({
           scene={scene}
           alt={copy.garden.alt}
           portalLabel={copy.garden.portal}
+          spiral={spiral}
           shown={garden}
           arrival={arrival}
           flare={flare}

@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 
 import { bestStore, type BestResult, type DiveResult } from '@cwc/dive/react';
+import { PortalSpiral } from '@cwc/ui';
 
 import { diveCopy } from './copy';
 import { FakeAudio, FakeAudioContext } from './fakeAudio';
@@ -86,6 +87,7 @@ const meta = {
     seed: 7,
     audio: () => new FakeAudio(),
     audioContext: () => new FakeAudioContext(),
+    spiral: PortalSpiral,
   },
   decorators: [
     (Story) => (

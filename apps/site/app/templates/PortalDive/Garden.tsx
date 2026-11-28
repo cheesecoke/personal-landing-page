@@ -1,6 +1,13 @@
-import { useEffect, useRef, useState, type CSSProperties, type Ref } from 'react';
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ComponentType,
+  type CSSProperties,
+  type Ref,
+} from 'react';
 
-import { PortalSpiral } from '@cwc/ui';
+import type { PortalSpiralProps } from '@cwc/ui';
 
 import s from './arrival.module.css';
 import type { GardenScene } from './scene';
@@ -14,6 +21,8 @@ export interface GardenProps {
   alt: string;
   /** The portal button's name. */
   portalLabel: string;
+  /** The spiral drawn in the ring's opening (`PortalSpiral`). Without it, only the glow. */
+  spiral?: ComponentType<PortalSpiralProps>;
   /** On screen. Until then the image loads unseen and nothing in it can be reached. */
   shown: boolean;
   arrival: Arrival;
@@ -39,6 +48,7 @@ export function Garden({
   scene,
   alt,
   portalLabel,
+  spiral: Spiral,
   shown,
   arrival,
   flare,
@@ -125,7 +135,7 @@ export function Garden({
               <span className={s.halo} aria-hidden="true" />
               <span className={s.opening} aria-hidden="true">
                 <span className={s.tint} />
-                <PortalSpiral className={s.spiral} speed={active ? 'active' : 'rest'} />
+                {Spiral ? <Spiral className={s.spiral} speed={active ? 'active' : 'rest'} /> : null}
               </span>
             </button>
           </div>

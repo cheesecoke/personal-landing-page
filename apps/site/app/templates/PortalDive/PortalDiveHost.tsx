@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ComponentType } from 'react';
 
-import { Button, cx, Text } from '@cwc/ui';
+import { Button, cx, PortalSpiral, Text } from '@cwc/ui';
 
 // Types only: the game and its words are a separate chunk, loaded after "Enter".
 import type { PortalDiveProps } from './PortalDive';
@@ -129,7 +129,14 @@ export function PortalDiveHost({
       )}
     >
       {!open ? null : Game ? (
-        <Game mailto={mailto} linkedin={linkedin} onExit={onClose} {...gameProps} />
+        // The page's own spiral goes in for the garden's portal (see `PortalDiveProps.spiral`).
+        <Game
+          mailto={mailto}
+          linkedin={linkedin}
+          onExit={onClose}
+          spiral={PortalSpiral}
+          {...gameProps}
+        />
       ) : (
         <div className="flex h-full flex-col items-center justify-center gap-6 px-gutter text-center">
           <div role="status" data-portal-dive-state={failed ? 'failed' : 'loading'}>
