@@ -4,6 +4,7 @@ import type { HomeContent } from '@cwc/content/hand';
 import {
   AtWorkPipeline,
   HomeHandoff,
+  NextStepHint,
   ProjectMapTeaser,
   ProjectPlates,
   ProofRow,
@@ -126,7 +127,8 @@ export interface HomeTemplateProps {
 
 /**
  * Home: the stump hero, then the proof row, the work pipeline, the project plates and the map
- * teaser on the thread, then the hand-off to Projects.
+ * teaser on the thread, then the hand-off to Projects. The hero's main action is the page's next
+ * step (`NextStepHint`).
  *
  * The hero runs up behind the site header: the shell sets `--stump-hero-lift` to the header's
  * height on this page.
@@ -146,6 +148,7 @@ export function HomeTemplate({ content, live, fresh, map }: HomeTemplateProps) {
         lead={hero.lead}
         primaryAction={hero.actions.find((action) => action.variant === 'primary')}
         secondaryAction={hero.actions.find((action) => action.variant === 'quiet')}
+        nextStep
         image={stump.wide}
         litImage={stump.wideLit}
         phoneImage={stump.phone}
@@ -201,6 +204,8 @@ export function HomeTemplate({ content, live, fresh, map }: HomeTemplateProps) {
           />
         </ThreadColumn>
       </ThreadScope>
+      {/* The hero's main action is Home's next step: hinted when the visitor rests. */}
+      <NextStepHint />
     </>
   );
 }
