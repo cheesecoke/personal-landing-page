@@ -5,6 +5,28 @@
     "title": "The door is open.",
     "lead": "Building with agents, or want to compare notes? Write to me."
   },
+  "portal": {
+    "src": "/media/portal/portal-ring.webp",
+    "width": 1600,
+    "height": 1024,
+    "alt": "",
+    "sources": [{ "src": "/media/portal/portal-ring.avif", "type": "image/avif" }],
+    "entry": {
+      "label": "Open the portal",
+      "dialog": {
+        "title": "Step through?",
+        "body": "It has been running all day. Nobody has said where it goes.",
+        "enter": "Enter",
+        "cancel": "Not now"
+      },
+      "game": {
+        "label": "Portal dive",
+        "loading": "Loading the game.",
+        "failed": "The game did not load. Check your connection and try again.",
+        "back": "Back to Contact"
+      }
+    }
+  },
   "channels": [
     {
       "name": "Email",

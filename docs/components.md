@@ -9,36 +9,38 @@ where it animates.
 
 ## Tier 1. Primitives (`packages/ui/src/primitives`)
 
-| Component         | Notes                                                          | Status  |
-| ----------------- | -------------------------------------------------------------- | ------- |
-| Text              | `role` prop: the type roles                                    | in site |
-| Heading           |                                                                | in site |
-| Label             |                                                                | in site |
-| Readout           | numeral, status, date, stardate                                | in site |
-| ConfirmMarker     |                                                                | in site |
-| Button            | primary, quiet                                                 | in site |
-| ArrowIcon         |                                                                | in site |
-| TextLink          |                                                                | in site |
-| HandoffLink       |                                                                | in site |
-| StatusDot         | dot only                                                       | in site |
-| RingMark          | logo; optional `arc` prop                                      | in site |
-| Favicon           | the icon files and `faviconLinks`, wired in the root           | in site |
-| Hairline          | not used by a page yet                                         | story   |
-| LitEdge           |                                                                | in site |
-| TickScale         |                                                                | in site |
-| Grain             | the one film-grain texture                                     | in site |
-| RingArcs          | not used by a page yet                                         | story   |
-| Panel             |                                                                | in site |
-| Expander          |                                                                | in site |
-| Breadcrumb        |                                                                | in site |
-| Caption           |                                                                | in site |
-| Figure            |                                                                | in site |
-| Picture           | `<picture>` around an image: modern formats with a fallback    | in site |
-| VisuallyHidden    |                                                                | in site |
-| SkipLink          |                                                                | in site |
-| FocusRing         | not used by a page yet (components set their own focus styles) | story   |
-| ProjectStateBadge | StatusDot + status word + optional NewMarker slot              | in site |
-| NewMarker         | ring around the status dot that drains with age, plus a label  | in site |
+| Component         | Notes                                                           | Status  |
+| ----------------- | --------------------------------------------------------------- | ------- |
+| Text              | `role` prop: the type roles                                     | in site |
+| Heading           |                                                                 | in site |
+| Label             |                                                                 | in site |
+| Readout           | numeral, status, date, stardate                                 | in site |
+| ConfirmMarker     |                                                                 | in site |
+| Button            | primary, quiet                                                  | in site |
+| ArrowIcon         |                                                                 | in site |
+| TextLink          |                                                                 | in site |
+| HandoffLink       |                                                                 | in site |
+| StatusDot         | dot only                                                        | in site |
+| RingMark          | logo; optional `arc` prop                                       | in site |
+| Favicon           | the icon files and `faviconLinks`, wired in the root            | in site |
+| Hairline          | not used by a page yet                                          | story   |
+| LitEdge           |                                                                 | in site |
+| TickScale         |                                                                 | in site |
+| Grain             | the one film-grain texture                                      | in site |
+| RingArcs          | not used by a page yet                                          | story   |
+| PortalSpiral      | Contact door portal; fills and stretches to its parent, `speed` | story   |
+| Panel             |                                                                 | in site |
+| Expander          |                                                                 | in site |
+| ConfirmDialog     | modal question with two answers (native `<dialog>`)             | story   |
+| Breadcrumb        |                                                                 | in site |
+| Caption           |                                                                 | in site |
+| Figure            |                                                                 | in site |
+| Picture           | `<picture>` around an image: modern formats with a fallback     | in site |
+| VisuallyHidden    |                                                                 | in site |
+| SkipLink          |                                                                 | in site |
+| FocusRing         | not used by a page yet (components set their own focus styles)  | story   |
+| ProjectStateBadge | StatusDot + status word + optional NewMarker slot               | in site |
+| NewMarker         | ring around the status dot that drains with age, plus a label   | in site |
 
 ## Tier 2. Layout and structure (`packages/ui/src/layout`)
 
@@ -70,6 +72,7 @@ where it animates.
 | ProjectPlates     |                                                                     | in site |
 | ProjectTile       | with ProjectStateBadge                                              | in site |
 | Canopy            | `teaser` (Home), `full` (Projects); lives in `packages/canopy`      | in site |
+| DiveGame          | Portal dive renderer and controls; lives in `packages/dive/react`   | story   |
 | ProjectIndex      | rows with ProjectStateBadge + NewMarker                             | in site |
 | WhereItsAt        |                                                                     | in site |
 | CaptainsLog       | log entries on the thread, newest first                             | in site |
@@ -91,7 +94,7 @@ where it animates.
 | FieldNotes        |                                                                     | in site |
 | TitanFlow         |                                                                     | in site |
 | BeyondSlots       |                                                                     | in site |
-| ContactDoor       |                                                                     | in site |
+| ContactDoor       | Contact links and portal; `portal` prop makes the opening a button  | in site |
 | HomeHandoff       | the "Next: Projects" hand-off closing Home                          | in site |
 | ProjectMapTeaser  | the frame around Home's tree teaser                                 | in site |
 | ProjectsMapSlot   | the full-width slot for the tree on Projects; lives in ProjectIndex | in site |
@@ -120,4 +123,5 @@ Each takes fixture data in Storybook and has a `NoLiveData` story.
 | AboutTemplate                | in site           |
 | BeyondTemplate               | in site           |
 | ContactTemplate              | in site           |
+| PortalDiveHost               | in site           |
 | NotFound (`PlaceholderPage`) | in site, no story |

@@ -343,6 +343,15 @@
   animation-duration: var(--duration-canopy-shrink);
 }
 
+@utility duration-arrival {
+  --tw-duration: var(--duration-arrival);
+  transition-duration: var(--duration-arrival);
+}
+
+@utility animate-duration-arrival {
+  animation-duration: var(--duration-arrival);
+}
+
 @custom-variant motion-ok {
   @media (prefers-reduced-motion: no-preference) {
     :root:not([data-motion='reduce']) & {

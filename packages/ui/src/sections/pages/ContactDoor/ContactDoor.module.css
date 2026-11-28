@@ -1,6 +1,10 @@
 /*
- * Contact: the links on the left and an open door on the right. The page's thread runs down the
- * left, along the floor and in through the door. Ported from the Contact board.
+ * Contact: the links on the left and the portal on the right. The page's thread runs down the
+ * left, along the floor and plugs into the portal's power unit.
+ *
+ * The component sets the render's numbers as custom properties on the column: `--portal-ratio`
+ * (height over width), and `--plug-x` and `--plug-y` (where the thread plugs in, as fractions of
+ * the render).
  */
 
 .column {
@@ -9,13 +13,22 @@
 }
 
 /*
- * The rail stops where the drawing's floor line starts. The drawing is 900 wide with the floor
- * line 44.5 above its foot, and it shrinks with the column, so the rail's foot follows it: 93px
- * above the column's foot at full size (the 48px of padding plus 44.5), less as it shrinks. On a
- * phone the drawing has a fixed height and the foot is 77px up.
+ * How wide the render is. It sits at the foot of the section, flush right, and keeps clear of the
+ * copy: on a wide column, the column less room for the copy, up to a limit; on a narrower one it
+ * may run under the links (it sits below them), up to 600px. The rail and the scene both read it.
  */
+.thread,
+.scene {
+  --stage-w: min(1000px, max(100cqw - 240px, min(100cqw - 80px, 600px)));
+  --stage-h: calc(var(--stage-w) * var(--portal-ratio));
+
+  /* How far the floor line is above the foot of the render. */
+  --floor-lift: calc(var(--stage-h) * (1 - var(--plug-y)));
+}
+
+/* The rail stops where the floor line starts: the 48px of padding plus the floor's height. */
 .thread {
-  --thread-bottom: calc(48px + min(44.5px, (100cqw + 40px) / 20.225));
+  --thread-bottom: calc(48px + var(--floor-lift));
 }
 
 .section {
@@ -25,6 +38,7 @@
 
 .copy {
   position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -91,13 +105,8 @@
   overflow-wrap: anywhere;
 }
 
-/* The door. It starts on the thread, 40px left of the copy, so the floor line meets the rail. */
+/* The scene starts on the thread, 40px left of the copy, so the floor line meets the rail. */
 .scene {
-  --door-leaf-dark: color-mix(in srgb, var(--bg-surface) 60%, var(--bg-ground));
-  --door-leaf-light: color-mix(in srgb, var(--line-hairline) 12%, var(--bg-raised));
-  --door-leaf-edge: color-mix(in srgb, var(--line-tick) 43%, var(--line-hairline));
-  --door-handle: color-mix(in srgb, var(--line-hairline) 59%, var(--bg-raised));
-
   position: absolute;
   right: 0;
   bottom: 0;
@@ -107,48 +116,137 @@
   pointer-events: none;
 }
 
-.svg {
+.stage {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: var(--stage-w);
+  height: var(--stage-h);
+  pointer-events: auto;
+}
+
+/*
+ * The render's ground was exported as the page ground, so it melts into the page; its edges also
+ * fade out, so a format that shifts the ground a shade still shows no rectangle. The cables trail
+ * off the right edge. The left edge fades only a little, to keep the power unit whole.
+ */
+.render {
   display: block;
   width: 100%;
   height: 100%;
+  mask-image:
+    linear-gradient(90deg, transparent, black 2%, black 88%, transparent),
+    linear-gradient(180deg, transparent, black 10%, black 86%, transparent);
+  mask-composite: intersect;
 }
 
-.warm {
-  stop-color: var(--accent-warm);
+/* The ring's opening, clipped to its ellipse. The spiral sits inside, behind the rim. */
+.opening {
+  position: absolute;
+  clip-path: ellipse(50% 50% at 50% 50%);
 }
 
-.ground {
-  stop-color: var(--bg-ground);
+/* Darker toward the rim, so the spiral reads as deep inside the ring, not painted on it. */
+.opening::after {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    closest-side,
+    transparent 70%,
+    color-mix(in srgb, var(--bg-ground) 70%, transparent) 92%,
+    var(--bg-ground)
+  );
+  content: '';
 }
 
+/* The spiral fills the opening edge to edge; the shadow above does the fading. */
+.opening .spiral {
+  mask-image: radial-gradient(closest-side, black 90%, transparent);
+}
+
+/*
+ * With a portal: only the opening takes the pointer, so the render does not cover the copy. The
+ * button is the opening's ellipse grown by a margin all round (and never under the touch target),
+ * so it is easy to hit; its focus ring follows the ellipse.
+ */
+.enterable {
+  pointer-events: none;
+}
+
+.portal {
+  --reach: 14px;
+
+  position: absolute;
+  box-sizing: border-box;
+  min-width: var(--touch-target);
+  min-height: var(--touch-target);
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+/*
+ * The ring is drawn just inside the opening, on its dark: outside it would land on the rim's own
+ * teal lines and vanish.
+ */
+.portal:focus-visible {
+  outline-offset: calc(-1 * var(--reach) - 10px);
+}
+
+/*
+ * The affordance: while the button has the pointer or focus, the shadow inside the rim lifts a
+ * little, so the spiral reads brighter and nearer, as if the opening were drawing you in.
+ */
+.enterable:has(.portal:hover, .portal:focus-visible) .opening::after {
+  opacity: 0.45;
+}
+
+/*
+ * The thread along the floor: from the rail to the toe of the power unit, where it plugs in. It
+ * brightens as it nears the plug.
+ */
 .floor {
-  stop-color: var(--line-hairline);
+  position: absolute;
+  bottom: calc(var(--floor-lift) - 0.5px);
+  left: 0;
+  width: calc(100% - var(--stage-w) * (1 - var(--plug-x)));
+  height: 1px;
+  background: linear-gradient(90deg, var(--thread-line) 60%, var(--thread-on));
+  opacity: 0.75;
 }
 
-.leafDark {
-  stop-color: var(--door-leaf-dark);
+/* The socket: a small lit point where the thread meets the unit. */
+.plug {
+  position: absolute;
+  top: -1.5px;
+  right: -2px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--thread-on);
+  box-shadow: var(--glow-thread);
 }
 
-.leafLight {
-  stop-color: var(--door-leaf-light);
-}
-
+/* On a phone the portal stacks under the links, as wide as the column from the rail. */
 @media (width < 700px) {
-  .thread {
-    --thread-bottom: 77px;
+  .thread,
+  .scene {
+    --stage-w: calc(100cqw + 26px);
+  }
+
+  .section {
+    min-height: 0;
   }
 
   .scene {
     position: relative;
     right: auto;
     left: auto;
-    height: 520px;
+    height: var(--stage-h);
     margin: 40px 0 0 -26px;
-  }
-
-  .svg {
-    width: 180%;
-    margin-left: -80%;
   }
 }
 
@@ -159,5 +257,9 @@
 
   :root:not([data-motion='reduce']) .plain {
     transition: color var(--duration-hover);
+  }
+
+  :root:not([data-motion='reduce']) .opening::after {
+    transition: opacity var(--duration-hover) var(--ease-out);
   }
 }

@@ -34,6 +34,12 @@ export {
 } from './RingArcs/RingArcs';
 
 export { RingMark, type RingMarkDetail, type RingMarkProps } from './RingMark/RingMark';
+export {
+  PortalSpiral,
+  PORTAL_ACTIVE_RATE,
+  type PortalSpiralProps,
+  type PortalSpiralSpeed,
+} from './PortalSpiral/PortalSpiral';
 export { Favicon, faviconLinks, type FaviconProps, type FaviconSize } from './Favicon/Favicon';
 
 export { Panel, type PanelProps } from './Panel/Panel';
@@ -42,6 +48,7 @@ export { Figure, type FigureProps } from './Figure/Figure';
 export { Picture, type PictureProps, type PictureSource } from './Picture/Picture';
 export { Breadcrumb, type BreadcrumbItem, type BreadcrumbProps } from './Breadcrumb/Breadcrumb';
 export { Expander, ExpanderGroup, type ExpanderProps } from './Expander/Expander';
+export { ConfirmDialog, type ConfirmDialogProps } from './ConfirmDialog/ConfirmDialog';
 
 export { VisuallyHidden, type VisuallyHiddenProps } from './VisuallyHidden/VisuallyHidden';
 export { SkipLink, type SkipLinkProps } from './SkipLink/SkipLink';
