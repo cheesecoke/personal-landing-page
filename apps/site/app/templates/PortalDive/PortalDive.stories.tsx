@@ -776,7 +776,9 @@ export const SittingStill: Story = {
           const target = (a.effect as KeyframeEffect | null)?.target;
           return !(target instanceof Element && portal.contains(target));
         });
-    await expect(moving()).toHaveLength(0);
+    // A one-off cross-fade that is still finishing (the video taking over from the still, on a
+    // slow machine) is not motion; anything that keeps running is.
+    await waitFor(() => expect(moving()).toHaveLength(0), { timeout: 3000 });
     const image = canvas.getByRole('img', { name: diveCopy.garden.alt });
     const before = image.getBoundingClientRect();
     await new Promise((r) => setTimeout(r, 1500));
