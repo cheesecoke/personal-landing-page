@@ -275,6 +275,10 @@ export const duration = {
   'canopy-shrink': 1000,
   /** The Portal dive's win: the tunnel's light blooms and the garden resolves out of it. */
   arrival: 2400,
+  /** The next-step hint: the arrow easing forward and back, a light along the edge. Once. */
+  hint: 1400,
+  /** The scroll cue: a thin line and chevron fading in, drifting down and fading out. Once. */
+  'hint-cue': 2000,
 } as const;
 
 export type DurationName = keyof typeof duration;
@@ -292,6 +296,21 @@ export const fresh = {
 } as const;
 
 export type FreshKind = keyof typeof fresh.life;
+
+/**
+ * The next-step hint: when the visitor rests, the page's most likely next action draws the eye
+ * once, then rests. Times in milliseconds. Design and code share these numbers.
+ */
+export const nudge = {
+  /** No pointer, key, wheel, scroll or touch for this long counts as resting. */
+  idle: 6000,
+  /** While the visitor keeps resting, the soonest the hint plays again (from the last start). */
+  repeat: 12000,
+  /** Most hints in one page view, the in-place hint and the scroll cue together. */
+  plays: 3,
+  /** How much of the target's height must be on screen for the in-place hint. */
+  inView: 0.6,
+} as const;
 
 /** The one texture: a film-grain filter over the page. */
 export const texture = {
@@ -316,6 +335,7 @@ export const tokens = {
   ease,
   duration,
   fresh,
+  nudge,
   texture,
 } as const;
 

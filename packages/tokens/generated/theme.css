@@ -352,6 +352,24 @@
   animation-duration: var(--duration-arrival);
 }
 
+@utility duration-hint {
+  --tw-duration: var(--duration-hint);
+  transition-duration: var(--duration-hint);
+}
+
+@utility animate-duration-hint {
+  animation-duration: var(--duration-hint);
+}
+
+@utility duration-hint-cue {
+  --tw-duration: var(--duration-hint-cue);
+  transition-duration: var(--duration-hint-cue);
+}
+
+@utility animate-duration-hint-cue {
+  animation-duration: var(--duration-hint-cue);
+}
+
 @custom-variant motion-ok {
   @media (prefers-reduced-motion: no-preference) {
     :root:not([data-motion='reduce']) & {
