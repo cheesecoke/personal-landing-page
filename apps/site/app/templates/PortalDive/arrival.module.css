@@ -92,9 +92,30 @@
   user-select: none;
 }
 
+/*
+ * The garden, alive: a canvas exactly over the image (same box), drawing it through the motion
+ * shader. Invisible until it has drawn a frame, and again if its context is lost, so the image
+ * underneath is what shows whenever the canvas cannot.
+ */
+.motion {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.motion[data-garden-drawn]:is([data-garden-motion='running'], [data-garden-motion='paused']) {
+  opacity: 1;
+}
+
 /* Tall screens get the left half of the render (see `scene.ts`); the frame keeps the full size. */
 @media (aspect-ratio <= 2/3) {
-  .image {
+  .image,
+  .motion {
     width: calc(var(--tall-share) * 100%);
   }
 }
@@ -409,6 +430,11 @@
   :root:not([data-motion='reduce']) .tint,
   :root:not([data-motion='reduce']) .spiral {
     transition: opacity var(--duration-hover) var(--ease-out);
+  }
+
+  /* The canvas takes over from the image with a short cross-fade (they differ only in filtering). */
+  :root:not([data-motion='reduce']) .motion {
+    transition: opacity var(--duration-nav) var(--ease-standard);
   }
 
   :root:not([data-motion='reduce']) .capsule,

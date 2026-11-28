@@ -267,3 +267,25 @@ export const PortalFromGarden: Story = {
     await closedToPortal(canvasElement);
   },
 };
+
+/** Leaving the garden lets its WebGL context go: nothing keeps drawing behind the page. */
+export const GardenReleasesContext: Story = {
+  args: { gameProps: wonGame },
+  globals: { viewport: { value: 'desktop' } },
+  play: async ({ canvasElement }) => {
+    const dialog = await openOverlay(canvasElement);
+    const canvas = await waitFor(
+      () => {
+        const el = dialog.querySelector<HTMLCanvasElement>('canvas[data-garden-motion="running"]');
+        if (!el) throw new Error('not running yet');
+        return el;
+      },
+      { timeout: 10000 },
+    );
+    const gl = canvas.getContext('webgl2')!;
+    await expect(gl.isContextLost()).toBe(false);
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Exit' }));
+    await closedToPortal(canvasElement);
+    await waitFor(() => expect(gl.isContextLost()).toBe(true));
+  },
+};
