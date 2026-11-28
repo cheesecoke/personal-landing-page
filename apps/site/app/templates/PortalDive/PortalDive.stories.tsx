@@ -965,3 +965,61 @@ export const GardenFlockReduced: Story = {
     await expect(flockOf(canvasElement)).toBeNull();
   },
 };
+
+/* ---- A far fish jump ------------------------------------------------------------------------ */
+
+const fishOf = (root: HTMLElement) =>
+  root.querySelector<HTMLCanvasElement>('canvas[data-garden-fish]');
+
+/**
+ * A far fish jump, 3 s after the garden appears, in the middle of the open water (the page waits 45 to 75 s for the first, then 2 to 4 minutes
+ * between jumps): a tiny splash far out on the open water, then a few slow, flat rings that fade.
+ * It sits over the scene and under the portal, and never takes the pointer.
+ */
+export const GardenFishJump: Story = {
+  args: {
+    store: store(),
+    preview: wonClean,
+    scene: gardenScene,
+    fish: { firstJumpS: 3, random: () => 0.5 },
+  },
+  globals: desktop,
+  play: async ({ canvasElement }) => {
+    await arrived(canvasElement);
+    await userEvent.click(
+      within(canvasElement).getByRole('button', { name: diveCopy.buttons.sit }),
+    );
+    const fish = fishOf(canvasElement)!;
+    await expect(fish).toHaveAttribute('aria-hidden', 'true');
+    await expect(getComputedStyle(fish).pointerEvents).toBe('none');
+    const portal = portalOf(canvasElement);
+    const box = portal.getBoundingClientRect();
+    await expect(
+      document
+        .elementFromPoint(box.left + box.width / 2, box.top + box.height / 2)
+        ?.closest('[data-garden-portal]'),
+    ).toBe(portal);
+  },
+};
+
+/** With the page's timing, the water stays still for the first 45 s at least. */
+export const GardenFishWaits: Story = {
+  args: { store: store(), preview: wonClean },
+  globals: desktop,
+  play: async ({ canvasElement }) => {
+    await arrived(canvasElement);
+    await new Promise((r) => setTimeout(r, 1000));
+    await expect(fishOf(canvasElement)).toHaveAttribute('data-garden-fish', 'waiting');
+  },
+};
+
+/** Reduced motion: no fish. */
+export const GardenFishReduced: Story = {
+  args: { store: store(), preview: wonClean, fish: { firstJumpS: 0 } },
+  globals: { ...desktop, motion: 'reduce' },
+  play: async ({ canvasElement }) => {
+    await arrived(canvasElement);
+    await new Promise((r) => setTimeout(r, 500));
+    await expect(fishOf(canvasElement)).toBeNull();
+  },
+};
