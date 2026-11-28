@@ -29,6 +29,7 @@ import {
 
 import s from './arrival.module.css';
 import { diveCopy, type PortalDiveCopy } from './copy';
+import type { FarFlockOptions } from './flockSky';
 import { type Arrival, Garden } from './Garden';
 import {
   type AudioContextFactory,
@@ -87,6 +88,8 @@ export interface PortalDiveProps {
    * the page into a chunk of its own, changing the page's first JavaScript.
    */
   spiral?: ComponentType<PortalSpiralProps>;
+  /** The far flock's timing (stories: a pass at once). The page never passes it. */
+  flock?: FarFlockOptions;
   copy?: PortalDiveCopy;
 }
 
@@ -179,6 +182,7 @@ export default function PortalDive({
   scene = gardenScene,
   sceneHold,
   spiral,
+  flock,
   copy = diveCopy,
 }: PortalDiveProps) {
   const [store] = useState(() => storeIn ?? bestStore());
@@ -398,6 +402,7 @@ export default function PortalDive({
           alt={copy.garden.alt}
           portalLabel={copy.garden.portal}
           spiral={spiral}
+          flock={flock}
           shown={garden}
           arrival={arrival}
           flare={flare}

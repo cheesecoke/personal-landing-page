@@ -6,6 +6,8 @@ import { PortalSpiral } from '@cwc/ui';
 
 import { diveCopy } from './copy';
 import { FakeAudio, FakeAudioContext } from './fakeAudio';
+import testMp4 from './fixtures/garden-test.mp4';
+import testWebm from './fixtures/garden-test.webm';
 import PortalDive from './PortalDive';
 import { gardenScene } from './scene';
 import { SOUND_KEY, soundStore } from './sound';
@@ -76,6 +78,10 @@ const won: DiveResult = {
 };
 const wonClean: DiveResult = { ...won, ringsHit: 0, livesLeft: 3, clean: true };
 
+/** The real scene with a tiny stand-in clip, so the tests never wait on the real video. */
+const testClip = { mp4: testMp4, webm: testWebm };
+const storyScene = { ...gardenScene, video: { wide: testClip, tall: testClip } };
+
 /**
  * The Portal dive as the overlay shows it, full size: start, the run, and the end screens. The
  * game is real; the end screens can be opened straight from a result (`preview`).
@@ -92,6 +98,7 @@ const meta = {
     audio: () => new FakeAudio(),
     audioContext: () => new FakeAudioContext(),
     spiral: PortalSpiral,
+    scene: storyScene,
   },
   decorators: [
     (Story) => (
@@ -422,7 +429,7 @@ const arrived = async (root: HTMLElement) => {
 
 /** A scene whose image never loads: the fallback is today's dark win screen. */
 const brokenScene = {
-  ...gardenScene,
+  ...storyScene,
   wide: { avif: '/missing-garden.avif', webp: '/missing-garden.webp' },
   tall: { avif: '/missing-garden.avif', webp: '/missing-garden.webp' },
 };
@@ -740,5 +747,178 @@ export const SittingStill: Story = {
         .elementFromPoint(box.left + box.width / 2, box.top + box.height / 2)
         ?.closest('[data-garden-portal]'),
     ).toBe(portal);
+  },
+};
+
+/* ---- The garden, moving --------------------------------------------------------------------- */
+
+const videoOf = (root: HTMLElement) => root.querySelector<HTMLVideoElement>('[data-garden-video]');
+
+/**
+ * The garden as it ships: the real clip, a locked camera, looping. Open this to watch it (it plays
+ * until you leave); the still is underneath until the clip can play through.
+ */
+export const GardenMoving: Story = {
+  args: { store: store(), preview: wonClean, scene: gardenScene },
+  globals: desktop,
+  play: async ({ canvasElement }) => {
+    await arrived(canvasElement);
+    await userEvent.click(
+      within(canvasElement).getByRole('button', { name: diveCopy.buttons.sit }),
+    );
+    await expect(videoOf(canvasElement)).not.toBeNull();
+  },
+};
+
+/**
+ * The clip plays over the still: muted, looping, inline, hidden from assistive tech, exactly the
+ * still's box, and the portal button stays on top of it at the ring's centre.
+ */
+export const GardenVideoPlays: Story = {
+  args: { store: store(), preview: wonClean },
+  globals: desktop,
+  play: async ({ canvasElement }) => {
+    await arrived(canvasElement);
+    const video = videoOf(canvasElement)!;
+    await waitFor(() => expect(video).toHaveAttribute('data-garden-video', 'playing'), {
+      timeout: 8000,
+    });
+    await expect(video).toHaveAttribute('data-ready');
+    await expect(video.muted).toBe(true);
+    await expect(video.loop).toBe(true);
+    await expect(video.playsInline).toBe(true);
+    await expect(video).toHaveAttribute('aria-hidden', 'true');
+    const image = within(canvasElement).getByRole('img', { name: diveCopy.garden.alt });
+    await expect(video.getBoundingClientRect().toJSON()).toEqual(
+      image.getBoundingClientRect().toJSON(),
+    );
+    const portal = portalOf(canvasElement);
+    const box = portal.getBoundingClientRect();
+    await expect(
+      document
+        .elementFromPoint(box.left + box.width / 2, box.top + box.height / 2)
+        ?.closest('[data-garden-portal]'),
+    ).toBe(portal);
+  },
+};
+
+/** The clip cannot load: it never shows, and the still garden works exactly as before. */
+export const GardenVideoFails: Story = {
+  args: {
+    store: store(),
+    preview: wonClean,
+    scene: {
+      ...gardenScene,
+      video: {
+        wide: { mp4: '/missing-garden.mp4', webm: '/missing-garden.webm' },
+        tall: { mp4: '/missing-garden.mp4', webm: '/missing-garden.webm' },
+      },
+    },
+  },
+  globals: desktop,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await arrived(canvasElement);
+    const video = videoOf(canvasElement)!;
+    await waitFor(() => expect(video).toHaveAttribute('data-garden-video', 'failed'));
+    await expect(video).not.toHaveAttribute('data-ready');
+    await expect(getComputedStyle(video).opacity).toBe('0');
+    await expect(canvas.getByRole('img', { name: diveCopy.garden.alt })).toBeVisible();
+    await userEvent.click(canvas.getByRole('button', { name: diveCopy.buttons.sit }));
+    await expect(canvas.getByRole('button', { name: diveCopy.garden.portal })).toBeVisible();
+  },
+};
+
+/** Reduced motion: no video at all, only the still. */
+export const GardenVideoReduced: Story = {
+  args: { store: store(), preview: wonClean },
+  globals: { ...desktop, motion: 'reduce' },
+  play: async ({ canvasElement }) => {
+    await arrived(canvasElement);
+    await new Promise((r) => setTimeout(r, 500));
+    await expect(videoOf(canvasElement)).toBeNull();
+  },
+};
+
+/** During a run the still loads in the background, but the video is not asked for until a win. */
+export const GardenVideoAfterWin: Story = {
+  args: { store: store() },
+  globals: desktop,
+  play: async ({ canvasElement }) => {
+    await userEvent.click(await within(canvasElement).findByRole('button', { name: 'Start' }));
+    await expect(canvasElement.querySelector('[data-garden] img')).not.toBeNull();
+    await new Promise((r) => setTimeout(r, 500));
+    await expect(canvasElement.querySelector('video')).toBeNull();
+    await expect(canvasElement.querySelector('canvas[data-garden-flock]')).toBeNull();
+  },
+};
+
+/** "Dive again" pauses the clip (the garden is off screen); nothing plays in the tunnel. */
+export const GardenVideoPausesOffScreen: Story = {
+  args: { store: store(), preview: wonClean },
+  globals: desktop,
+  play: async ({ canvasElement }) => {
+    await arrived(canvasElement);
+    const video = videoOf(canvasElement)!;
+    await waitFor(() => expect(video).toHaveAttribute('data-garden-video', 'playing'), {
+      timeout: 8000,
+    });
+    await userEvent.click(within(canvasElement).getByRole('button', { name: 'Dive again' }));
+    await waitFor(() => expect(video).toHaveAttribute('data-garden-video', 'paused'));
+    await expect(video.paused).toBe(true);
+  },
+};
+
+/* ---- The far flock -------------------------------------------------------------------------- */
+
+const flockOf = (root: HTMLElement) =>
+  root.querySelector<HTMLCanvasElement>('canvas[data-garden-flock]');
+
+/**
+ * A far flock pass, started at once (the page waits 20 to 30 s for the first, then 60 to 90 s
+ * between passes): a few tiny, hazy birds drift slowly across the open sky between the trees. It
+ * sits over the scene and under the portal, and never takes the pointer.
+ */
+export const GardenFlockPass: Story = {
+  args: { store: store(), preview: wonClean, scene: gardenScene, flock: { firstPassS: 0 } },
+  globals: desktop,
+  play: async ({ canvasElement }) => {
+    await arrived(canvasElement);
+    await userEvent.click(
+      within(canvasElement).getByRole('button', { name: diveCopy.buttons.sit }),
+    );
+    const flock = flockOf(canvasElement)!;
+    await waitFor(() => expect(flock).toHaveAttribute('data-garden-flock', 'flying'));
+    await expect(flock).toHaveAttribute('aria-hidden', 'true');
+    await expect(getComputedStyle(flock).pointerEvents).toBe('none');
+    const portal = portalOf(canvasElement);
+    const box = portal.getBoundingClientRect();
+    await expect(
+      document
+        .elementFromPoint(box.left + box.width / 2, box.top + box.height / 2)
+        ?.closest('[data-garden-portal]'),
+    ).toBe(portal);
+  },
+};
+
+/** With the page's timing, the sky stays empty for the first 20 s at least. */
+export const GardenFlockWaits: Story = {
+  args: { store: store(), preview: wonClean },
+  globals: desktop,
+  play: async ({ canvasElement }) => {
+    await arrived(canvasElement);
+    await new Promise((r) => setTimeout(r, 1000));
+    await expect(flockOf(canvasElement)).toHaveAttribute('data-garden-flock', 'waiting');
+  },
+};
+
+/** Reduced motion: no flock at all. */
+export const GardenFlockReduced: Story = {
+  args: { store: store(), preview: wonClean, flock: { firstPassS: 0 } },
+  globals: { ...desktop, motion: 'reduce' },
+  play: async ({ canvasElement }) => {
+    await arrived(canvasElement);
+    await new Promise((r) => setTimeout(r, 500));
+    await expect(flockOf(canvasElement)).toBeNull();
   },
 };

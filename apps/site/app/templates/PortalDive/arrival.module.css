@@ -79,9 +79,42 @@
   user-select: none;
 }
 
+/*
+ * The scene moving: a video exactly over the still (same box, same framing). Invisible until it can
+ * play through, then it fades in; the still underneath is what shows before, and if it fails.
+ */
+.video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: left top;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.video[data-ready] {
+  opacity: 1;
+}
+
+/*
+ * The far flock: a small canvas over the open sky (placed by the component, in the render's
+ * proportions), under the portal and everything else. The birds are drawn in this colour, faintly.
+ */
+.flock {
+  position: absolute;
+  display: block;
+  color: var(--palette-tick);
+  pointer-events: none;
+}
+
 /* Tall screens get the left half of the render (see `scene.ts`); the frame keeps the full size. */
 @media (aspect-ratio <= 2/3) {
-  .image {
+  .image,
+  .video {
     width: calc(var(--tall-share) * 100%);
   }
 }
@@ -390,6 +423,11 @@
   :root:not([data-motion='reduce']) .tint,
   :root:not([data-motion='reduce']) .spiral {
     transition: opacity var(--duration-hover) var(--ease-out);
+  }
+
+  /* The video takes over from the still with a slow cross-fade (the same picture, now moving). */
+  :root:not([data-motion='reduce']) .video {
+    transition: opacity var(--duration-nav) var(--ease-standard);
   }
 
   :root:not([data-motion='reduce']) .capsule,
