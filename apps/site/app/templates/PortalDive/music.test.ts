@@ -319,7 +319,6 @@ describe('createMusic through Web Audio', () => {
       const music = createMusic({
         enabled: true,
         create: () => audio,
-        ambience: [],
         // The music alone: the garden's ambience has its own tests below.
         ambience: [],
         createContext,
