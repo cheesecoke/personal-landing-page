@@ -276,7 +276,7 @@ export const duration = {
   /** The Portal dive's win: the tunnel's light blooms and the garden resolves out of it. */
   arrival: 2400,
   /** The next-step hint: the arrow easing forward and back, a light along the edge. Once. */
-  hint: 1400,
+  hint: 1600,
   /** The scroll cue: a thin line and chevron fading in, drifting down and fading out. Once. */
   'hint-cue': 2000,
 } as const;
