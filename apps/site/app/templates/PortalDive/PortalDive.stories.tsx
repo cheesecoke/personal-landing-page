@@ -4,8 +4,8 @@ import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { bestStore, type BestResult, type DiveResult } from '@cwc/dive/react';
 import { PortalSpiral } from '@cwc/ui';
 
+import { FakeAudio, FakeAudioContext } from '../../sound/fakeAudio';
 import { diveCopy } from './copy';
-import { FakeAudio, FakeAudioContext } from './fakeAudio';
 import testMp4 from './fixtures/garden-test.mp4';
 import testWebm from './fixtures/garden-test.webm';
 import PortalDive from './PortalDive';

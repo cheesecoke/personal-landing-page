@@ -5,7 +5,7 @@ import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { bestStore } from '@cwc/dive/react';
 
 import contact from '../../../content/hand/contact.json';
-import { FakeAudio, FakeAudioContext } from './fakeAudio';
+import { FakeAudio, FakeAudioContext } from '../../sound/fakeAudio';
 import { PortalDiveHost, type PortalDiveHostProps } from './PortalDiveHost';
 import { soundStore } from './sound';
 

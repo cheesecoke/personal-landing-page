@@ -1,4 +1,4 @@
-import type { AudioContextLike, AudioLike, GainLike } from './music';
+import type { AudioContextLike, AudioLike, GainLike } from './track';
 
 /**
  * For tests and stories only: a silent stand-in for the music's `<audio>` element that records
