@@ -70,7 +70,6 @@ describe('createNextStepController', () => {
     controller.activity();
     vi.advanceTimersByTime(120_000);
     expect(plays).toHaveLength(3);
-    expect(controller.played).toBe(3);
   });
 
   it('waits a full rest after activity even when a repeat is due', () => {

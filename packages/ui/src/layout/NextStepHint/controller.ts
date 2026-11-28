@@ -47,8 +47,7 @@ export interface NextStepController {
   engage(): void;
   /** The page was hidden (`true`) or shown again (`false`). */
   hidden(isHidden: boolean): void;
-  /** How many hints and cues have played. */
-  readonly played: number;
+  /** Stop for good (unmount). */
   destroy(): void;
 }
 
@@ -112,6 +111,12 @@ export function createNextStepController(
     schedule(now + timings.idle);
   }
 
+  function end() {
+    done = true;
+    clear();
+    stopPlaying();
+  }
+
   schedule();
 
   return {
@@ -124,12 +129,7 @@ export function createNextStepController(
       // The pending timer re-checks the clock when it fires; only start one if none is pending.
       if (timer === undefined) schedule();
     },
-    engage() {
-      if (done) return;
-      done = true;
-      clear();
-      stopPlaying();
-    },
+    engage: end,
     hidden(next) {
       isHidden = next;
       if (next) {
@@ -140,13 +140,6 @@ export function createNextStepController(
         schedule();
       }
     },
-    get played() {
-      return played;
-    },
-    destroy() {
-      done = true;
-      clear();
-      stopPlaying();
-    },
+    destroy: end,
   };
 }
