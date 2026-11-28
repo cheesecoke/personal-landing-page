@@ -404,6 +404,7 @@ export default function PortalDive({
           spiral={spiral}
           flock={flock}
           shown={garden}
+          portalReachable={!showCard}
           arrival={arrival}
           flare={flare}
           onPortal={onExit}
@@ -413,21 +414,19 @@ export default function PortalDive({
       )}
       {showCard ? (
         // Over the tunnel the dimmed layer covers the whole screen; only Exit sits above it. Over
-        // the garden there is no dimming: the card sits on paper, off centre, over the water.
+        // the garden there is no dimming: the card sits on paper over the scene. Either way it is
+        // centred below the top bar, and a card taller than the space scrolls inside.
         <div
-          className={
-            garden
-              ? s.overlay
-              : 'fixed inset-0 z-3 flex items-center justify-center overflow-y-auto bg-ground/80 px-gutter py-20'
-          }
+          className={cx(s.overlay, !garden && s.dim)}
           data-arrival={garden ? arrival : undefined}
+          data-dive-overlay=""
         >
-          <div ref={panel} className={garden ? s.slot : 'w-full max-w-110'}>
+          <div ref={panel} className={s.slot}>
             <Panel
               padded
               data-dive-screen={screen}
               data-dive-card={garden ? 'garden' : 'tunnel'}
-              className={cx('flex flex-col gap-3', garden && s.paper, garden && s.card)}
+              className={cx('flex flex-col gap-3', s.card, garden && s.paper)}
             >
               {screen === 'start' ? (
                 <>
