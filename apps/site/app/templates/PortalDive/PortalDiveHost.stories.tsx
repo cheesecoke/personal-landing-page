@@ -267,3 +267,25 @@ export const PortalFromGarden: Story = {
     await closedToPortal(canvasElement);
   },
 };
+
+/** Leaving the garden lets the clip go: nothing keeps loading or playing behind the page. */
+export const GardenReleasesVideo: Story = {
+  args: { gameProps: wonGame },
+  globals: { viewport: { value: 'desktop' } },
+  play: async ({ canvasElement }) => {
+    const dialog = await openOverlay(canvasElement);
+    const video = await waitFor(
+      () => {
+        const el = dialog.querySelector<HTMLVideoElement>('video[data-garden-video]');
+        if (!el) throw new Error('no video yet');
+        return el;
+      },
+      { timeout: 10000 },
+    );
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Exit' }));
+    await closedToPortal(canvasElement);
+    await waitFor(() => expect(video.isConnected).toBe(false));
+    await expect(video.paused).toBe(true);
+    await expect(video.networkState).toBe(HTMLMediaElement.NETWORK_EMPTY);
+  },
+};
