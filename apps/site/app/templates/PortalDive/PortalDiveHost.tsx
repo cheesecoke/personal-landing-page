@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type ComponentType } from 'react';
 
 import { Button, cx, PortalSpiral, Text } from '@cwc/ui';
 
+import { holdSiteAmbience } from '../../sound/site';
 // Types only: the game and its words are a separate chunk, loaded after "Enter".
 import type { PortalDiveProps } from './PortalDive';
 
@@ -31,6 +32,11 @@ export interface PortalDiveHostProps {
   words: PortalDiveWords;
   /** Loads the game. Default: its own chunk. Stories pass a stand-in. */
   load?: () => Promise<GameModule>;
+  /**
+   * While open, the site's ambience steps aside (fades out) so the game's own music owns the
+   * sound; it comes back on close. Default: the site's. Returns the release.
+   */
+  holdAmbience?: () => () => void;
   /** Props for the game itself (stories: a seed, a store, a preview). */
   gameProps?: Partial<Omit<PortalDiveProps, 'mailto' | 'linkedin' | 'onExit'>>;
 }
@@ -50,6 +56,7 @@ export function PortalDiveHost({
   linkedin,
   words,
   load = loadGame,
+  holdAmbience = holdSiteAmbience,
   gameProps,
 }: PortalDiveHostProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -62,6 +69,11 @@ export function PortalDiveHost({
     onCloseRef.current = onClose;
     loadRef.current = load;
   });
+
+  const holdRef = useRef(holdAmbience);
+  useEffect(() => {
+    if (open) return holdRef.current();
+  }, [open]);
 
   // The chunk: fetched on the first open (and again after a failure), then kept.
   useEffect(() => {

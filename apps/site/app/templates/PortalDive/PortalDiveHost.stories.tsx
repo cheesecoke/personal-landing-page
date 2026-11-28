@@ -294,3 +294,31 @@ export const GardenReleasesVideo: Story = {
     await expect(video.networkState).toBe(HTMLMediaElement.NETWORK_EMPTY);
   },
 };
+
+const ambience = { held: 0, holds: 0 };
+/**
+ * The site's ambience steps aside while the overlay is open, so the game's music owns the sound,
+ * and comes back when it closes (a stand-in records the hand-off; nothing plays).
+ */
+export const AmbienceHandOff: Story = {
+  args: {
+    holdAmbience: () => {
+      ambience.held += 1;
+      ambience.holds += 1;
+      return () => {
+        ambience.held -= 1;
+      };
+    },
+  },
+  globals: { viewport: { value: 'desktop' } },
+  play: async ({ canvasElement }) => {
+    await expect(ambience.held).toBe(0);
+    const dialog = await openOverlay(canvasElement);
+    await expect(ambience.held).toBe(1);
+    await within(dialog).findByRole('button', { name: 'Start' });
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Exit' }));
+    await closedToPortal(canvasElement);
+    await expect(ambience.held).toBe(0);
+    await expect(ambience.holds).toBe(1);
+  },
+};
