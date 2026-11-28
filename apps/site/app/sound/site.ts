@@ -11,6 +11,7 @@
  */
 import type { createSiteAmbience, SiteAmbience } from './ambience';
 import { type SoundPreference, sitePreference } from './preference';
+import { createTouches, type Touches } from './touches';
 import type { AudioContextLike } from './track';
 
 type AmbienceModule = { createSiteAmbience: typeof createSiteAmbience };
@@ -19,8 +20,10 @@ export interface SiteSound {
   preference: SoundPreference;
   /** Starts listening (the shell, once mounted). Returns the stop. */
   install: () => () => void;
-  /** The Portal dive is open: the ambience steps aside until the returned release is called. */
+  /** The Portal dive is open: the ambience and every UI sound step aside until released. */
   hold: () => () => void;
+  /** The small sounds and vibration: cues for explicit hooks (a tree node, a page change). */
+  touches: Touches;
 }
 
 export interface SiteSoundOptions {
@@ -30,7 +33,8 @@ export interface SiteSoundOptions {
   /** Makes an audio context inside the first gesture. Default: the browser's. */
   createContext?: () => AudioContextLike | null;
   win?: Pick<Window, 'addEventListener' | 'removeEventListener'>;
-  doc?: Pick<Document, 'visibilityState' | 'documentElement'>;
+  doc?: Document;
+  nav?: Pick<Navigator, 'vibrate'> | null;
 }
 
 const GESTURES = ['pointerdown', 'keydown', 'touchend'] as const;
@@ -47,11 +51,21 @@ export function createSiteSound({
   createContext = browserContext,
   win = window,
   doc = document,
+  nav,
 }: SiteSoundOptions): SiteSound {
   let ambience: SiteAmbience | null = null;
   let loading = false;
   let listening = false;
   let holds = 0;
+  /** When sound was last turned on before the chunk had arrived: its "on" cue plays on arrival. */
+  let onAsked = -Infinity;
+
+  const touches = createTouches({
+    gate: () => preference.read() && holds === 0 && doc.visibilityState === 'visible',
+    bus: () => ambience?.cues() ?? null,
+    doc,
+    nav,
+  });
 
   const listen = (on: boolean) => {
     if (on === listening) return;
@@ -86,8 +100,10 @@ export function createSiteSound({
     load().then(
       (mod) => {
         ambience = mod.createSiteAmbience({ context, held: holds > 0 });
-        if (preference.read()) begin();
-        else ambience.stop();
+        if (preference.read()) {
+          begin();
+          if (performance.now() - onAsked < 1500) touches.cue('on');
+        } else ambience.stop();
       },
       () => {
         // The chunk did not load: stay quiet, say nothing; the button still works.
@@ -112,11 +128,18 @@ export function createSiteSound({
     else doc.documentElement.setAttribute('data-sound', 'off');
     if (!on) {
       listen(false);
+      touches.hum(false);
       ambience?.stop();
       return;
     }
-    // Turned on here (a press, so a gesture): start now. From another tab: wait for a gesture.
-    if (doc.visibilityState === 'visible') begin();
+    // Turned on here (a press, so a gesture): start now, with a small "on". From another tab:
+    // wait for a gesture.
+    if (doc.visibilityState === 'visible') {
+      begin();
+      touches.vibrate('strong');
+      if (ambience) touches.cue('on');
+      else onAsked = performance.now();
+    }
     listen(true);
   };
 
@@ -124,14 +147,17 @@ export function createSiteSound({
     preference,
     install: () => {
       const unsubscribe = preference.subscribe(onChange);
+      const untouch = touches.install();
       if (preference.read()) listen(true);
       return () => {
         unsubscribe();
+        untouch();
         listen(false);
       };
     },
     hold: () => {
       holds += 1;
+      touches.hum(false);
       ambience?.setHeld(true);
       let released = false;
       return () => {
@@ -141,6 +167,7 @@ export function createSiteSound({
         ambience?.setHeld(holds > 0);
       };
     },
+    touches,
   };
 }
 
@@ -150,3 +177,9 @@ export const siteSound = () => (site ??= createSiteSound({ preference: sitePrefe
 
 /** For the Portal dive's overlay: the site's ambience steps aside while it is open. */
 export const holdSiteAmbience = () => siteSound().hold();
+
+/** A cue from an explicit hook (a tree node lighting up, a page change). Dropped if it cannot play. */
+export const siteCue: Touches['cue'] = (name, note) => siteSound().touches.cue(name, note);
+
+/** A vibration from an explicit hook (entering the portal). */
+export const siteVibrate: Touches['vibrate'] = (kind) => siteSound().touches.vibrate(kind);

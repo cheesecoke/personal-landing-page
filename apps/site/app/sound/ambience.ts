@@ -4,6 +4,7 @@
  * the track is part of any page's first load. One instance lives for the page's whole life, above
  * the routes, so it keeps playing across client-side page changes.
  */
+import { createCueBus, type CueBus } from './cues';
 import ambienceAac from './media/site-ambience.m4a';
 import ambienceOpus from './media/site-ambience.webm';
 import {
@@ -53,6 +54,11 @@ export interface SiteAmbience {
   setHeld: (held: boolean) => void;
   /** False once the track cannot play (it failed to load, or there is no audio). */
   available: () => boolean;
+  /**
+   * The small interaction sounds, on the same audio context as the bed (made if there is none
+   * yet, e.g. when the track could not load). Null without Web Audio. The caller gates them.
+   */
+  cues: () => CueBus | null;
 }
 
 export interface SiteAmbienceOptions {
@@ -98,6 +104,7 @@ export function createSiteAmbience({
   let held = heldIn;
   let hidden = doc?.visibilityState === 'hidden';
   let fadeUp = FADE_IN_MS;
+  let bus: CueBus | null = null;
 
   const level = () => (held || hidden ? 0 : AMBIENCE_LEVEL);
   const fade = (_from: number, to: number) =>
@@ -168,6 +175,8 @@ export function createSiteAmbience({
     stop: () => {
       const t = track;
       const c = context;
+      bus?.dispose();
+      bus = null;
       track = null;
       context = null;
       t?.close(OFF_FADE_MS, () => closeContext(c));
@@ -179,5 +188,17 @@ export function createSiteAmbience({
       update(FADE_IN_MS);
     },
     available: () => !failed && !(track?.unavailable() ?? false),
+    cues: () => {
+      if (bus) return bus;
+      try {
+        context ??= createContext();
+        if (!context) return null;
+        if (context.state === 'suspended') void Promise.resolve(context.resume()).catch(() => {});
+        bus = createCueBus(context as unknown as BaseAudioContext);
+      } catch {
+        bus = null;
+      }
+      return bus;
+    },
   };
 }

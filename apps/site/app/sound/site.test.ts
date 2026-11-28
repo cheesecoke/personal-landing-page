@@ -8,11 +8,13 @@ import { createSiteSound } from './site';
 /** A silent stand-in for the ambience chunk: records what the bootstrap asks of it. */
 function fakeAmbience(result: boolean | (() => boolean) = true) {
   const made: SiteAmbienceOptions[] = [];
+  const bus = { play: vi.fn(), hum: vi.fn(), dispose: vi.fn() };
   const ambience = {
     start: vi.fn(() => Promise.resolve(typeof result === 'function' ? result() : result)),
     stop: vi.fn(),
     setHeld: vi.fn(),
     available: vi.fn(() => true),
+    cues: vi.fn(() => bus),
   } satisfies SiteAmbience;
   const load = vi.fn(() =>
     Promise.resolve({
@@ -22,7 +24,7 @@ function fakeAmbience(result: boolean | (() => boolean) = true) {
       },
     }),
   );
-  return { ambience, load, made };
+  return { ambience, load, made, bus };
 }
 
 function setup({
@@ -45,13 +47,15 @@ function setup({
   });
   const win = new EventTarget();
   const attrs = new Map<string, string>();
-  const doc = {
+  const doc = Object.assign(new EventTarget(), {
     visibilityState: 'visible' as DocumentVisibilityState,
     documentElement: {
+      dataset: {} as Record<string, string>,
       setAttribute: (k: string, v: string) => attrs.set(k, v),
       removeAttribute: (k: string) => attrs.delete(k),
     } as unknown as HTMLElement,
-  };
+  });
+  const vibrations: number[] = [];
   const fake = fakeAmbience(result);
   const contexts: FakeAudioContext[] = [];
   const site = createSiteSound({
@@ -63,14 +67,15 @@ function setup({
       return c;
     },
     win: win as unknown as Window,
-    doc,
+    doc: doc as unknown as Document,
+    nav: { vibrate: ((ms: number) => (vibrations.push(ms), true)) as Navigator['vibrate'] },
   });
   const fire = async (type: string) => {
     win.dispatchEvent(new Event(type));
     // Let the chunk's promise and the start's promise settle.
     for (let i = 0; i < 5; i += 1) await Promise.resolve();
   };
-  return { ...fake, site, preference, fire, contexts, attrs, doc, storage };
+  return { ...fake, site, preference, fire, contexts, attrs, doc, storage, vibrations };
 }
 
 describe('the site sound bootstrap', () => {
@@ -195,5 +200,44 @@ describe('the site sound bootstrap', () => {
     uninstall();
     await fire('pointerdown');
     expect(load).not.toHaveBeenCalled();
+  });
+
+  it('turning sound on plays a small "on" and a longer pulse; turning it off, nothing', async () => {
+    const { site, preference, bus, fire, vibrations } = setup();
+    site.install();
+    await fire('pointerdown');
+    preference.write(false);
+    expect(bus.play).not.toHaveBeenCalled();
+    expect(vibrations).toEqual([]);
+    preference.write(true);
+    expect(bus.play).toHaveBeenCalledWith('on', undefined);
+    expect(vibrations).toEqual([22]);
+  });
+
+  it('turned on before the chunk has loaded, the "on" plays when it arrives', async () => {
+    const { site, preference, bus } = setup({ stored: 'off' });
+    site.install();
+    preference.write(true);
+    await vi.waitFor(() => expect(bus.play).toHaveBeenCalledWith('on', undefined));
+  });
+
+  it('gates every cue: off, hidden, or while the game is open; nothing before the chunk', async () => {
+    const { site, preference, bus, fire, doc } = setup();
+    site.install();
+    site.touches.cue('page');
+    expect(bus.play).not.toHaveBeenCalled();
+    await fire('pointerdown');
+    site.touches.cue('page');
+    expect(bus.play).toHaveBeenCalledTimes(1);
+    const release = site.hold();
+    expect(bus.hum).toHaveBeenCalledWith(false);
+    site.touches.cue('page');
+    release();
+    doc.visibilityState = 'hidden';
+    site.touches.cue('page');
+    doc.visibilityState = 'visible';
+    preference.write(false);
+    site.touches.cue('page');
+    expect(bus.play).toHaveBeenCalledTimes(1);
   });
 });

@@ -65,6 +65,11 @@ export interface CanopyProps {
   stage?: Pick<CanopyOptions, 'forceStatic' | 'watchdog'>;
   /** Called when the live stage has mounted, and with `null` when it is torn down. */
   onStage?: (handle: CanopyHandle | null) => void;
+  /**
+   * Called when what is hovered or open changes (from the stage or the list): the page can answer
+   * a node lighting up, with a sound for instance.
+   */
+  onSelectionChange?: (selection: CanopySelection) => void;
   className?: string;
   ref?: Ref<CanopyRef>;
 }
@@ -157,6 +162,7 @@ export function Canopy({
   colors,
   stage,
   onStage,
+  onSelectionChange,
   className,
   ref,
 }: CanopyProps) {
@@ -183,9 +189,9 @@ export function Canopy({
   const narrow = width > 0 && width < 761;
 
   /* The latest props, for the stage's callbacks: changing them must not rebuild the stage. */
-  const live = useRef({ data, colors, copy, onStage });
+  const live = useRef({ data, colors, copy, onStage, onSelectionChange });
   useEffect(() => {
-    live.current = { data, colors, copy, onStage };
+    live.current = { data, colors, copy, onStage, onSelectionChange };
   });
 
   useEffect(() => {
@@ -264,6 +270,10 @@ export function Canopy({
   useEffect(() => {
     handle?.relayout();
   }, [handle, active, width]);
+
+  useEffect(() => {
+    live.current.onSelectionChange?.(selection);
+  }, [selection]);
 
   const pinned = selection.pinShoot?.i;
   useEffect(() => {
