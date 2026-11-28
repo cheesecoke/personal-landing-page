@@ -21,6 +21,7 @@ import { freshCandidates, liveContent } from './content/live.server';
 import { AppShell } from './shell/AppShell';
 import { motionMirrorScript } from './shell/motion';
 import { pageTitle, PlaceholderPage } from './shell/PlaceholderPage';
+import { soundMirrorScript } from './sound/preference';
 
 const preloadFont = (href: string) =>
   ({ rel: 'preload', href, as: 'font', type: 'font/woff2', crossOrigin: 'anonymous' }) as const;
@@ -66,6 +67,8 @@ export function Layout({ children }: { children: ReactNode }) {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <script dangerouslySetInnerHTML={{ __html: motionMirrorScript }} />
+        {/* Sets `data-sound="off"` for a visitor who turned sound off, so the header shows it. */}
+        <script dangerouslySetInnerHTML={{ __html: soundMirrorScript }} />
         <Meta />
         <Links />
       </head>

@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { FakeAudio, FakeAudioContext } from './fakeAudio';
+import { FakeAudio, FakeAudioContext } from '../../sound/fakeAudio';
 import {
   AMBIENCE_FADE_IN_MS,
   AMBIENCE_FADE_OUT_MS,

@@ -4,8 +4,16 @@ import { useLocation } from 'react-router';
 import { useFreshness } from '@cwc/content/react';
 import { cx, Grain, SiteFooter, SiteNav, SkipLink } from '@cwc/ui';
 
+import { useSiteSound } from '../sound/useSiteSound';
 import { RouterLink } from './RouterLink';
-import { currentNavHref, formatLastUpdate, navLinks, shellLinks, site } from './site';
+import {
+  currentNavHref,
+  formatLastUpdate,
+  navLinks,
+  shellLinks,
+  site,
+  SOUND_SHORTCUT,
+} from './site';
 
 /** The footer's words: the `footer` of hand content's `site.json`. */
 export interface ShellFooter {
@@ -34,6 +42,8 @@ export interface AppShellProps {
 export function AppShell({ footer, lastUpdate, children }: AppShellProps) {
   const { pathname } = useLocation();
   const { navRing } = useFreshness();
+  // The site's sound lives here, above the routes, so it plays on across page changes.
+  const sound = useSiteSound();
   /*
    * Home's hero runs up behind the header: `--stump-hero-lift` is the header's height (one row:
    * the name and the menu button under `md`, the name and the pages from it; with scripting off
@@ -59,6 +69,12 @@ export function AppShell({ footer, lastUpdate, children }: AppShellProps) {
           menu={site.menu}
           locationKey={pathname}
           linkAs={RouterLink}
+          sound={{
+            on: sound.on,
+            onToggle: sound.toggle,
+            labels: site.sound,
+            shortcut: SOUND_SHORTCUT,
+          }}
         />
       </header>
       <main id="main" tabIndex={-1} className="app-main relative flex-1 outline-none">

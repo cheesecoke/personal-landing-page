@@ -37,3 +37,16 @@
     animation-timing-function: var(--ease-standard);
   }
 }
+
+/*
+ * The header's sound button before hydration: the page is pre-rendered with sound on (the
+ * default), and the head script marks `<html data-sound="off">` for a visitor who turned it off,
+ * so the muted speaker shows from the first paint. After hydration the button agrees anyway.
+ */
+:root[data-sound='off'] [data-site-sound] [data-sound-waves] {
+  display: none;
+}
+
+:root[data-sound='off'] [data-site-sound] [data-sound-cross] {
+  display: inline;
+}

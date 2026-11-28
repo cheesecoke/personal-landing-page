@@ -38,6 +38,7 @@ where it animates.
 | Picture           | `<picture>` around an image: modern formats with a fallback     | in site |
 | VisuallyHidden    |                                                                 | in site |
 | SkipLink          |                                                                 | in site |
+| SoundToggle       | the speaker button; optional page-wide key (M)                  | in site |
 | FocusRing         | not used by a page yet (components set their own focus styles)  | story   |
 | ProjectStateBadge | StatusDot + status word + optional NewMarker slot               | in site |
 | NewMarker         | ring around the status dot that drains with age, plus a label   | in site |
@@ -47,7 +48,7 @@ where it animates.
 | Component         | Notes                                                                       | Status  |
 | ----------------- | --------------------------------------------------------------------------- | ------- |
 | AppShell          | lives in `apps/site/app/shell`: nav, `main`, footer, skip link              | in site |
-| SiteNav           | with NavTimeline, the release nav ring and the phone menu (under `md`)      | in site |
+| SiteNav           | with NavTimeline, release ring, phone menu (under `md`), sound button       | in site |
 | SiteFooter        | with "Last update · date"                                                   | in site |
 | Container         |                                                                             | in site |
 | Section           |                                                                             | in site |

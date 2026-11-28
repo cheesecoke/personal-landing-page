@@ -52,6 +52,11 @@ export { ConfirmDialog, type ConfirmDialogProps } from './ConfirmDialog/ConfirmD
 
 export { VisuallyHidden, type VisuallyHiddenProps } from './VisuallyHidden/VisuallyHidden';
 export { SkipLink, type SkipLinkProps } from './SkipLink/SkipLink';
+export {
+  SoundToggle,
+  type SoundToggleLabels,
+  type SoundToggleProps,
+} from './SoundToggle/SoundToggle';
 export { FocusRing, focusRing, focusRingInset, type FocusRingProps } from './FocusRing/FocusRing';
 
 export {

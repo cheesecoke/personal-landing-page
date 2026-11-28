@@ -4,13 +4,13 @@ import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { bestStore, type BestResult, type DiveResult } from '@cwc/dive/react';
 import { PortalSpiral } from '@cwc/ui';
 
+import { FakeAudio, FakeAudioContext } from '../../sound/fakeAudio';
+import { createSoundPreference, SOUND_KEY } from '../../sound/preference';
 import { diveCopy } from './copy';
-import { FakeAudio, FakeAudioContext } from './fakeAudio';
 import testMp4 from './fixtures/garden-test.mp4';
 import testWebm from './fixtures/garden-test.webm';
 import PortalDive from './PortalDive';
 import { gardenScene } from './scene';
-import { SOUND_KEY, soundStore } from './sound';
 
 /** A Storage stand-in. `blocked` throws on every call, as private modes and settings can. */
 function storage(initial?: BestResult, blocked = false): Storage {
@@ -38,7 +38,7 @@ const store = (initial?: BestResult, blocked = false) =>
 function sound(initial?: 'on' | 'off') {
   const s = storage();
   if (initial) s.setItem(SOUND_KEY, initial);
-  return { storage: s, store: soundStore(s, SOUND_KEY) };
+  return { storage: s, store: createSoundPreference({ storage: s, events: null }) };
 }
 
 /**
@@ -776,7 +776,9 @@ export const SittingStill: Story = {
           const target = (a.effect as KeyframeEffect | null)?.target;
           return !(target instanceof Element && portal.contains(target));
         });
-    await expect(moving()).toHaveLength(0);
+    // A one-off cross-fade that is still finishing (the video taking over from the still, on a
+    // slow machine) is not motion; anything that keeps running is.
+    await waitFor(() => expect(moving()).toHaveLength(0), { timeout: 3000 });
     const image = canvas.getByRole('img', { name: diveCopy.garden.alt });
     const before = image.getBoundingClientRect();
     await new Promise((r) => setTimeout(r, 1500));

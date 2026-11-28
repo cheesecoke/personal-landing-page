@@ -1,6 +1,6 @@
 import { useRef, type HTMLAttributes } from 'react';
 
-import { VisuallyHidden } from '../../primitives';
+import { SoundToggle, type SoundToggleLabels, VisuallyHidden } from '../../primitives';
 import { Container } from '../Container/Container';
 import { cx } from '../internal/cx';
 import type { LinkComponent, SiteLink } from '../internal/link';
@@ -14,6 +14,16 @@ export interface SiteNavItem extends SiteLink {
    * `label` is read out by assistive tech, so colour is not the only signal.
    */
   ring?: { label: string };
+}
+
+/** The header's sound button: the whole site's sound, on or off. */
+export interface SiteNavSound {
+  on: boolean;
+  onToggle: () => void;
+  /** Its name ("Sound") and tooltips. */
+  labels: SoundToggleLabels;
+  /** A key that presses it from anywhere on the page ("m"), except while typing. */
+  shortcut?: string;
 }
 
 export interface SiteNavProps extends HTMLAttributes<HTMLElement> {
@@ -39,6 +49,11 @@ export interface SiteNavProps extends HTMLAttributes<HTMLElement> {
   locationKey?: string;
   /** The element or component for the links. Default `a`. It receives `href`. */
   linkAs?: LinkComponent;
+  /**
+   * The sound button: after the pages from `md`, beside the menu button under it (one tap on a
+   * phone, without opening the menu). Hidden with scripting off, where there is no sound.
+   */
+  sound?: SiteNavSound;
 }
 
 const linkMotion = 'motion-ok:transition-colors motion-ok:duration-hover motion-ok:ease-[ease]';
@@ -86,6 +101,7 @@ export function SiteNav({
   menu,
   locationKey,
   linkAs: Link = 'a',
+  sound,
   className,
   ...rest
 }: SiteNavProps) {
@@ -109,14 +125,14 @@ export function SiteNav({
     <Container as="nav" aria-label={label} className={className} {...rest}>
       <div
         ref={rowRef}
-        className="relative flex min-h-14 items-stretch justify-between gap-x-8 border-b border-hairline max-md:noscript:flex-wrap md:min-h-[88px] md:flex-wrap"
+        className="relative flex min-h-14 items-stretch justify-between gap-x-4 border-b md:gap-x-8 border-hairline max-md:noscript:flex-wrap md:min-h-[88px] md:flex-wrap"
       >
         <div ref={homeRef} className="relative flex items-center max-md:noscript:basis-full">
           <NavMark name={name} href={homeHref} current={isHome} linkAs={Link} />
         </div>
         <div
           ref={linksRef}
-          className="-mr-3 flex items-stretch gap-2 max-md:hidden max-md:noscript:-ml-3 max-md:noscript:flex max-md:noscript:basis-full max-md:noscript:justify-between max-md:noscript:gap-0"
+          className="-mr-3 flex items-stretch gap-2 max-md:hidden md:ml-auto max-md:noscript:-ml-3 max-md:noscript:flex max-md:noscript:basis-full max-md:noscript:justify-between max-md:noscript:gap-0"
         >
           {items.map((item) => {
             const on = item.href === current;
@@ -148,6 +164,17 @@ export function SiteNav({
             );
           })}
         </div>
+        {sound ? (
+          <SoundToggle
+            variant="plain"
+            on={sound.on}
+            onToggle={sound.onToggle}
+            labels={sound.labels}
+            shortcut={sound.shortcut}
+            data-site-sound=""
+            className="self-center noscript:hidden max-md:ml-auto max-md:-mr-4 md:-ml-5 md:-mr-3"
+          />
+        ) : null}
         <SiteNavMenu
           name={name}
           homeHref={homeHref}

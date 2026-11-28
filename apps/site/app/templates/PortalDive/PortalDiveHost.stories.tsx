@@ -5,9 +5,9 @@ import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { bestStore } from '@cwc/dive/react';
 
 import contact from '../../../content/hand/contact.json';
-import { FakeAudio, FakeAudioContext } from './fakeAudio';
+import { FakeAudio, FakeAudioContext } from '../../sound/fakeAudio';
+import { createSoundPreference } from '../../sound/preference';
 import { PortalDiveHost, type PortalDiveHostProps } from './PortalDiveHost';
-import { soundStore } from './sound';
 
 const words = contact.portal.entry.game;
 
@@ -49,7 +49,7 @@ const meta = {
     gameProps: {
       seed: 7,
       store: bestStore(null),
-      sound: soundStore(null),
+      sound: createSoundPreference({ storage: null, events: null }),
       audio: silent,
       audioContext: silentContext,
     },
@@ -86,7 +86,7 @@ async function closedToPortal(root: HTMLElement) {
 const wonGame = {
   seed: 7,
   store: bestStore(null),
-  sound: soundStore(null),
+  sound: createSoundPreference({ storage: null, events: null }),
   audio: silent,
   audioContext: silentContext,
   preview: {
@@ -149,7 +149,7 @@ export const BackToContact: Story = {
     gameProps: {
       seed: 7,
       store: bestStore(null),
-      sound: soundStore(null),
+      sound: createSoundPreference({ storage: null, events: null }),
       audio: silent,
       audioContext: silentContext,
       preview: {
@@ -225,7 +225,7 @@ export const SoundStopsOnClose: Story = {
     gameProps: {
       seed: 7,
       store: bestStore(null),
-      sound: soundStore(null),
+      sound: createSoundPreference({ storage: null, events: null }),
       // Each mount makes the music, then the garden's ambience: keep the music.
       audio: () => {
         const audio = new FakeAudio();
@@ -292,5 +292,33 @@ export const GardenReleasesVideo: Story = {
     await waitFor(() => expect(video.isConnected).toBe(false));
     await expect(video.paused).toBe(true);
     await expect(video.networkState).toBe(HTMLMediaElement.NETWORK_EMPTY);
+  },
+};
+
+const ambience = { held: 0, holds: 0 };
+/**
+ * The site's ambience steps aside while the overlay is open, so the game's music owns the sound,
+ * and comes back when it closes (a stand-in records the hand-off; nothing plays).
+ */
+export const AmbienceHandOff: Story = {
+  args: {
+    holdAmbience: () => {
+      ambience.held += 1;
+      ambience.holds += 1;
+      return () => {
+        ambience.held -= 1;
+      };
+    },
+  },
+  globals: { viewport: { value: 'desktop' } },
+  play: async ({ canvasElement }) => {
+    await expect(ambience.held).toBe(0);
+    const dialog = await openOverlay(canvasElement);
+    await expect(ambience.held).toBe(1);
+    await within(dialog).findByRole('button', { name: 'Start' });
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Exit' }));
+    await closedToPortal(canvasElement);
+    await expect(ambience.held).toBe(0);
+    await expect(ambience.holds).toBe(1);
   },
 };

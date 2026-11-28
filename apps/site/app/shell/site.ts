@@ -13,7 +13,12 @@ export const site = {
   releaseRingLabel: 'New release',
   /** The phone menu: its open and close buttons, and the Home row at the top of its list. */
   menu: { open: 'Menu', close: 'Close', home: 'Home' },
+  /** The header's sound button: a fixed name with `aria-pressed`; the tooltip says how it is now. */
+  sound: { label: 'Sound', on: 'Sound on', off: 'Sound off', unavailable: 'Sound unavailable' },
 } as const;
+
+/** The key that turns the site's sound on and off from anywhere (not while typing). */
+export const SOUND_SHORTCUT = 'm';
 
 /** Pages that are not open yet are set quieter in the nav and footer. */
 const quiet: ReadonlySet<string> = new Set(['/beyond']);
