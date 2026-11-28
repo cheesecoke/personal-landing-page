@@ -39,6 +39,7 @@ import {
   createMusic,
   type Music,
 } from './music';
+import type { FishJumpOptions } from './pondFish';
 import { gardenScene, type GardenScene, sceneVars } from './scene';
 import { type SoundStore, soundStore } from './sound';
 import { SoundToggle } from './SoundToggle';
@@ -90,6 +91,8 @@ export interface PortalDiveProps {
   spiral?: ComponentType<PortalSpiralProps>;
   /** The far flock's timing (stories: a pass at once). The page never passes it. */
   flock?: FarFlockOptions;
+  /** The far fish jumps' timing (stories: a jump at once). The page never passes it. */
+  fish?: FishJumpOptions;
   copy?: PortalDiveCopy;
 }
 
@@ -183,6 +186,7 @@ export default function PortalDive({
   sceneHold,
   spiral,
   flock,
+  fish,
   copy = diveCopy,
 }: PortalDiveProps) {
   const [store] = useState(() => storeIn ?? bestStore());
@@ -403,6 +407,7 @@ export default function PortalDive({
           portalLabel={copy.garden.portal}
           spiral={spiral}
           flock={flock}
+          fish={fish}
           shown={garden}
           portalReachable={!showCard}
           arrival={arrival}

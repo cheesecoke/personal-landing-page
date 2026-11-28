@@ -111,6 +111,13 @@
   pointer-events: none;
 }
 
+/* The far fish jumps: a small canvas over the open middle of the pond, placed like the flock's. */
+.fish {
+  position: absolute;
+  display: block;
+  pointer-events: none;
+}
+
 /* Tall screens get the left half of the render (see `scene.ts`); the frame keeps the full size. */
 @media (aspect-ratio <= 2/3) {
   .image,
