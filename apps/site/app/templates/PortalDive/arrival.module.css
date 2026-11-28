@@ -291,55 +291,49 @@
   --line-hairline: var(--paper-edge);
 }
 
-/* ---- The win card over the garden --------------------------------------------------------- */
+/* ---- The end cards (over the garden, and over the tunnel) ---------------------------------- */
 
 .overlay {
+  /* The top bar's height: the card is centred in the space below it. */
+  --bar: 64px;
+
   position: absolute;
   z-index: 3;
   inset: 0;
+  display: grid;
+  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+  place-items: center;
+  box-sizing: border-box;
+  padding: calc(var(--bar) + 8px) max(var(--gutter), env(safe-area-inset-right))
+    max(min(var(--gutter), 6cqh), 12px, env(safe-area-inset-bottom))
+    max(var(--gutter), env(safe-area-inset-left));
   pointer-events: none;
 }
 
+/* Over the tunnel the whole screen dims under the card (the top bar stays above it). */
+.dim {
+  background-color: color-mix(in srgb, var(--palette-ground) 80%, transparent);
+  pointer-events: auto;
+}
+
 /*
- * Off centre, over the open water: centred at 42% across, but kept clear of the ring and of the
- * right edge, and standing on the bottom gutter. The sun, at about
- * two thirds across, stays clear on every width.
+ * Centred both ways in the space below the top bar, at every width: as wide as the tunnel's card
+ * at most, never taller than the space (the card scrolls inside instead). Where it overlaps the
+ * ring on a small screen, the card is on top and takes the pointer.
  */
 .slot {
-  --card-w: min(420px, 100cqw - 2 * var(--gutter));
-
-  position: absolute;
-  bottom: min(var(--gutter), 6cqh);
-  left: min(
-    100cqw - var(--card-w) - var(--gutter),
-    max(var(--x0) + var(--ring-right) * var(--sw) + 24px, 42cqw - var(--card-w) / 2)
-  );
-  width: var(--card-w);
+  display: flex;
+  width: min(440px, 100%);
+  max-height: 100%;
   pointer-events: auto;
 }
 
 .card {
-  max-height: calc(100cqh - 64px - 2 * min(var(--gutter), 6cqh));
+  width: 100%;
+  max-height: 100%;
+  box-sizing: border-box;
   overflow-y: auto;
   overscroll-behavior: contain;
-}
-
-/* Phones: a sheet at the bottom, with the scene (and the portal) in view above it. */
-@container (width < 560px) {
-  .slot {
-    right: 0;
-    bottom: 0;
-    left: 0;
-    width: auto;
-  }
-
-  .card {
-    max-height: max(240px, calc(100cqh - var(--y0) - var(--ring-bottom) * var(--sh) - 16px));
-    border-right: 0;
-    border-bottom: 0;
-    border-left: 0;
-    border-radius: var(--radius-panel) var(--radius-panel) 0 0;
-  }
 }
 
 /* ---- The top bar over the garden ---------------------------------------------------------- */

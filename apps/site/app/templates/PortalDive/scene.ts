@@ -11,7 +11,7 @@
  * 180 points by least squares and the fit repeated from its own centre until it settled. Half the
  * points lie within 2.0% of the ellipse and nine in ten within 3.9%. The opening is a little taller
  * than it is wide. The ring's outer edge was read off an overlay of the render, to the nearest
- * few pixels; it only keeps the win card clear of the ring and sizes the glow.
+ * few pixels; it keeps the ring in view on tall screens and sizes the glow.
  *
  * The video is the same render brought to life (a locked camera: rigid things stay within half a
  * pixel of the stills in every frame), cut into a seamless 8.8 s loop, so the same numbers place
@@ -94,7 +94,5 @@ export function sceneVars(scene: GardenScene): Record<`--${string}`, number> {
     '--ring-w': (2 * r.rx) / w,
     '--ring-h': (2 * r.ry) / h,
     '--ring-left': (r.cx - r.rx) / w,
-    '--ring-right': (r.cx + r.rx) / w,
-    '--ring-bottom': (r.cy + r.ry) / h,
   };
 }

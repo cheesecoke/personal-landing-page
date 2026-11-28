@@ -28,6 +28,11 @@ export interface GardenProps {
   spiral?: ComponentType<PortalSpiralProps>;
   /** On screen. Until then the image loads unseen and nothing in it can be reached. */
   shown: boolean;
+  /**
+   * The portal can be tabbed to. Not while the win card is up: the card may cover the ring on a
+   * small screen, and the card comes first ("Sit for a while" hands the scene over).
+   */
+  portalReachable?: boolean;
   arrival: Arrival;
   /** Where the bloom starts (the tunnel's vanishing point), in px from the scene's top-left. */
   flare?: { x: number; y: number } | null;
@@ -55,6 +60,7 @@ export function Garden({
   portalLabel,
   spiral: Spiral,
   shown,
+  portalReachable = true,
   arrival,
   flare,
   onPortal,
@@ -132,6 +138,7 @@ export function Garden({
               type="button"
               className={s.portal}
               aria-label={portalLabel}
+              tabIndex={portalReachable ? undefined : -1}
               data-garden-portal=""
               data-active={active ? '' : undefined}
               onClick={onPortal}

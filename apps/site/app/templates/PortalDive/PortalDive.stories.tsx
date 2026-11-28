@@ -427,6 +427,28 @@ const arrived = async (root: HTMLElement) => {
   await waitFor(() => expect(getComputedStyle(scene).opacity).toBe('1'), { timeout: 5000 });
 };
 
+/**
+ * The card sits centred in the space below the top bar (the overlay's content box), whole and on
+ * screen, and the page never scrolls sideways.
+ */
+const expectCentred = async (root: HTMLElement) => {
+  const card = cardOf(root)!.getBoundingClientRect();
+  const overlay = root.querySelector<HTMLElement>('[data-dive-overlay]')!;
+  const box = overlay.getBoundingClientRect();
+  const pad = getComputedStyle(overlay);
+  const left = box.left + parseFloat(pad.paddingLeft);
+  const right = box.right - parseFloat(pad.paddingRight);
+  const top = box.top + parseFloat(pad.paddingTop);
+  const bottom = box.bottom - parseFloat(pad.paddingBottom);
+  await expect(Math.abs((card.left + card.right) / 2 - (left + right) / 2)).toBeLessThan(1);
+  await expect(Math.abs((card.top + card.bottom) / 2 - (top + bottom) / 2)).toBeLessThan(1);
+  await expect(card.left).toBeGreaterThanOrEqual(left - 0.5);
+  await expect(card.right).toBeLessThanOrEqual(right + 0.5);
+  await expect(card.top).toBeGreaterThanOrEqual(top - 0.5);
+  await expect(card.bottom).toBeLessThanOrEqual(bottom + 0.5);
+  await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth);
+};
+
 /** A scene whose image never loads: the fallback is today's dark win screen. */
 const brokenScene = {
   ...storyScene,
@@ -456,12 +478,14 @@ export const WonGarden: Story = {
     await expect(canvas.getByRole('img', { name: diveCopy.garden.alt })).toBeVisible();
     await waitFor(() => expect(canvas.getByRole('button', { name: 'Dive again' })).toHaveFocus());
 
-    // The card keeps clear of the ring.
-    const card = cardOf(canvasElement)!.getBoundingClientRect();
-    const ring = portalOf(canvasElement).getBoundingClientRect();
-    await expect(card.left).toBeGreaterThan(ring.right);
-    // The portal button is there and named, at least a touch target.
+    // The card is centred below the top bar, no wider than the tunnel's card.
+    await waitFor(() => expect(getComputedStyle(cardOf(canvasElement)!).opacity).toBe('1'));
+    await expectCentred(canvasElement);
+    await expect(cardOf(canvasElement)!.getBoundingClientRect().width).toBeLessThanOrEqual(440);
+    // The portal button is there and named, at least a touch target, but out of the tab order
+    // while the card is up (the card comes first).
     const portal = canvas.getByRole('button', { name: diveCopy.garden.portal });
+    await expect(portal).toHaveAttribute('tabindex', '-1');
     await expect(portal.getBoundingClientRect().width).toBeGreaterThanOrEqual(44);
     await expect(portal.getBoundingClientRect().height).toBeGreaterThanOrEqual(44);
     // The top bar sits on paper over the image; its buttons stay 44px.
@@ -470,23 +494,42 @@ export const WonGarden: Story = {
   },
 };
 
-/** On a phone: the card is a sheet at the bottom; the scene and the portal are in view above. */
+/**
+ * On a phone the card is centred too, the full width less the gutters, scrolling inside if it does
+ * not fit. Where it covers the ring, the card takes the pointer, not the portal behind it.
+ */
 export const WonGardenPhone: Story = {
   args: { store: store(), preview: wonClean },
   globals: phone,
   play: async ({ canvasElement }) => {
     await arrived(canvasElement);
-    await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth);
-    const card = cardOf(canvasElement)!.getBoundingClientRect();
+    await waitFor(() => expect(getComputedStyle(cardOf(canvasElement)!).opacity).toBe('1'));
+    await expectCentred(canvasElement);
+    const card = cardOf(canvasElement)!;
+    const box = card.getBoundingClientRect();
+    await expect(box.width).toBeGreaterThan(window.innerWidth - 2 * 32);
+    await expect(getComputedStyle(card).overflowY).toBe('auto');
     const portal = portalOf(canvasElement).getBoundingClientRect();
-    await expect(card.left).toBe(0);
-    await expect(Math.round(card.right)).toBe(window.innerWidth);
-    await expect(Math.round(card.bottom)).toBe(window.innerHeight);
-    // The portal: on screen, above the sheet, and a touch target.
-    await expect(portal.left).toBeGreaterThanOrEqual(0);
-    await expect(portal.right).toBeLessThanOrEqual(window.innerWidth);
-    await expect(portal.bottom).toBeLessThan(card.top);
+    const x = portal.left + portal.width / 2;
+    const y = portal.top + portal.height / 2;
+    if (x > box.left && x < box.right && y > box.top && y < box.bottom) {
+      await expect(document.elementFromPoint(x, y)?.closest('[data-dive-card]')).toBe(card);
+    }
     await expect(portal.width).toBeGreaterThanOrEqual(44);
+  },
+};
+
+/** The tunnel's cards (here, a crash) are centred and whole on a phone too. */
+export const CrashedPhone: Story = {
+  args: { store: store(), preview: crashed },
+  globals: phone,
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(cardOf(canvasElement)).toHaveAttribute('data-dive-card', 'tunnel'));
+    const card = cardOf(canvasElement)!.getBoundingClientRect();
+    await expect(Math.abs((card.left + card.right) / 2 - window.innerWidth / 2)).toBeLessThan(1);
+    await expect(card.left).toBeGreaterThanOrEqual(0);
+    await expect(card.right).toBeLessThanOrEqual(window.innerWidth);
+    await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth);
   },
 };
 
