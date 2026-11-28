@@ -3,6 +3,7 @@ import type { ElementType, ReactNode } from 'react';
 import { ArrowIcon, type ArrowSize } from '../ArrowIcon/ArrowIcon';
 import { cx } from '../cx';
 import { Label } from '../Label/Label';
+import styles from '../NextStep/NextStep.module.css';
 import type { PolymorphicProps } from '../polymorphic';
 
 /**
@@ -30,6 +31,11 @@ interface HandoffLinkOwnProps {
   variant?: HandoffVariant;
   /** Classes for the wrapper around the label and the link. */
   wrapperClassName?: string;
+  /**
+   * This is the page's next step: when the visitor rests, the long arrow eases forward and a light
+   * runs under the link, once (`NextStepHint` decides when). One per page.
+   */
+  nextStep?: boolean;
 }
 
 export type HandoffLinkProps<E extends ElementType = 'a'> = PolymorphicProps<
@@ -46,6 +52,7 @@ export function HandoffLink<E extends ElementType = 'a'>({
   label,
   variant = 'page',
   wrapperClassName,
+  nextStep = false,
   className,
   children,
   ...rest
@@ -58,8 +65,12 @@ export function HandoffLink<E extends ElementType = 'a'>({
         className={cx(
           'group/link inline-flex min-h-touch flex-wrap items-center gap-x-5 gap-y-2 self-start no-underline',
           links[variant],
+          nextStep && styles.target,
+          nextStep && styles.edge,
+          nextStep && styles.reachLong,
           className as string | undefined,
         )}
+        data-next-step={nextStep ? '' : undefined}
         {...rest}
       >
         {children}
@@ -69,6 +80,7 @@ export function HandoffLink<E extends ElementType = 'a'>({
             'group-hover/link:translate-x-1.5 group-focus-visible/link:translate-x-1.5',
             'motion-ok:transition-transform motion-ok:duration-arrow motion-ok:ease-out',
             variant === 'home' && 'text-signal',
+            nextStep && styles.arrow,
           )}
         />
       </Component>
