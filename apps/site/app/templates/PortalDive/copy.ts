@@ -32,6 +32,19 @@ export const diveCopy = {
     again: 'Dive again',
     back: 'Back to Contact',
     exit: 'Exit',
+    /** On the win card over the garden: hides the card and leaves the reader in the scene. */
+    sit: 'Sit for a while',
+  },
+  /** The garden a win arrives in. */
+  garden: {
+    /** The scene's text alternative. */
+    alt: 'A quiet garden at sunrise on another world: a still pond, raked gravel, mossy steps, two moons and a ringed planet, and the portal you came through on a rise to the left.',
+    /** The portal in the scene, as a button: it leaves the game. */
+    portal: 'Go back through the portal',
+    /** Shown for a few seconds, and announced, when the reader sits down. */
+    hint: 'Press Escape, or step back through the portal, to leave.',
+    /** The same, where touch comes first. */
+    hintTouch: 'Step back through the portal to leave.',
   },
   rings: (passed: number, total: number) => `Rings threaded: ${passed} of ${total}`,
   lives: (left: number) => `Lives left: ${left}`,

@@ -2,10 +2,12 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 
 import { bestStore, type BestResult, type DiveResult } from '@cwc/dive/react';
+import { PortalSpiral } from '@cwc/ui';
 
 import { diveCopy } from './copy';
 import { FakeAudio, FakeAudioContext } from './fakeAudio';
 import PortalDive from './PortalDive';
+import { gardenScene } from './scene';
 import { SOUND_KEY, soundStore } from './sound';
 
 /** A Storage stand-in. `blocked` throws on every call, as private modes and settings can. */
@@ -85,6 +87,7 @@ const meta = {
     seed: 7,
     audio: () => new FakeAudio(),
     audioContext: () => new FakeAudioContext(),
+    spiral: PortalSpiral,
   },
   decorators: [
     (Story) => (
@@ -395,5 +398,305 @@ export const SoundUnavailable: Story = {
     await waitFor(() => expect(Number(bar.getAttribute('aria-valuenow'))).toBeGreaterThan(0), {
       timeout: 5000,
     });
+  },
+};
+
+/* ---- The garden a win arrives in ------------------------------------------------------------ */
+
+const gardenOf = (root: HTMLElement) => root.querySelector<HTMLElement>('[data-dive-garden]');
+const cardOf = (root: HTMLElement) => root.querySelector<HTMLElement>('[data-dive-card]');
+const portalOf = (root: HTMLElement) =>
+  root.querySelector<HTMLButtonElement>('[data-garden-portal]')!;
+/** The line that announces how to leave (DiveGame has a status line of its own). */
+const statusOf = (root: HTMLElement) => root.querySelector<HTMLElement>('[data-dive-rest-status]')!;
+/** Waits for the garden to be on screen: its image loaded and decoded, and faded fully in. */
+const arrived = async (root: HTMLElement) => {
+  await waitFor(() => expect(gardenOf(root)).not.toBeNull(), { timeout: 8000 });
+  const scene = root.querySelector('[data-garden]')!;
+  await waitFor(() => expect(getComputedStyle(scene).opacity).toBe('1'), { timeout: 5000 });
+};
+
+/** A scene whose image never loads: the fallback is today's dark win screen. */
+const brokenScene = {
+  ...gardenScene,
+  wide: { avif: '/missing-garden.avif', webp: '/missing-garden.webp' },
+  tall: { avif: '/missing-garden.avif', webp: '/missing-garden.webp' },
+};
+
+/**
+ * The garden. A win opens into it: the card sits on warm paper over the water, off centre and
+ * clear of the portal, with the scene around it. The portal is a button even now (the scene is the
+ * same throughout), but focus starts on "Dive again".
+ */
+export const WonGarden: Story = {
+  args: { store: store(), preview: wonClean },
+  globals: desktop,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await arrived(canvasElement);
+    await expect(cardOf(canvasElement)).toHaveAttribute('data-dive-card', 'garden');
+    await expect(canvas.getByRole('heading', { name: diveCopy.won })).toBeVisible();
+    await expect(canvas.getByText(diveCopy.clean)).toBeVisible();
+    await expect(canvas.getByText(diveCopy.note)).toBeVisible();
+    await expect(canvas.getByRole('link', { name: diveCopy.linkedin })).toBeVisible();
+    await expect(canvas.getByRole('link', { name: diveCopy.email })).toBeVisible();
+    await expect(canvas.getByRole('button', { name: diveCopy.buttons.sit })).toBeVisible();
+    await expect(canvas.getByRole('button', { name: diveCopy.buttons.back })).toBeVisible();
+    await expect(canvas.getByRole('img', { name: diveCopy.garden.alt })).toBeVisible();
+    await waitFor(() => expect(canvas.getByRole('button', { name: 'Dive again' })).toHaveFocus());
+
+    // The card keeps clear of the ring.
+    const card = cardOf(canvasElement)!.getBoundingClientRect();
+    const ring = portalOf(canvasElement).getBoundingClientRect();
+    await expect(card.left).toBeGreaterThan(ring.right);
+    // The portal button is there and named, at least a touch target.
+    const portal = canvas.getByRole('button', { name: diveCopy.garden.portal });
+    await expect(portal.getBoundingClientRect().width).toBeGreaterThanOrEqual(44);
+    await expect(portal.getBoundingClientRect().height).toBeGreaterThanOrEqual(44);
+    // The top bar sits on paper over the image; its buttons stay 44px.
+    const exit = canvas.getByRole('button', { name: 'Exit' });
+    await expect(exit.getBoundingClientRect().height).toBeGreaterThanOrEqual(44);
+  },
+};
+
+/** On a phone: the card is a sheet at the bottom; the scene and the portal are in view above. */
+export const WonGardenPhone: Story = {
+  args: { store: store(), preview: wonClean },
+  globals: phone,
+  play: async ({ canvasElement }) => {
+    await arrived(canvasElement);
+    await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth);
+    const card = cardOf(canvasElement)!.getBoundingClientRect();
+    const portal = portalOf(canvasElement).getBoundingClientRect();
+    await expect(card.left).toBe(0);
+    await expect(Math.round(card.right)).toBe(window.innerWidth);
+    await expect(Math.round(card.bottom)).toBe(window.innerHeight);
+    // The portal: on screen, above the sheet, and a touch target.
+    await expect(portal.left).toBeGreaterThanOrEqual(0);
+    await expect(portal.right).toBeLessThanOrEqual(window.innerWidth);
+    await expect(portal.bottom).toBeLessThan(card.top);
+    await expect(portal.width).toBeGreaterThanOrEqual(44);
+  },
+};
+
+/** Reduced motion: the garden comes in with a plain cross-fade; no bloom, no pan. */
+export const WonGardenReduced: Story = {
+  args: { store: store(), preview: wonClean, previewArrival: true },
+  globals: { ...desktop, motion: 'reduce' },
+  play: async ({ canvasElement }) => {
+    await arrived(canvasElement);
+    const frame = canvasElement.querySelector('[data-garden]')!;
+    await expect(frame.getAnimations({ subtree: true })).toHaveLength(0);
+    await waitFor(() =>
+      expect(within(canvasElement).getByRole('button', { name: 'Dive again' })).toHaveFocus(),
+    );
+  },
+};
+
+/**
+ * The arrival, as a run that ends with the garden ready: the tunnel's glow blooms to warm white
+ * and the garden resolves out of the light; the card follows.
+ */
+export const Arrival: Story = {
+  args: { store: store(), preview: wonClean, previewArrival: true },
+  globals: desktop,
+  play: async ({ canvasElement }) => {
+    await arrived(canvasElement);
+    await expect(canvasElement.querySelector('[data-garden]')).toHaveAttribute(
+      'data-arrival',
+      'bloom',
+    );
+    await waitFor(() =>
+      expect(within(canvasElement).getByRole('button', { name: 'Dive again' })).toHaveFocus(),
+    );
+    // Let the arrival finish before the accessibility check reads the card.
+    await waitFor(() => expect(getComputedStyle(cardOf(canvasElement)!).opacity).toBe('1'), {
+      timeout: 5000,
+    });
+  },
+};
+
+const sitExit = fn();
+/**
+ * "Sit for a while": the card goes and the reader is left in the garden. A hint says how to leave
+ * (and is read out); Tab reaches the portal, which is named and leaves the game.
+ */
+export const SitForAWhile: Story = {
+  args: { store: store(), preview: wonClean, onExit: sitExit },
+  globals: desktop,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await arrived(canvasElement);
+    await userEvent.click(canvas.getByRole('button', { name: diveCopy.buttons.sit }));
+    await expect(cardOf(canvasElement)).toBeNull();
+    await expect(gardenOf(canvasElement)).toHaveAttribute('data-dive-garden', 'resting');
+    // The hint: seen for a few seconds, and announced.
+    await expect(statusOf(canvasElement)).toHaveAttribute('role', 'status');
+    await expect(statusOf(canvasElement)).toHaveTextContent(diveCopy.garden.hint);
+    await expect(canvasElement.querySelector('[data-dive-rest-hint]')).toHaveAttribute(
+      'data-visible',
+    );
+    // Focus is in the scene; Tab reaches the portal, Shift+Tab goes back to Exit, then Sound.
+    await userEvent.tab();
+    const portal = canvas.getByRole('button', { name: diveCopy.garden.portal });
+    await expect(portal).toHaveFocus();
+    await userEvent.tab({ shift: true });
+    await expect(canvas.getByRole('button', { name: 'Exit' })).toHaveFocus();
+    await userEvent.tab({ shift: true });
+    await expect(canvas.getByRole('button', { name: diveCopy.sound.label })).toHaveFocus();
+    await userEvent.click(portal);
+    await expect(sitExit).toHaveBeenCalledTimes(1);
+  },
+};
+
+/** On a touch screen the hint has no Escape in it. */
+export const SitForAWhilePhone: Story = {
+  args: { store: store(), preview: wonClean },
+  globals: phone,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await arrived(canvasElement);
+    await userEvent.click(canvas.getByRole('button', { name: diveCopy.buttons.sit }));
+    const expected = window.matchMedia('(pointer: coarse)').matches
+      ? diveCopy.garden.hintTouch
+      : diveCopy.garden.hint;
+    await expect(statusOf(canvasElement)).toHaveTextContent(expected);
+    const portal = portalOf(canvasElement).getBoundingClientRect();
+    await expect(portal.width).toBeGreaterThanOrEqual(44);
+    await expect(portal.height).toBeGreaterThanOrEqual(44);
+  },
+};
+
+/**
+ * Resting, the top bar goes very quiet after a few seconds without activity, and comes back on
+ * any movement or key (and never hides from focus).
+ */
+export const RestingQuietBar: Story = {
+  args: { store: store(), preview: wonClean },
+  globals: desktop,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await arrived(canvasElement);
+    await userEvent.click(canvas.getByRole('button', { name: diveCopy.buttons.sit }));
+    const bar = canvasElement.querySelector('[data-dive-bar]')!;
+    await waitFor(() => expect(bar).toHaveAttribute('data-quiet'), { timeout: 6000 });
+    await userEvent.keyboard('{Shift}');
+    await expect(bar).not.toHaveAttribute('data-quiet');
+  },
+};
+
+/** The portal comes alive on hover and on keyboard focus: the spiral speeds up and brightens. */
+export const PortalHoverAndFocus: Story = {
+  args: { store: store(), preview: wonClean },
+  globals: desktop,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await arrived(canvasElement);
+    await userEvent.click(canvas.getByRole('button', { name: diveCopy.buttons.sit }));
+    const portal = portalOf(canvasElement);
+    const spiral = () => portal.querySelector('svg')!;
+    await expect(portal).not.toHaveAttribute('data-active');
+    await expect(spiral()).toHaveAttribute('data-speed', 'rest');
+    await userEvent.hover(portal);
+    await expect(portal).toHaveAttribute('data-active');
+    await expect(spiral()).toHaveAttribute('data-speed', 'active');
+    await expect(getComputedStyle(portal).cursor).toBe('pointer');
+    await userEvent.unhover(portal);
+    await expect(portal).not.toHaveAttribute('data-active');
+    await userEvent.tab();
+    await expect(portal).toHaveFocus();
+    await expect(portal).toHaveAttribute('data-active');
+  },
+};
+
+/** "Dive again" from the garden: back to the dark tunnel, and a new run starts. */
+export const DiveAgainFromGarden: Story = {
+  args: { store: store(), preview: wonClean },
+  globals: desktop,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await arrived(canvasElement);
+    await userEvent.click(canvas.getByRole('button', { name: 'Dive again' }));
+    await expect(gardenOf(canvasElement)).toBeNull();
+    await expect(canvasElement.querySelector('[data-garden]')).not.toHaveAttribute('data-shown');
+    await waitFor(() => expect(portalOf(canvasElement)).not.toBeVisible());
+    const bar = await canvas.findByRole('progressbar');
+    await waitFor(() => expect(Number(bar.getAttribute('aria-valuenow'))).toBeGreaterThan(0), {
+      timeout: 5000,
+    });
+  },
+};
+
+let releaseScene: () => void = () => {};
+/**
+ * A win before the garden's image is ready: the card shows over the tunnel as before, and the
+ * scene comes in (a cross-fade) when the image does, without moving focus.
+ */
+export const WonBeforeScene: Story = {
+  args: {
+    store: store(),
+    preview: won,
+    get sceneHold() {
+      return new Promise<void>((resolve) => (releaseScene = resolve));
+    },
+  },
+  globals: desktop,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(cardOf(canvasElement)).toHaveAttribute('data-dive-card', 'tunnel');
+    await expect(canvas.queryByRole('button', { name: diveCopy.buttons.sit })).toBeNull();
+    const again = canvas.getByRole('button', { name: 'Dive again' });
+    await waitFor(() => expect(again).toHaveFocus());
+    releaseScene();
+    await arrived(canvasElement);
+    await expect(cardOf(canvasElement)).toHaveAttribute('data-dive-card', 'garden');
+    await expect(canvasElement.querySelector('[data-garden]')).toHaveAttribute(
+      'data-arrival',
+      'fade',
+    );
+    await expect(again).toHaveFocus();
+  },
+};
+
+const failExit = fn();
+/** The image fails: today's dark win screen, complete and working; no garden, no "Sit". */
+export const SceneFails: Story = {
+  args: { store: store(), preview: wonClean, scene: brokenScene, onExit: failExit },
+  globals: desktop,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await waitFor(() => expect(canvasElement.querySelector('[data-garden]')).toBeNull(), {
+      timeout: 5000,
+    });
+    await expect(cardOf(canvasElement)).toHaveAttribute('data-dive-card', 'tunnel');
+    await expect(canvas.getByText(diveCopy.note)).toBeVisible();
+    await expect(canvas.queryByRole('button', { name: diveCopy.buttons.sit })).toBeNull();
+    await userEvent.click(canvas.getByRole('button', { name: diveCopy.buttons.back }));
+    await expect(failExit).toHaveBeenCalledTimes(1);
+  },
+};
+
+/** A crash stays in the dark tunnel: only people who make it through see the garden. */
+export const CrashedStaysInTunnel: Story = {
+  args: { store: store(), preview: crashed },
+  globals: desktop,
+  play: async ({ canvasElement }) => {
+    await waitFor(() => expect(cardOf(canvasElement)).toHaveAttribute('data-dive-card', 'tunnel'));
+    // Give the image time to load: it still never shows.
+    await new Promise((r) => setTimeout(r, 800));
+    await expect(gardenOf(canvasElement)).toBeNull();
+    await expect(cardOf(canvasElement)).toHaveAttribute('data-dive-card', 'tunnel');
+  },
+};
+
+/** The garden is not asked for before Start: the start screen has no scene at all. */
+export const SceneAfterStart: Story = {
+  args: { store: store() },
+  globals: desktop,
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.querySelector('[data-garden]')).toBeNull();
+    await userEvent.click(await within(canvasElement).findByRole('button', { name: 'Start' }));
+    await expect(canvasElement.querySelector('[data-garden] img')).not.toBeNull();
+    await expect(canvasElement.querySelector('[data-garden]')).not.toHaveAttribute('data-shown');
   },
 };
