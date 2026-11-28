@@ -11,8 +11,10 @@ import type { PortalSpiralProps } from '@cwc/ui';
 
 import s from './arrival.module.css';
 import { FarFlock } from './FarFlock';
+import { FishJump } from './FishJump';
 import type { FarFlockOptions } from './flockSky';
 import { GardenVideo } from './GardenVideo';
+import type { FishJumpOptions } from './pondFish';
 import type { GardenScene } from './scene';
 
 /** `bloom`: the full arrival out of the tunnel's light. `fade`: a plain cross-fade. */
@@ -46,6 +48,8 @@ export interface GardenProps {
   ref?: Ref<HTMLDivElement>;
   /** The far flock's timing (stories: a pass at once). The page never passes it. */
   flock?: FarFlockOptions;
+  /** The far fish jumps' timing (stories: a jump at once). The page never passes it. */
+  fish?: FishJumpOptions;
 }
 
 /**
@@ -68,6 +72,7 @@ export function Garden({
   onFail,
   ref,
   flock,
+  fish,
 }: GardenProps) {
   const [hover, setHover] = useState(false);
   const [focus, setFocus] = useState(false);
@@ -134,6 +139,7 @@ export function Garden({
             </picture>
             <GardenVideo scene={scene} shown={shown} />
             <FarFlock shown={shown} {...flock} />
+            <FishJump shown={shown} img={imgRef} tallMedia={scene.tallMedia} {...fish} />
             <button
               type="button"
               className={s.portal}
