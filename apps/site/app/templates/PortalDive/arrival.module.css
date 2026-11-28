@@ -1,0 +1,508 @@
+/*
+ * The garden a win arrives in: the scene, the bloom that opens into it, the portal button over the
+ * ring, the paper the win card and the top bar's buttons sit on over the bright image, and the
+ * hint.
+ *
+ * The game's root is a size container and carries the render's numbers as custom properties (set
+ * from `scene.ts`): `--scene-ratio` (width over height), `--tall-share` (the tall image's share of
+ * the render's width), `--open-*` (the ring's opening) and `--ring-*` (its outer edge), each a
+ * fraction of the render.
+ */
+
+/* The drift: 0 at one end of the pan, 1 at the other. Registered so it can be animated. */
+@property --scene-drift {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+.root {
+  container-type: size;
+
+  /* How far the scene pans, as a share of its width. */
+  --drift-share: 0.06;
+
+  /*
+   * Where the scene sits: it covers the container (as object-fit: cover would), centred, except
+   * that it moves right where centring would push the ring's outer edge closer than a gutter to the
+   * left side (portrait screens), so the portal always stays in view. `--x1` is the other end of
+   * the pan, a little further right (never leaving a gap). Read by the descendants, where the
+   * container units resolve against this element.
+   */
+  --sw: max(100cqw, 100cqh * var(--scene-ratio));
+  --sh: calc(var(--sw) / var(--scene-ratio));
+  --x0: min(0px, max((100cqw - var(--sw)) / 2, var(--gutter) - var(--ring-left) * var(--sw)));
+  --x1: min(0px, var(--x0) + var(--drift-share) * var(--sw));
+  --y0: calc((100cqh - var(--sh)) * 0.45);
+}
+
+/* ---- The scene ---------------------------------------------------------------------------- */
+
+.scene {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  overflow: hidden;
+  visibility: hidden;
+  opacity: 0;
+  outline: none;
+
+  /*
+   * A plain cross-fade, both ways: the arrival under reduced motion (and when the image comes in
+   * after the win card), and the quick fade back to the tunnel on "Dive again". Opacity only.
+   */
+  transition:
+    opacity var(--duration-nav) var(--ease-standard),
+    visibility 0s linear var(--duration-nav);
+}
+
+.scene[data-shown] {
+  visibility: visible;
+  opacity: 1;
+  transition:
+    opacity var(--duration-nav) var(--ease-standard),
+    visibility 0s;
+}
+
+/* The lens scales the whole scene on arrival; the frame inside pans. */
+.lens {
+  position: absolute;
+  inset: 0;
+  transform-origin: var(--flare-x, 50%) var(--flare-y, 50%);
+}
+
+.frame {
+  position: absolute;
+  top: var(--y0);
+  left: var(--x0);
+  width: var(--sw);
+  height: var(--sh);
+  translate: calc((var(--x1) - var(--x0)) * var(--scene-drift)) 0;
+}
+
+.image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: left top;
+  user-select: none;
+}
+
+/* Tall screens get the left half of the render (see `scene.ts`); the frame keeps the full size. */
+@media (aspect-ratio <= 2/3) {
+  .image {
+    width: calc(var(--tall-share) * 100%);
+  }
+}
+
+/* ---- The portal --------------------------------------------------------------------------- */
+
+/* The button: over the ring's opening, never smaller than a touch target. */
+.portal {
+  position: absolute;
+  top: calc(var(--open-y) * 100%);
+  left: calc(var(--open-x) * 100%);
+  box-sizing: border-box;
+  width: max(var(--touch-target), calc(var(--open-w) * 100%));
+  height: max(var(--touch-target), calc(var(--open-h) * 100%));
+  margin: 0;
+  padding: 0;
+  translate: -50% -50%;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* A ring of light round the ring, while the portal is wanted. */
+.halo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: calc(var(--ring-w) * var(--sw) * 1.35);
+  height: calc(var(--ring-h) * var(--sh) * 1.35);
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(
+    closest-side,
+    transparent 66%,
+    color-mix(in srgb, var(--palette-signal) 36%, transparent) 80%,
+    transparent 100%
+  );
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* The opening itself, exactly: it clips the spiral. */
+.opening {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: calc(var(--open-w) * var(--sw));
+  height: calc(var(--open-h) * var(--sh));
+  overflow: hidden;
+  translate: -50% -50%;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* The way back darkens toward the tunnel when the portal is wanted. */
+.tint {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--palette-ground) 78%, transparent) 0%,
+    color-mix(in srgb, var(--palette-ground) 40%, transparent) 70%,
+    transparent 100%
+  );
+  opacity: 0;
+}
+
+.spiral {
+  position: absolute;
+  inset: 0;
+  opacity: 0.28;
+}
+
+.portal[data-active] .halo {
+  opacity: 1;
+}
+
+.portal[data-active] .tint {
+  opacity: 0.85;
+}
+
+.portal[data-active] .spiral {
+  opacity: 1;
+}
+
+/* Two rings, dark inside light, so the focus shows on any part of the image. */
+.portal:focus-visible {
+  outline: 2px solid var(--palette-bone);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--palette-ground);
+}
+
+/* ---- The bloom ---------------------------------------------------------------------------- */
+
+/* Only drawn during a full arrival, with motion allowed. */
+.flare {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  overflow: hidden;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.bloom {
+  position: absolute;
+  top: var(--flare-y, 50%);
+  left: var(--flare-x, 50%);
+  width: 280vmax;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(
+    closest-side,
+    var(--palette-bone) 0%,
+    var(--palette-bone) 28%,
+    color-mix(in srgb, var(--palette-bone) 72%, var(--palette-hinoki)) 46%,
+    color-mix(in srgb, var(--palette-hinoki) 30%, transparent) 68%,
+    transparent 100%
+  );
+  scale: 0;
+}
+
+/* The tunnel's own teal at the heart of the bloom, gone as the light warms. */
+.bloom::after {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--palette-signal) 70%, transparent) 0%,
+    transparent 30%
+  );
+  content: '';
+}
+
+/* ---- Paper: what sits on the bright image ------------------------------------------------- */
+
+/*
+ * A warm, translucent sheet with dark ink. The site's components read their colours from custom
+ * properties, so the sheet's children get the light-on-dark ones swapped for ink-on-paper: Bone
+ * becomes ink, Ground becomes paper, the quiet text becomes Tick, lines become Smoke, and the
+ * Signal accents (hover, focus) become ink.
+ */
+.paper {
+  --paper-ink: var(--palette-ground);
+  --paper-sheet: color-mix(in srgb, var(--palette-bone) 82%, var(--palette-hinoki));
+  --paper-quiet: var(--palette-tick);
+  --paper-edge: var(--palette-smoke);
+
+  border: 1px solid color-mix(in srgb, var(--paper-sheet) 60%, transparent);
+  background-color: color-mix(in srgb, var(--paper-sheet) 86%, transparent);
+  box-shadow: 0 28px 56px -28px color-mix(in srgb, var(--paper-ink) 60%, transparent);
+  color: var(--paper-ink);
+  backdrop-filter: blur(18px) saturate(1.2);
+}
+
+.paper > * {
+  --palette-bone: var(--paper-ink);
+  --palette-ground: var(--paper-sheet);
+  --palette-hinoki: var(--paper-quiet);
+  --palette-ash: var(--paper-quiet);
+  --palette-smoke: var(--paper-quiet);
+  --palette-hairline: var(--paper-edge);
+  --palette-signal: var(--paper-ink);
+  --palette-signal-dim: var(--paper-quiet);
+  --text-primary: var(--paper-ink);
+  --text-secondary: var(--paper-quiet);
+  --text-label: var(--paper-quiet);
+  --accent-signal: var(--paper-ink);
+  --accent-warm: var(--paper-quiet);
+  --line-hairline: var(--paper-edge);
+}
+
+/* ---- The win card over the garden --------------------------------------------------------- */
+
+.overlay {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  pointer-events: none;
+}
+
+/*
+ * Off centre, over the open water: centred at 42% across, but kept clear of the ring (wherever
+ * the pan takes it) and of the right edge, and standing on the bottom gutter. The sun, at about
+ * two thirds across, stays clear on every width.
+ */
+.slot {
+  --card-w: min(420px, 100cqw - 2 * var(--gutter));
+
+  position: absolute;
+  bottom: min(var(--gutter), 6cqh);
+  left: min(
+    100cqw - var(--card-w) - var(--gutter),
+    max(var(--x1) + var(--ring-right) * var(--sw) + 24px, 42cqw - var(--card-w) / 2)
+  );
+  width: var(--card-w);
+  pointer-events: auto;
+}
+
+.card {
+  max-height: calc(100cqh - 64px - 2 * min(var(--gutter), 6cqh));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* Phones: a sheet at the bottom, with the scene (and the portal) in view above it. */
+@container (width < 560px) {
+  .slot {
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: auto;
+  }
+
+  .card {
+    max-height: max(240px, calc(100cqh - var(--y0) - var(--ring-bottom) * var(--sh) - 16px));
+    border-right: 0;
+    border-bottom: 0;
+    border-left: 0;
+    border-radius: var(--radius-panel) var(--radius-panel) 0 0;
+  }
+}
+
+/* ---- The top bar over the garden ---------------------------------------------------------- */
+
+.capsule {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 6px;
+  border-radius: calc(var(--radius-button) + 6px);
+}
+
+/* Resting: after a while without activity the buttons go very quiet, but never from focus. */
+.capsule[data-quiet]:not(:hover, :focus-within) {
+  opacity: 0.2;
+}
+
+/* ---- The hint ----------------------------------------------------------------------------- */
+
+.hint {
+  position: absolute;
+  z-index: 3;
+  bottom: max(var(--gutter), 24px);
+  left: 50%;
+  box-sizing: border-box;
+  max-width: calc(100cqw - 2 * var(--gutter));
+  margin: 0;
+  padding: 10px 18px;
+  translate: -50% 0;
+  border-radius: 999px;
+  opacity: 0;
+  text-align: center;
+  pointer-events: none;
+}
+
+.hint[data-visible] {
+  opacity: 1;
+}
+
+/* ---- Motion ------------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  /*
+   * The arrival, over `--duration-arrival` (2.4 s): the vanishing point's glow blooms from teal to
+   * warm white until it fills the screen (to 38%), holds a breath of pure light, then thins away
+   * while the garden, already there underneath, settles from a slight zoom like eyes adjusting
+   * to daylight. The card follows once the light has cleared.
+   */
+  :root:not([data-motion='reduce']) .scene[data-shown][data-arrival='bloom'] {
+    animation: scene-in var(--duration-arrival) linear both;
+  }
+
+  :root:not([data-motion='reduce']) .scene[data-shown][data-arrival='bloom'] .lens {
+    animation: lens-in var(--duration-arrival) both;
+  }
+
+  :root:not([data-motion='reduce']) .flare[data-play] {
+    visibility: visible;
+  }
+
+  :root:not([data-motion='reduce']) .flare[data-play] .bloom {
+    animation: bloom var(--duration-arrival) both;
+  }
+
+  :root:not([data-motion='reduce']) .flare[data-play] .bloom::after {
+    animation: bloom-teal var(--duration-arrival) both;
+  }
+
+  :root:not([data-motion='reduce']) .overlay[data-arrival='bloom'] .card {
+    animation: card-in var(--duration-rise) var(--ease-out) calc(var(--duration-arrival) * 0.6)
+      backwards;
+  }
+
+  /* The top bar turns to paper under cover of the light, not while the tunnel is still dark. */
+  :root:not([data-motion='reduce']) .capsule[data-arrival='bloom'] {
+    animation: capsule-in var(--duration-arrival) linear backwards;
+  }
+
+  /* The slow pan, once the scene has arrived. */
+  :root:not([data-motion='reduce']) .scene[data-shown] .frame {
+    animation: drift var(--duration-scene-drift) var(--ease-standard) var(--duration-arrival)
+      infinite alternate;
+  }
+
+  :root:not([data-motion='reduce']) .halo,
+  :root:not([data-motion='reduce']) .tint,
+  :root:not([data-motion='reduce']) .spiral {
+    transition: opacity var(--duration-hover) var(--ease-out);
+  }
+
+  :root:not([data-motion='reduce']) .capsule,
+  :root:not([data-motion='reduce']) .hint {
+    transition: opacity var(--duration-nav) var(--ease-standard);
+  }
+}
+
+@keyframes scene-in {
+  0%,
+  30% {
+    opacity: 0;
+  }
+
+  42%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes lens-in {
+  0%,
+  36% {
+    scale: 1.14;
+    animation-timing-function: var(--ease-out);
+  }
+
+  100% {
+    scale: 1;
+  }
+}
+
+@keyframes bloom {
+  0% {
+    opacity: 0;
+    scale: 0.015;
+    animation-timing-function: ease-in;
+  }
+
+  8% {
+    opacity: 1;
+  }
+
+  38% {
+    scale: 1;
+    animation-timing-function: linear;
+  }
+
+  52% {
+    opacity: 1;
+    scale: 1.08;
+    animation-timing-function: var(--ease-standard);
+  }
+
+  100% {
+    opacity: 0;
+    scale: 1.35;
+  }
+}
+
+@keyframes bloom-teal {
+  0% {
+    opacity: 1;
+  }
+
+  30%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes capsule-in {
+  0%,
+  32% {
+    opacity: 0;
+  }
+
+  44% {
+    opacity: 1;
+  }
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    translate: 0 14px;
+  }
+}
+
+@keyframes drift {
+  from {
+    --scene-drift: 0;
+  }
+
+  to {
+    --scene-drift: 1;
+  }
+}
