@@ -10,6 +10,7 @@ import { freshCandidates, markerSlots, statusKeyTone, toFreshProp } from '../con
 import { liveContent } from '../content/live.server';
 import { pageMeta } from '../content/meta';
 import { RouterLink } from '../shell/RouterLink';
+import { useNodeCue } from '../sound/useNodeCue';
 import {
   ProjectsTemplate,
   type ProjectsFresh,
@@ -77,12 +78,24 @@ function ProjectsPage({ content, live, map }: Route.ComponentProps['loaderData']
   }, [marks]);
   const tree = useMemo(() => withCanopyFresh(map.data, marks, map.shoots), [map, marks]);
   const copy = useMemo(() => toCanopyCopy(map.words), [map.words]);
+  const nodeCue = useNodeCue(tree.nodes);
   return (
     <ProjectsTemplate
       content={content}
       fresh={fresh}
       live={live}
-      map={<Canopy variant="full" data={tree} copy={copy} renderLink={canopyLink} />}
+      map={
+        // The tree rings its own note when a node lights up, so its controls only click softly.
+        <div data-ui-sound="soft" className="contents">
+          <Canopy
+            variant="full"
+            data={tree}
+            copy={copy}
+            renderLink={canopyLink}
+            onSelectionChange={nodeCue}
+          />
+        </div>
+      }
     />
   );
 }

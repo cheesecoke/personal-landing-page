@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { handContent } from '../content/hand.server';
 import { pageMeta } from '../content/meta';
 import { PreloadImage } from '../content/preload';
+import { siteVibrate } from '../sound/site';
 import { ContactTemplate } from '../templates/ContactTemplate';
 import { PortalDiveHost } from '../templates/PortalDive/PortalDiveHost';
 import type { Route } from './+types/contact';
@@ -31,7 +32,15 @@ export default function Contact({ loaderData }: Route.ComponentProps) {
       <PreloadImage image={content.portal} />
       <ContactTemplate
         content={content}
-        onEnterPortal={entry ? () => setDiving(true) : undefined}
+        onEnterPortal={
+          entry
+            ? () => {
+                // Stepping through is a bigger moment than a press: a longer pulse (on phones).
+                siteVibrate('strong');
+                setDiving(true);
+              }
+            : undefined
+        }
       />
       {/* The game is its own chunk: the host fetches it only once the reader chooses to enter. */}
       {entry ? (

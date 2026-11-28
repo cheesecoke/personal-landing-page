@@ -43,7 +43,7 @@ export function AppShell({ footer, lastUpdate, children }: AppShellProps) {
   const { pathname } = useLocation();
   const { navRing } = useFreshness();
   // The site's sound lives here, above the routes, so it plays on across page changes.
-  const sound = useSiteSound();
+  const sound = useSiteSound(pathname);
   /*
    * Home's hero runs up behind the header: `--stump-hero-lift` is the header's height (one row:
    * the name and the menu button under `md`, the name and the pages from it; with scripting off
