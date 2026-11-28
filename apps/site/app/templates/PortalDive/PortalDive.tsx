@@ -30,7 +30,6 @@ import {
 import s from './arrival.module.css';
 import { diveCopy, type PortalDiveCopy } from './copy';
 import { type Arrival, Garden } from './Garden';
-import type { GardenMotionOptions } from './GardenMotion';
 import {
   type AudioContextFactory,
   type AudioFactory,
@@ -88,8 +87,6 @@ export interface PortalDiveProps {
    * the page into a chunk of its own, changing the page's first JavaScript.
    */
   spiral?: ComponentType<PortalSpiralProps>;
-  /** The garden's motion layer (stories: a context that fails, or is lost). */
-  motion?: GardenMotionOptions;
   copy?: PortalDiveCopy;
 }
 
@@ -182,7 +179,6 @@ export default function PortalDive({
   scene = gardenScene,
   sceneHold,
   spiral,
-  motion,
   copy = diveCopy,
 }: PortalDiveProps) {
   const [store] = useState(() => storeIn ?? bestStore());
@@ -402,7 +398,6 @@ export default function PortalDive({
           alt={copy.garden.alt}
           portalLabel={copy.garden.portal}
           spiral={spiral}
-          motion={motion}
           shown={garden}
           arrival={arrival}
           flare={flare}
