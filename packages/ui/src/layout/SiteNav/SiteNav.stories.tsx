@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useEffect, useState, type ComponentPropsWithoutRef } from 'react';
-import { expect, userEvent, waitFor, within } from 'storybook/test';
+import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 
-import { SiteNav, type SiteNavItem } from './SiteNav';
+import { SiteNav, type SiteNavItem, type SiteNavProps } from './SiteNav';
 
 const items: SiteNavItem[] = [
   { label: 'Projects', href: '/projects' },
@@ -158,7 +158,7 @@ export const Tablet: Story = {
  * The phone nav (under `md`): one header row with the name and a menu button, and the menu panel.
  */
 
-type PhoneWidth = 360 | 390 | 430;
+type PhoneWidth = 320 | 360 | 390 | 430;
 
 const phone = (width: PhoneWidth) => ({
   viewport: {
@@ -416,3 +416,151 @@ export const PhoneReduced: Story = {
     await lineEndsAtCurrentRow(panel);
   },
 };
+
+/*
+ * The sound button: the whole site's sound, on or off. The site keeps the choice; here a story
+ * stands in for it (and never plays anything).
+ */
+
+const soundLabels = {
+  label: 'Sound',
+  on: 'Sound on',
+  off: 'Sound off',
+  unavailable: 'Sound unavailable',
+};
+
+/** The site's choice, as the story keeps it: `stored` is what a reload would read. */
+const choice = { stored: 'on' as 'on' | 'off', onToggle: fn() };
+
+function WithSound(args: SiteNavProps) {
+  const [on, setOn] = useState(true);
+  useEffect(() => {
+    choice.stored = 'on';
+    choice.onToggle.mockClear();
+  }, []);
+  return (
+    <>
+      <SiteNav
+        {...args}
+        sound={{
+          on,
+          labels: soundLabels,
+          shortcut: 'm',
+          onToggle: () => {
+            choice.onToggle();
+            choice.stored = on ? 'off' : 'on';
+            setOn(!on);
+          },
+        }}
+      />
+      <div className="mx-auto max-w-page px-gutter pt-10">
+        <input
+          aria-label="A field"
+          className="min-h-touch border border-hairline bg-transparent px-3 text-primary"
+        />
+      </div>
+    </>
+  );
+}
+
+const soundButton = (root: HTMLElement) => within(root).getByRole('button', { name: 'Sound' });
+
+/** A press turns it off and on: `aria-pressed`, the tooltip and the kept choice follow. */
+const toggles = async (root: HTMLElement) => {
+  const button = soundButton(root);
+  await expect(button).toHaveAttribute('aria-pressed', 'true');
+  await expect(button).toHaveAttribute('title', 'Sound on');
+  const box = button.getBoundingClientRect();
+  await expect(box.width).toBeGreaterThanOrEqual(44);
+  await expect(box.height).toBeGreaterThanOrEqual(44);
+  await userEvent.click(button);
+  await expect(button).toHaveAttribute('aria-pressed', 'false');
+  await expect(button).toHaveAttribute('title', 'Sound off');
+  await expect(button).toHaveAccessibleName('Sound');
+  await expect(choice.stored).toBe('off');
+  await userEvent.click(button);
+  await expect(button).toHaveAttribute('aria-pressed', 'true');
+  await expect(choice.stored).toBe('on');
+};
+
+/** Desktop: after the pages, on the same row, with the line still running to the current page. */
+export const Sound: Story = {
+  args: { current: '/projects' },
+  render: (args) => <WithSound {...args} />,
+  play: async ({ canvasElement }) => {
+    const button = soundButton(canvasElement);
+    const contact = within(canvasElement).getByRole('link', { name: 'Contact' });
+    // Last in the row and in the tab order, on the pages' line.
+    await expect(button.getBoundingClientRect().left).toBeGreaterThanOrEqual(
+      contact.getBoundingClientRect().right,
+    );
+    await expect(
+      contact.compareDocumentPosition(button) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    await endsAtCurrent(canvasElement);
+    await toggles(canvasElement);
+  },
+};
+
+/** M turns the sound off and on from anywhere on the page, but not while typing in a field. */
+export const SoundKey: Story = {
+  args: { current: '/' },
+  render: (args) => <WithSound {...args} />,
+  play: async ({ canvasElement }) => {
+    const button = soundButton(canvasElement);
+    await userEvent.keyboard('m');
+    await expect(button).toHaveAttribute('aria-pressed', 'false');
+    await expect(choice.stored).toBe('off');
+    await userEvent.keyboard('M');
+    await expect(button).toHaveAttribute('aria-pressed', 'true');
+    await userEvent.type(within(canvasElement).getByRole('textbox', { name: 'A field' }), 'mm');
+    await expect(button).toHaveAttribute('aria-pressed', 'true');
+    await userEvent.keyboard('{Meta>}m{/Meta}');
+    await expect(button).toHaveAttribute('aria-pressed', 'true');
+    await expect(choice.onToggle).toHaveBeenCalledTimes(2);
+  },
+};
+
+/** Keyboard focus shows the Signal outline around the 44px square. */
+export const SoundFocus: Story = {
+  args: { current: '/about' },
+  render: (args) => <WithSound {...args} />,
+  play: async ({ canvasElement }) => {
+    const button = soundButton(canvasElement);
+    within(canvasElement).getByRole('link', { name: 'Contact' }).focus();
+    await userEvent.tab();
+    await expect(button).toHaveFocus();
+    await expect(getComputedStyle(button).outlineStyle).not.toBe('none');
+  },
+};
+
+/**
+ * Phone: in the header row beside the menu button, so it is one tap without opening the menu.
+ * The row stays one 56px line with nothing cut off, down to 320 wide.
+ */
+const soundAt = (width: PhoneWidth): Story => ({
+  ...phoneStory(width),
+  args: { current: '/projects' },
+  render: (args) => <WithSound {...args} />,
+  play: async ({ canvasElement }) => {
+    await expect(window.innerWidth).toBe(width);
+    await closedHeader(canvasElement);
+    const button = soundButton(canvasElement);
+    await expect(button).toBeVisible();
+    const sound = button.getBoundingClientRect();
+    const menu = menuButton(canvasElement).getBoundingClientRect();
+    const name = within(canvasElement).getAllByRole('link', { name: 'Chase Cole' })[0]!;
+    // Name, then sound, then menu, on one line, none overlapping, all inside the viewport.
+    await expect(sound.left).toBeGreaterThanOrEqual(name.getBoundingClientRect().right);
+    await expect(menu.left).toBeGreaterThanOrEqual(sound.right);
+    await expect(sound.top).toBe(menu.top);
+    await expect(menu.right).toBeLessThanOrEqual(width);
+    await expect(menuButton(canvasElement).scrollWidth).toBeLessThanOrEqual(
+      menuButton(canvasElement).clientWidth,
+    );
+    await toggles(canvasElement);
+  },
+});
+
+export const PhoneSound: Story = soundAt(390);
+export const PhoneSound320: Story = soundAt(320);

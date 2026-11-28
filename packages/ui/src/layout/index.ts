@@ -39,6 +39,7 @@ export {
   type NavTimelineProps,
   type SiteNavItem,
   type SiteNavProps,
+  type SiteNavSound,
 } from './SiteNav/SiteNav';
 export type { SiteNavMenuLabels } from './SiteNav/SiteNavMenu';
 export { timelineX, useNavTimeline, type NavTimelineState } from './SiteNav/useNavTimeline';
