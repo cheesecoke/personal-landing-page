@@ -22,11 +22,13 @@ import {
   Panel,
   type PortalSpiralProps,
   Readout,
+  SoundToggle,
   Text,
   TextLink,
   VisuallyHidden,
 } from '@cwc/ui';
 
+import { type SoundPreference, sitePreference } from '../../sound/preference';
 import s from './arrival.module.css';
 import { diveCopy, type PortalDiveCopy } from './copy';
 import type { FarFlockOptions } from './flockSky';
@@ -41,8 +43,6 @@ import {
 } from './music';
 import type { FishJumpOptions } from './pondFish';
 import { gardenScene, type GardenScene, sceneVars } from './scene';
-import { type SoundStore, soundStore } from './sound';
-import { SoundToggle } from './SoundToggle';
 
 type Screen = 'start' | 'running' | 'crashed' | 'won';
 
@@ -63,8 +63,11 @@ export interface PortalDiveProps {
   onExit: () => void;
   /** Where the best result is kept. Default: localStorage, falling back to memory. */
   store?: BestStore;
-  /** Where the sound choice is kept. Default: localStorage, falling back to memory. */
-  sound?: SoundStore;
+  /**
+   * The sound choice: the site's own (the header button changes the same one). Stories pass one
+   * over their own storage.
+   */
+  sound?: SoundPreference;
   /** Makes the music's audio element. Default: `new Audio()`. Stories pass a silent fake. */
   audio?: AudioFactory;
   /** Makes the Web Audio context the music plays through. Default: the browser's. */
@@ -105,34 +108,36 @@ function subscribePointer(onChange: () => void) {
 const touchFirst = () =>
   typeof window.matchMedia === 'function' && window.matchMedia(COARSE).matches;
 
-/** Typing in a field never toggles the sound. */
-function isEditable(target: EventTarget | null) {
-  if (!(target instanceof HTMLElement)) return false;
-  return target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName);
-}
-
 /**
  * The music for as long as the game is on screen: made when the chunk mounts, paused while the
  * tab is hidden, faded out and let go when the overlay closes. Returns the controller (for the
  * Start press, which has to call it inside the click) and whether the track is available.
  */
-function useMusic(enabled: boolean, audio: AudioFactory, audioContext: AudioContextFactory) {
+function useMusic(sound: SoundPreference, audio: AudioFactory, audioContext: AudioContextFactory) {
   const music = useRef<Music | null>(null);
   const [available, setAvailable] = useState(true);
-  const first = useRef({ enabled, audio, audioContext });
+  const first = useRef({ sound, audio, audioContext });
   useEffect(() => {
+    const { sound: pref } = first.current;
     const m = createMusic({
-      enabled: first.current.enabled,
+      enabled: pref.read(),
       create: first.current.audio,
       createContext: first.current.audioContext,
       onAvailable: setAvailable,
     });
     music.current = m;
     setAvailable(m.available());
+    // The choice changed (this button, the header's, M, another tab). Called inside the press
+    // that changed it, so unlocking here still counts as the reader's gesture.
+    const unsubscribe = pref.subscribe(() => {
+      m.unlock();
+      m.setEnabled(pref.read());
+    });
     const onVisibility = () => m.setHidden(document.visibilityState === 'hidden');
     onVisibility();
     document.addEventListener('visibilitychange', onVisibility);
     return () => {
+      unsubscribe();
       document.removeEventListener('visibilitychange', onVisibility);
       m.dispose({ fade: document.visibilityState !== 'hidden' });
       if (music.current === m) music.current = null;
@@ -193,9 +198,9 @@ export default function PortalDive({
   const [screen, setScreen] = useState<Screen>(preview ? preview.status : 'start');
   const [result, setResult] = useState<DiveResult | null>(preview ?? null);
   const [best, setBest] = useState<BestResult | null>(() => store.read());
-  const [sound] = useState(() => soundIn ?? soundStore());
-  const [soundOn, setSoundOn] = useState(() => sound.read());
-  const { music, available } = useMusic(soundOn, audio, audioContext);
+  const [sound] = useState(() => soundIn ?? sitePreference());
+  const soundOn = useSyncExternalStore(sound.subscribe, sound.read, sound.read);
+  const { music, available } = useMusic(sound, audio, audioContext);
   const touch = useSyncExternalStore(subscribePointer, touchFirst, () => false);
   const game = useRef<DiveGameHandle>(null);
   const root = useRef<HTMLDivElement>(null);
@@ -320,34 +325,10 @@ export default function PortalDive({
     setResting(true);
   };
 
-  const soundOnRef = useRef(soundOn);
+  // The music follows through the subscription in `useMusic`.
   const toggleSound = () => {
-    const m = music.current;
-    if (!m?.available()) return;
-    const next = !soundOnRef.current;
-    soundOnRef.current = next;
-    sound.write(next);
-    m.unlock();
-    m.setEnabled(next);
-    setSoundOn(next);
+    if (music.current?.available()) sound.toggle();
   };
-  const toggleRef = useRef(toggleSound);
-  useEffect(() => {
-    toggleRef.current = toggleSound;
-  });
-
-  // M toggles the sound while the overlay is open (not while typing, not with a modifier).
-  useEffect(() => {
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key !== 'm' && event.key !== 'M') return;
-      if (event.repeat || event.ctrlKey || event.metaKey || event.altKey) return;
-      if (isEditable(event.target)) return;
-      event.preventDefault();
-      toggleRef.current();
-    };
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
-  }, []);
 
   // Over the garden the best line sits on paper, where the quieter label tone would be too faint.
   const bestLine = best ? (
@@ -378,11 +359,14 @@ export default function PortalDive({
           data-arrival={garden ? arrival : undefined}
           data-quiet={quiet ? '' : undefined}
         >
+          {/* M presses it too: one shortcut for the site's sound, this button while it is up. */}
           <SoundToggle
             on={soundOn}
             available={available}
             onToggle={toggleSound}
-            copy={copy.sound}
+            labels={copy.sound}
+            shortcut="m"
+            data-dive-sound={!available ? 'unavailable' : soundOn ? 'on' : 'off'}
           />
           <Button variant="quiet" data-dive-exit="" onClick={onExit}>
             {copy.buttons.exit}

@@ -5,12 +5,12 @@ import { bestStore, type BestResult, type DiveResult } from '@cwc/dive/react';
 import { PortalSpiral } from '@cwc/ui';
 
 import { FakeAudio, FakeAudioContext } from '../../sound/fakeAudio';
+import { createSoundPreference, SOUND_KEY } from '../../sound/preference';
 import { diveCopy } from './copy';
 import testMp4 from './fixtures/garden-test.mp4';
 import testWebm from './fixtures/garden-test.webm';
 import PortalDive from './PortalDive';
 import { gardenScene } from './scene';
-import { SOUND_KEY, soundStore } from './sound';
 
 /** A Storage stand-in. `blocked` throws on every call, as private modes and settings can. */
 function storage(initial?: BestResult, blocked = false): Storage {
@@ -38,7 +38,7 @@ const store = (initial?: BestResult, blocked = false) =>
 function sound(initial?: 'on' | 'off') {
   const s = storage();
   if (initial) s.setItem(SOUND_KEY, initial);
-  return { storage: s, store: soundStore(s, SOUND_KEY) };
+  return { storage: s, store: createSoundPreference({ storage: s, events: null }) };
 }
 
 /**

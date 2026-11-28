@@ -6,8 +6,8 @@ import { bestStore } from '@cwc/dive/react';
 
 import contact from '../../../content/hand/contact.json';
 import { FakeAudio, FakeAudioContext } from '../../sound/fakeAudio';
+import { createSoundPreference } from '../../sound/preference';
 import { PortalDiveHost, type PortalDiveHostProps } from './PortalDiveHost';
-import { soundStore } from './sound';
 
 const words = contact.portal.entry.game;
 
@@ -49,7 +49,7 @@ const meta = {
     gameProps: {
       seed: 7,
       store: bestStore(null),
-      sound: soundStore(null),
+      sound: createSoundPreference({ storage: null, events: null }),
       audio: silent,
       audioContext: silentContext,
     },
@@ -86,7 +86,7 @@ async function closedToPortal(root: HTMLElement) {
 const wonGame = {
   seed: 7,
   store: bestStore(null),
-  sound: soundStore(null),
+  sound: createSoundPreference({ storage: null, events: null }),
   audio: silent,
   audioContext: silentContext,
   preview: {
@@ -149,7 +149,7 @@ export const BackToContact: Story = {
     gameProps: {
       seed: 7,
       store: bestStore(null),
-      sound: soundStore(null),
+      sound: createSoundPreference({ storage: null, events: null }),
       audio: silent,
       audioContext: silentContext,
       preview: {
@@ -225,7 +225,7 @@ export const SoundStopsOnClose: Story = {
     gameProps: {
       seed: 7,
       store: bestStore(null),
-      sound: soundStore(null),
+      sound: createSoundPreference({ storage: null, events: null }),
       // Each mount makes the music, then the garden's ambience: keep the music.
       audio: () => {
         const audio = new FakeAudio();
