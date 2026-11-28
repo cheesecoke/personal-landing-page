@@ -549,3 +549,33 @@ describe('the garden hand-off', () => {
     expect(controller.available()).toBe(true);
   });
 });
+
+describe('availability with both tracks', () => {
+  it('is unavailable from the start when neither track has a source that can play', () => {
+    const make = () => {
+      const audio = new FakeAudio();
+      audio.canPlay = () => '';
+      return audio;
+    };
+    const onAvailable = vi.fn();
+    const music = createMusic({
+      enabled: true,
+      create: make,
+      createContext: () => null,
+      onAvailable,
+    });
+    expect(music.available()).toBe(false);
+  });
+
+  it('stays available when only the ambience can play', () => {
+    let n = 0;
+    const make = () => {
+      const audio = new FakeAudio();
+      // The first element is the music: it cannot play; the second (the ambience) can.
+      if (n++ === 0) audio.canPlay = () => '';
+      return audio;
+    };
+    const music = createMusic({ enabled: true, create: make, createContext: () => null });
+    expect(music.available()).toBe(true);
+  });
+});

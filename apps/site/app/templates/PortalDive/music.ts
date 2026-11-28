@@ -274,6 +274,9 @@ function createTrack(
     audio.loop = true;
     audio.volume = 0;
     audio.addEventListener('error', onError);
+    // A track no source of which can play is unavailable from the start (asking fetches nothing),
+    // so the sound button does not offer a garden ambience that could never play.
+    if (pickSource(audio, sources) === null) unavailable = true;
   }
 
   /** The level goes to the gain when there is one (the element then stays at full), else the element. */
