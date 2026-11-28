@@ -41,16 +41,20 @@ function sound(initial?: 'on' | 'off') {
   return { storage: s, store: soundStore(s, SOUND_KEY) };
 }
 
-/** A silent audio element for each mount, and the last one made (stories never play sound). */
+/**
+ * Silent audio elements (stories never play sound). Each mount makes two from the same factory,
+ * the music and then the garden's ambience; `last()` is the latest mount's music.
+ */
 function silentAudio(canPlay?: (type: string) => string) {
-  let last: FakeAudio | null = null;
+  const made: FakeAudio[] = [];
   return {
     factory: () => {
-      last = new FakeAudio();
-      if (canPlay) last.canPlay = canPlay;
-      return last;
+      const audio = new FakeAudio();
+      if (canPlay) audio.canPlay = canPlay;
+      made.push(audio);
+      return audio;
     },
-    last: () => last,
+    last: () => made.at(-2) ?? null,
   };
 }
 

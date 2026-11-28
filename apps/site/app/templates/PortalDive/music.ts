@@ -4,6 +4,8 @@
  * game's lazy chunk imports this file, so no part of it (and no request for a track) is on the
  * Contact page until the reader enters the portal.
  */
+import ambienceAac from './music/portal-dive-ambience.m4a';
+import ambienceOpus from './music/portal-dive-ambience.webm';
 import musicAac from './music/portal-dive-music.m4a';
 import musicOpus from './music/portal-dive-music.webm';
 
@@ -34,12 +36,13 @@ export const MUSIC_SOURCES: readonly MusicSource[] = [
 ];
 
 /**
- * The garden's ambience, best first. None yet: with an empty list there is no ambience element at
- * all and the garden is quiet. To add one, put the file in `./music/` and add one line here, e.g.
- * `{ src: new URL('./music/garden.webm', import.meta.url).href, type: 'audio/webm; codecs="opus"' },`
- * (Vite fingerprints a `new URL(..., import.meta.url)` asset the same way as an import).
+ * The garden's ambience (wind chimes), best first, the same way as the music. An empty list would
+ * mean no ambience element at all and a quiet garden. Where both tracks come from: `music/CREDITS.md`.
  */
-export const AMBIENCE_SOURCES: readonly MusicSource[] = [];
+export const AMBIENCE_SOURCES: readonly MusicSource[] = [
+  { src: ambienceOpus, type: 'audio/webm; codecs="opus"' },
+  { src: ambienceAac, type: 'audio/mp4; codecs="mp4a.40.2"' },
+];
 
 export interface MusicSource {
   src: string;
@@ -271,6 +274,9 @@ function createTrack(
     audio.loop = true;
     audio.volume = 0;
     audio.addEventListener('error', onError);
+    // A track no source of which can play is unavailable from the start (asking fetches nothing),
+    // so the sound button does not offer a garden ambience that could never play.
+    if (pickSource(audio, sources) === null) unavailable = true;
   }
 
   /** The level goes to the gain when there is one (the element then stays at full), else the element. */
