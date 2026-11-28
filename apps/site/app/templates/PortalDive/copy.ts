@@ -12,7 +12,7 @@ export const diveCopy = {
   touchHint: 'Hold the left or right side of the screen.',
   crashed: 'The tunnel won this one.',
   won: 'You made it through.',
-  note: 'Hardly anyone finds this place, and fewer reach the far side. Tell me you made it through. I will know what you mean.',
+  note: 'Well done. Welcome to the garden. Please reach out or take a moment and rest.',
   linkedin: 'Find me on LinkedIn',
   email: 'Or send an email',
   clean: 'Clean dive',

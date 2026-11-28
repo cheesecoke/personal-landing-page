@@ -193,7 +193,7 @@ const portal: ContactDoorPortal = {
   label: 'Open the portal',
   dialog: {
     title: 'Step through?',
-    body: 'It has been running all day. Nobody has said where it goes.',
+    body: "The portal's been running all day. Nobody seems to know where it goes.",
     enter: 'Enter',
     cancel: 'Not now',
   },
